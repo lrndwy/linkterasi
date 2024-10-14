@@ -1,0 +1,13 @@
+<section>
+<div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+  <div class="flex flex-row items-center justify-between">
+    <div>
+      <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-2">{{ judul }}</h2>
+      <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 text-wrap">{{ deskripsi }}</p>
+    </div>
+    {% if heading_image_url %}
+      <img src="{{ heading_image_url }}" alt="Icon" class="flex-shrink-0 w-8 h-8 sm:w-14 sm:h-14 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+    {% endif %}
+  </div>
+</div>
+</section>

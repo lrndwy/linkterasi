@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Produk">
+    <c-slot name="sidebar">
+        <c-sidebar.sptproduk></c-sidebar.sptproduk>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Komplain" deskripsi="Daftar komplain" heading_image_url="https://img.icons8.com/?size=100&id=hnuJKXRIY1PQ&format=png&color=000000"></c-headingCard>
+        <c-kTable></c-kTable>
+    </c-slot>
+</c-layouts.dashboard>
+{% endblock %}

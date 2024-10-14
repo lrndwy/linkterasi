@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="Produk">
+    <c-slot name="sidebar">
+        <c-sidebar.produk></c-sidebar.produk>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard produk" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
+        <c-indexProduk></c-indexProduk>
+        
+    </c-slot>
+</c-layouts.dashboard>
+{% endblock %}

@@ -1,0 +1,33 @@
+from django.contrib import admin
+
+from .models import *
+
+# Register your models here.
+admin.site.register(kegiatan)
+admin.site.register(kepsek)
+admin.site.register(guru)
+admin.site.register(produk)
+admin.site.register(teknisi)
+admin.site.register(sales)
+admin.site.register(sptproduk)
+admin.site.register(sptteknisi)
+admin.site.register(sptsales)
+admin.site.register(komplain)
+admin.site.register(saran)
+admin.site.register(permintaan)
+admin.site.register(sekolah)
+admin.site.register(jenjang)
+admin.site.register(kelas)
+admin.site.register(siswa)
+admin.site.register(permintaanSPT)
+admin.site.register(pengumuman)
+admin.site.register(omset_tik)
+admin.site.register(omset_robotik)
+admin.site.register(omset_hardware)
+admin.site.register(omset_buku)
+admin.site.register(omset_lainnya)
+admin.site.register(karyawan)
+admin.site.register(penggajian)
+admin.site.register(kunjungan_produk)
+admin.site.register(kunjungan_teknisi)
+admin.site.register(provinsi)

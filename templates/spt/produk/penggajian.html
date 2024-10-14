@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Produk">
+    <c-slot name="sidebar">
+        <c-sidebar.sptproduk></c-sidebar.sptproduk>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Penggajian" deskripsi="Penggajian" heading_image_url="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000"></c-headingCard>
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white">Data Penggajian</h2>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                Tambah Data
+              </button>
+            </div>
+            <div class="mb-4">
+              <input type="text" id="penggajianSearch" placeholder="Cari data penggajian..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">NIK</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Nama</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Jenis</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Jenjang</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Bank</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Gaji Pokok</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tunjangan</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">THR</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Uang Admin</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="penggajianTableBody">
+                  {% for item in data_penggajian %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.NIK }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.nama }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.jenis }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.jenjang }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.bank }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.gaji_pokok }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tunjangan }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.THR }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.uang_admin }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded mr-2">
+                          Update
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+    </c-slot>
+</c-layouts.dashboard>
+
+<script>
+  document.getElementById('penggajianSearch').addEventListener('keyup', function() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("penggajianSearch");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("penggajianTableBody");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td");
+      for (j = 0; j < td.length; j++) {
+        if (td[j]) {
+          txtValue = td[j].textContent || td[j].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

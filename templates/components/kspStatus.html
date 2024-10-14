@@ -1,0 +1,26 @@
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+      <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Status {{ ksp_kategori }}</h2>
+      <div class="flex flex-col gap-4">
+      {% comment %} {% if ksp_status %} {% endcomment %}
+          <div class="flex flex-col gap-4">
+              <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg">
+                  <img src="https://img.icons8.com/?size=100&id=1CFLY7AQOCRy&format=png&color=000000" alt="Menunggu Icon" class="w-8 h-8 mb-2">
+                  <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Menunggu</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ ksp_kategori }} yang sedang menunggu untuk diproses</p>
+              </div>
+              <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
+                  <img src="https://img.icons8.com/?size=100&id=HMwxzLul2dfm&format=png&color=000000" alt="Diproses Icon" class="w-8 h-8 mb-2">
+                  <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Diproses</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ ksp_kategori }} yang sedang dalam proses penanganan</p>
+              </div>
+              <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
+                  <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Selesai Icon" class="w-8 h-8 mb-2">
+                  <h4 class="text-md font-medium mb-2 text-gray-800 dark:text-white">Selesai</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ ksp_kategori }} yang telah selesai ditangani</p>
+              </div>
+          </div>
+      {% comment %} {% endif %} {% endcomment %}
+      </div>
+  </div>
+</section>

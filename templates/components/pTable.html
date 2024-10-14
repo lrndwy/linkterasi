@@ -1,0 +1,114 @@
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Permintaan</h2>
+
+    <div class="mb-4">
+      <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+    </div>
+    
+    <!-- Table -->
+    <div class="overflow-x-auto rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Judul</th>
+            <th scope="col" class="px-6 py-3">Deskripsi</th>
+            <th scope="col" class="px-6 py-3">Kategori</th>
+            <th scope="col" class="px-6 py-3">Tanggal</th>
+            <th scope="col" class="px-6 py-3">Status</th>
+            <th scope="col" class="px-6 py-3">File</th>
+            <th scope="col" class="px-6 py-3">Sekolah</th>
+            <th scope="col" class="px-6 py-3">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="permintaanTableBody">
+          <!-- Table body akan diisi oleh JavaScript -->
+          {% for permintaan in daftar_permintaan %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td class="px-6 py-4">{{ permintaan.judul }}</td>
+              <td class="px-6 py-4">{{ permintaan.deskripsi }}</td>
+              <td class="px-6 py-4">{{ permintaan.kategori }}</td>
+              <td class="px-6 py-4">{{ permintaan.tanggal }}</td>
+              <td class="px-6 py-4">{{ permintaan.status }}</td>
+              <td class="px-6 py-4">
+                {% if permintaan.file %}
+                  <a href="{{ permintaan.file.url }}" class="text-blue-600 hover:underline">Lihat File</a>
+                {% else %}
+                  Tidak ada file
+                {% endif %}
+              </td>
+              <td class="px-6 py-4">{{ permintaan.sekolah }}</td>
+              <td class="px-6 py-4">
+                {% if permintaan.status == 'menunggu' %}
+                  <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Proses</button>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="8" class="px-6 py-4 text-center">Tidak ada data permintaan</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('permintaanTableBody');
+
+    // Data dummy untuk permintaan
+    const dummyPermintaan = [
+      { judul: "Permintaan Produk Baru", deskripsi: "Meminta produk versi terbaru", kategori: "produk", tanggal: "2023-11-01", status: "menunggu", file: null, sekolah: "SMA Negeri 1" },
+      { judul: "Permintaan Layanan Khusus", deskripsi: "Membutuhkan layanan tambahan", kategori: "layanan", tanggal: "2023-11-02", status: "diproses", file: "file1.pdf", sekolah: "SMK Negeri 2" },
+      { judul: "Permintaan Upgrade Sistem", deskripsi: "Upgrade sistem ke versi terbaru", kategori: "produk", tanggal: "2023-11-03", status: "menunggu", file: null, sekolah: "SMP Negeri 3" },
+      { judul: "Permintaan Konsultasi", deskripsi: "Konsultasi penggunaan produk", kategori: "layanan", tanggal: "2023-11-04", status: "disetujui", file: "file2.pdf", sekolah: "SD Negeri 4" },
+      { judul: "Permintaan Pelatihan", deskripsi: "Pelatihan untuk tim", kategori: "layanan", tanggal: "2023-11-05", status: "menunggu", file: null, sekolah: "SMA Negeri 5" }
+    ];
+
+    // Fungsi untuk memuat data ke dalam tabel
+    function loadTableData(data) {
+      tableBody.innerHTML = '';
+      data.forEach(item => {
+        const row = `
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-6 py-4">${item.judul}</td>
+            <td class="px-6 py-4">${item.deskripsi}</td>
+            <td class="px-6 py-4">${item.kategori}</td>
+            <td class="px-6 py-4">${item.tanggal}</td>
+            <td class="px-6 py-4">${item.status}</td>
+            <td class="px-6 py-4">
+              ${item.file ? `<a href="#" class="text-blue-600 hover:underline">Lihat File</a>` : 'Tidak ada file'}
+            </td>
+            <td class="px-6 py-4">${item.sekolah}</td>
+            <td class="px-6 py-4">
+              ${item.status === 'menunggu' ? `<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Proses</button>` : ''}
+            </td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    // Memuat data awal
+    loadTableData(dummyPermintaan);
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      const filteredData = dummyPermintaan.filter(item => {
+        return item.judul.toLowerCase().includes(searchTerm) ||
+               item.deskripsi.toLowerCase().includes(searchTerm) ||
+               item.kategori.toLowerCase().includes(searchTerm) ||
+               item.sekolah.toLowerCase().includes(searchTerm);
+      });
+
+      loadTableData(filteredData);
+    }
+
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>

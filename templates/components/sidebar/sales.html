@@ -1,0 +1,36 @@
+<li>
+  <a href="{% url 'sales' %}"
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'sales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      <img src="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000" alt="Dashboard Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+      <span class="ms-3">Dashboard</span>
+  </a>
+</li>
+<li>
+    <a href="{% url 'jadwal_sales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'jadwal_sales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Jadwal Kegiatan Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="ms-3">Jadwal Kegiatan</span>
+    </a>
+</li>
+<li>
+    <a href="{% url 'sptpermintaan_sales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'sptpermintaan_sales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=LdBR9a3vFiwK&format=png&color=000000" alt="Permintaan SPT Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="flex-1 ms-3 whitespace-nowrap">Permintaan SPT</span>
+    </a>
+</li>
+<li>
+    <a href="{% url 'pengumuman_sales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'pengumuman_sales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=CLuWGSvnuOz9&format=png&color=000000" alt="pengumuman Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="flex-1 ms-3 whitespace-nowrap">Pengumuman</span>
+    </a>
+</li>
+<li>
+    <a href="{% url 'omset_sales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'omset_sales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=7Ego1HgHexLw&format=png&color=000000" alt="Omset TIK Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="flex-1 ms-3 whitespace-nowrap">Omset</span>
+    </a>
+</li>
+

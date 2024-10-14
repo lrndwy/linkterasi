@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="Guru">
+    <c-slot name="sidebar">
+        <c-sidebar.guru></c-sidebar.guru>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Komplain" deskripsi="Komplain Form untuk membuat Komplain" heading-image-url="https://img.icons8.com/?size=100&id=hnuJKXRIY1PQ&format=png&color=000000"></c-headingCard>
+        <div class="flex flex-col">
+            <div>
+                <c-kspForm kategori="Komplain" post_url="{% url 'komplain_guru' %}"></c-kspForm>
+            </div>
+            <div>
+              <c-kspStatus></c-kspStatus>
+            </div>
+        </div>
+    </c-slot>
+    
+</c-layouts.dashboard>
+{% endblock %}

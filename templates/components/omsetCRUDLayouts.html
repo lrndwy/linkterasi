@@ -1,0 +1,95 @@
+<section class="mt-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white">Data Omset TIK</h2>
+      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Tambah</button>
+    </div>
+    <div class="relative overflow-x-auto sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Nama Sekolah</th>
+            <th scope="col" class="px-6 py-3">Jenjang</th>
+            <th scope="col" class="px-6 py-3">Januari</th>
+            <th scope="col" class="px-6 py-3">Februari</th>
+            <th scope="col" class="px-6 py-3">Maret</th>
+            <th scope="col" class="px-6 py-3">April</th>
+            <th scope="col" class="px-6 py-3">Mei</th>
+            <th scope="col" class="px-6 py-3">Juni</th>
+            <th scope="col" class="px-6 py-3">Juli</th>
+            <th scope="col" class="px-6 py-3">Agustus</th>
+            <th scope="col" class="px-6 py-3">September</th>
+            <th scope="col" class="px-6 py-3">Oktober</th>
+            <th scope="col" class="px-6 py-3">November</th>
+            <th scope="col" class="px-6 py-3">Desember</th>
+            <th scope="col" class="px-6 py-3">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="omsetTableBody">
+          <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tableBody = document.getElementById('omsetTableBody');
+    const tambahDataBtn = document.getElementById('tambahDataBtn');
+    
+    // Data dummy untuk omset TIK
+    const dummyOmsetTIK = [
+      { nama_sekolah: "SD Negeri 1", jenjang: "SD", januari: 1000000, februari: 1200000, maret: 1100000, april: 1300000, mei: 1400000, juni: 1200000, juli: 1000000, agustus: 1100000, september: 1300000, oktober: 1200000, november: 1100000, desember: 1000000 },
+      { nama_sekolah: "SMP Swasta 2", jenjang: "SMP", januari: 1500000, februari: 1600000, maret: 1700000, april: 1800000, mei: 1900000, juni: 1700000, juli: 1500000, agustus: 1600000, september: 1800000, oktober: 1700000, november: 1600000, desember: 1500000 },
+    ];
+    
+    // Fungsi untuk memuat data dummy ke dalam tabel
+    function loadDummyData() {
+      tableBody.innerHTML = '';
+      dummyOmsetTIK.forEach((item, index) => {
+        const row = `
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">${item.nama_sekolah}</td>
+            <td class="px-6 py-4">${item.jenjang}</td>
+            <td class="px-6 py-4">${item.januari}</td>
+            <td class="px-6 py-4">${item.februari}</td>
+            <td class="px-6 py-4">${item.maret}</td>
+            <td class="px-6 py-4">${item.april}</td>
+            <td class="px-6 py-4">${item.mei}</td>
+            <td class="px-6 py-4">${item.juni}</td>
+            <td class="px-6 py-4">${item.juli}</td>
+            <td class="px-6 py-4">${item.agustus}</td>
+            <td class="px-6 py-4">${item.september}</td>
+            <td class="px-6 py-4">${item.oktober}</td>
+            <td class="px-6 py-4">${item.november}</td>
+            <td class="px-6 py-4">${item.desember}</td>
+            <td class="px-6 py-4">
+              <button onclick="editData(${index})" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-2">Edit</button>
+              <button onclick="deleteData(${index})" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</button>
+            </td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+    
+    // Memuat data dummy
+    loadDummyData();
+    
+    // Fungsi untuk menambah data (dummy)
+    tambahDataBtn.addEventListener('click', function() {
+      alert('Fungsi tambah data akan diimplementasikan di sini');
+    });
+    
+    // Fungsi untuk mengedit data (dummy)
+    window.editData = function(index) {
+      alert(`Fungsi edit data untuk indeks ${index} akan diimplementasikan di sini`);
+    };
+    
+    // Fungsi untuk menghapus data (dummy)
+    window.deleteData = function(index) {
+      alert(`Fungsi hapus data untuk indeks ${index} akan diimplementasikan di sini`);
+    };
+  });
+</script>

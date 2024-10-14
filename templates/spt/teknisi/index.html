@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Teknisi">  
+    <c-slot name="sidebar">
+        <c-sidebar.sptteknisi></c-sidebar.sptteknisi>
+    </c-slot>
+
+    <c-slot name="content">
+      {% comment %} Heading Card {% endcomment %}
+      <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard SPT Teknisi" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
+
+      {% comment %} Pilih Produk {% endcomment %}
+      <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+        <div class="flex flex-wrap justify-between items-center w-full gap-2">
+          <h2 for="produk" class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Pengguna Produk</h2>
+          <select name="produk" id="produk" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="semua">Semua</option>
+            <option value="hafiz">Hafiz</option>
+            <option value="alif">Alif</option>
+          </select>
+        </div>
+      </section>
+
+      {% comment %} Grafik Sekolah {% endcomment %}
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <!-- Radial Chart 1 -->
+          <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+            <!-- Line Chart -->
+            <div class="py-6" id="pie-chart1"></div>
+        
+            <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+              <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Sekolah</h5>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Sekolah per Jenjang</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Radial Chart 2 -->
+          <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+            <!-- Line Chart -->
+            <div class="py-6" id="pie-chart2"></div>
+        
+            <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+              <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Siswa</h5>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Siswa per Jenjang</p>
+              </div>
+            </div>
+          </div>
+      </section>
+
+      {% comment %} Map Sekolah {% endcomment %}
+      <c-mapSekolah></c-mapSekolah>
+
+      {% comment %} List Sekolah {% endcomment %}
+      <c-tableSekolah></c-tableSekolah>
+
+      {% comment %} Pilih Bulan {% endcomment %}
+      <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+        <div class="flex flex-wrap justify-between items-center w-full gap-2">
+          <h2 for="bulan" class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Bulan</h2>
+          <select name="bulan" id="bulan" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="semua">Semua</option>
+            <option value="januari">Januari</option>
+            <option value="februari">Februari</option>
+            <option value="maret">Maret</option>
+            <option value="april">April</option>
+            <option value="mei">Mei</option>
+            <option value="juni">Juni</option>
+            <option value="juli">Juli</option>
+            <option value="agustus">Agustus</option>
+            <option value="september">September</option>
+            <option value="oktober">Oktober</option>
+            <option value="november">November</option>
+            <option value="desember">Desember</option>
+          </select>
+        </div>
+      </section>
+
+      {% comment %} Jumlah Sekolah Dikunjungi/Dikontak {% endcomment %}
+      <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
+            <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Maintenance Icon" class="w-8 h-8 mr-2">
+            <div class="ml-2">
+              <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Maintenance</h3>
+              <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ maintenance }}</p>
+              <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
+            </div>
+          </div>
+          <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+            <img src="https://img.icons8.com/?size=100&id=HMwxzLul2dfm&format=png&color=000000" alt="Trouble Shooting Icon" class="w-8 h-8 mr-2">
+            <div class="ml-2">
+              <h3 class="text-base sm:text-xl font-semibold text-yellow-800 dark:text-white">Trouble Shooting</h3>
+              <p class="text-2xl sm:text-3xl font-bold text-yellow-600 dark:text-yellow-300">{{ trouble_shooting }}</p>
+              <p class="text-sm text-yellow-600 dark:text-yellow-400">Bulan ini</p>
+            </div>
+          </div>
+          <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
+            <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
+            <div class="ml-2">
+              <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Belum Dikunjungi</h3>
+              <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ belum_dikunjungi }}</p>
+              <p class="text-sm text-red-600 dark:text-red-400">Bulan ini</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {% comment %} Riwayat Kunjungan {% endcomment %}
+      <section>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+          <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan</h2>
+          <div class="mb-4">
+            <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+          </div>
+          <div class="overflow-x-auto rounded-lg">
+            <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Nama Sekolah</th>
+                  <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal Kunjungan</th>
+                  <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Teknisi</th>
+                  <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody id="kunjunganTableBody">
+                {% for item in riwayat_kunjungan %}
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.nama_sekolah }}</td>
+                    <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal_kunjungan }}</td>
+                    <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.teknisi }}</td>
+                    <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+  </c-slot>
+</c-layouts.dashboard>
+
+<script src="{% static 'apexcharts/dist/apexcharts.min.js' %}"></script>
+<script src="{% static 'apexcharts/dist/apexcharts.js' %}"></script>
+<script>
+    const getChartOptions1 = () => {
+      return {
+        series: [52.8, 26.8, 20.4],
+        colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+        chart: {
+          height: 420,
+          width: "100%",
+          type: "pie",
+        },
+        stroke: {
+          colors: ["white"],
+          lineCap: "",
+        },
+        plotOptions: {
+          pie: {
+            labels: {
+              show: true,
+            },
+            size: "100%",
+            dataLabels: {
+              offset: -25
+            }
+          },
+        },
+        labels: ["Direct", "Organic search", "Referrals"],
+        dataLabels: {
+          enabled: true,
+          style: {
+            fontFamily: "Inter, sans-serif",
+          },
+        },
+        legend: {
+          position: "bottom",
+          fontFamily: "Inter, sans-serif",
+        },
+        yaxis: {
+          labels: {
+            formatter: function (value) {
+              return value + "%"
+            },
+          },
+        },
+        xaxis: {
+          labels: {
+            formatter: function (value) {
+              return value  + "%"
+            },
+          },
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+        },
+      }
+    }
+
+    const getChartOptions2 = () => {
+      return {
+        series: [52.8, 26.8, 20.4],
+        colors: ["#1C64F2", "#16BDCA", "#9061F9"],
+        chart: {
+          height: 420,
+          width: "100%",
+          type: "pie",
+        },
+        stroke: {
+          colors: ["white"],
+          lineCap: "",
+        },
+        plotOptions: {
+          pie: {
+            labels: {
+              show: true,
+            },
+            size: "100%",
+            dataLabels: {
+              offset: -25
+            }
+          },
+        },
+        labels: ["Direct", "Organic search", "Referrals"],
+        dataLabels: {
+          enabled: true,
+          style: {
+            fontFamily: "Inter, sans-serif",
+          },
+        },
+        legend: {
+          position: "bottom",
+          fontFamily: "Inter, sans-serif",
+        },
+        yaxis: {
+          labels: {
+            formatter: function (value) {
+              return value + "%"
+            },
+          },
+        },
+        xaxis: {
+          labels: {
+            formatter: function (value) {
+              return value  + "%"
+            },
+          },
+          axisTicks: {
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
+        },
+      }
+    }
+
+    if (document.getElementById("pie-chart1") && typeof ApexCharts !== 'undefined') {
+      const chart = new ApexCharts(document.getElementById("pie-chart1"), getChartOptions1());
+      chart.render();
+    }
+
+    if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
+      const chart = new ApexCharts(document.getElementById("pie-chart2"), getChartOptions2());
+      chart.render();
+    }
+</script>
+
+<script>
+  document.getElementById('kunjunganSearch').addEventListener('keyup', function() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("kunjunganSearch");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("kunjunganTableBody");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

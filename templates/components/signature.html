@@ -1,0 +1,126 @@
+{% load static %}
+
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg mb-4 w-full">
+    <label class="block text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-4">Tanda Tangan Digital</label>
+    <div class="container mb-4 rounded-lg">
+      <canvas id="signatureCanvas" width="100%" height="100%" class="border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900"></canvas>
+    </div>
+    <div class="flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0">
+      <button id="clearButton" class="w-full sm:w-auto text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5">Reset TTD</button>
+    </div>
+    <input type="hidden" id="signatureData" name="signature">
+  </div>
+</section>
+
+<style>
+  canvas {
+    border: 1px solid #e5e7eb;
+    touch-action: none;
+    max-width: 100%;
+    height: auto;
+  }
+  .canvas-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('signatureCanvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientWidth / 2;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+
+    document.getElementById('clearButton').addEventListener('click', clearCanvas);
+
+    function startDrawing(e) {
+      isDrawing = true;
+      [lastX, lastY] = getCoordinates(e);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = isDarkMode() ? '#fff' : '#000';
+
+      const [x, y] = getCoordinates(e);
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      [lastX, lastY] = [x, y];
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+      updateSignatureData();
+    }
+
+    function getCoordinates(e) {
+      let x, y;
+      const rect = canvas.getBoundingClientRect();
+      if (e.type.includes('touch')) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+      } else {
+        x = e.offsetX;
+        y = e.offsetY;
+      }
+      return [x, y];
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      updateSignatureData();
+    }
+
+    function updateSignatureData() {
+      const dataURL = canvas.toDataURL('image/png');
+      document.getElementById('signatureData').value = dataURL;
+    }
+
+    function isDarkMode() {
+      return document.documentElement.classList.contains('dark');
+    }
+
+    // Observe theme changes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === "attributes" && mutation.attributeName === "class") {
+          ctx.strokeStyle = isDarkMode() ? '#fff' : '#000';
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  });
+</script>

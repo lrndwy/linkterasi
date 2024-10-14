@@ -1,0 +1,138 @@
+{% load static %}
+
+<div>
+  <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center justify-start rtl:justify-end">
+                <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+                    type="button"
+                    class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Toggle sidebar</span>
+                    <img src="https://img.icons8.com/?size=100&id=g5dx3VExcn2X&format=png&color=000000" alt="Menu icon" class="w-6 h-6 transition-transform duration-300" id="menuIcon">
+                </button>
+                <a href="" class="flex ms-2 md:me-24">
+                    <img src="{% static 'images/logo.png' %}" class="h-8 me-3" alt="Diginusa Logo" />
+                    <span
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Dashboard {{ dashboard_name }}</span>
+                </a>
+            </div>
+            <div class="flex items-center">
+                <div class="flex items-center ms-3">
+                    <div>
+                        <button type="button"
+                            class="flex items-center p-2 text-gray-900 text-xl space-x-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                            <img src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="User icon" class="w-8 h-8">
+                        </button>
+                    </div>
+                    <div class="z-40 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+                        id="dropdown-user">
+                        <div class="px-4 py-3" role="none">
+                            <p class="text-sm text-gray-900 dark:text-white" role="none">Neil Sims</p>
+                            <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                neil.sims@flowbite.com</p>
+                        </div>
+                        <ul class="py-1" role="none">
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    role="menuitem">Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    role="menuitem">Logout</a>
+                            </li>
+                            <li>
+                                <button id="theme-toggle" type="button"
+                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    role="menuitem">Ubah Mode Gelap/Terang</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</div>
+<aside id="logo-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    aria-label="Sidebar">
+    <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <ul class="sidebar space-y-2 font-medium">
+            {{ sidebar }}
+        </ul>
+    </div>
+</aside>
+
+<div class="p-4 sm:ml-64">
+    <div class="content p-4 rounded-lg dark:border-gray-700 mt-14" data-aos="fade-up" data-aos-delay="200" data-aos-duration="750">
+        {{ content }}
+        <c-copyright></c-copyright>
+    </div>
+</div>
+
+<script src="{% static 'flowbite/dist/flowbite.min.js' %}"></script>
+<script>
+    var themeToggleDarkIcon = document.createElement('svg');
+    themeToggleDarkIcon.classList.add('w-5', 'h-5');
+    themeToggleDarkIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
+    
+    var themeToggleLightIcon = document.createElement('svg');
+    themeToggleLightIcon.classList.add('w-5', 'h-5');
+    themeToggleLightIcon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>';
+
+    var themeToggleBtn = document.getElementById('theme-toggle');
+
+    // Change the icons inside the button based on previous settings
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+
+    themeToggleBtn.addEventListener('click', function() {
+        // toggle icons inside button
+        document.documentElement.classList.toggle('dark');
+
+        // if set via local storage previously
+        if (localStorage.getItem('color-theme')) {
+            if (localStorage.getItem('color-theme') === 'light') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            }
+        // if NOT set via local storage previously
+        } else {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        }
+    });
+
+    // Tambahkan kode untuk mengubah ikon menu dengan animasi rotasi
+    var menuIcon = document.getElementById('menuIcon');
+    var sidebarToggle = document.querySelector('[data-drawer-toggle="logo-sidebar"]');
+    var isOpen = false;
+
+    sidebarToggle.addEventListener('click', function() {
+        if (!isOpen) {
+            menuIcon.src = 'https://img.icons8.com/?size=100&id=pId9iTyUzwBy&format=png&color=000000';
+            menuIcon.style.transform = 'rotate(180deg)';
+        } else {
+            menuIcon.src = 'https://img.icons8.com/?size=100&id=g5dx3VExcn2X&format=png&color=000000';
+            menuIcon.style.transform = 'rotate(0deg)';
+        }
+        isOpen = !isOpen;
+    });
+</script>
+
+

@@ -1,0 +1,98 @@
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+        <img src="https://img.icons8.com/?size=100&id=hnuJKXRIY1PQ&format=png&color=000000" alt="Komplain Icon" class="w-8 h-8 mr-2">
+        <div class="ml-2">
+          <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Komplain</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_komplain }}</p>
+        </div>
+      </div>
+      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center space-x-2">
+        <img src="https://img.icons8.com/?size=100&id=IA6GgS2nbpmB&format=png&color=000000" alt="Permintaan Icon" class="w-8 h-8 mr-2">
+        <div class="ml-2">
+          <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Permintaan</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_permintaan }}</p>
+        </div>
+      </div>
+      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+        <img src="https://img.icons8.com/?size=100&id=outGJp6v2Y0y&format=png&color=000000" alt="Saran Icon" class="w-8 h-8 mr-2">
+        <div class="ml-2">
+          <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Saran</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_saran }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat</h2>
+    <div class="mb-4">
+      <input type="text" id="kspSearch" placeholder="Cari riwayat Komplain, Permintaan, atau Saran..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Judul</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Kategori</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody id="kspTableBody">
+          <!-- {% for item in ksp_history %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.kategori }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
+            </tr>
+          {% endfor %} -->
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Komplain Jaringan Lambat</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Komplain</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-15</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Menunggu</td>
+          </tr>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Permintaan Perangkat Baru</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Permintaan</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-10</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Disetujui</td>
+          </tr>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Saran Peningkatan Keamanan</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Saran</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-05</td>
+            <td class="px-3 sm:px-6 py-2 sm:py-4">Ditinjau</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('kspSearch').addEventListener('keyup', function() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("kspSearch");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("kspTableBody");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  });
+</script>

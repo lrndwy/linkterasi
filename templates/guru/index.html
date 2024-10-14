@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="Guru">
+    <c-slot name="sidebar">
+        <c-sidebar.guru></c-sidebar.guru>
+    </c-slot>
+    
+    <c-slot name="content">
+        <c-headingCard judul="Dashboard" deskripsi="Dashboard Guru" heading-image-url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
+        <c-indexGuruKepsek></c-indexGuruKepsek>       
+    </c-slot>
+</c-layouts.dashboard>
+{% endblock %}

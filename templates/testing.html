@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Peta Sekolah di Indonesia</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Atur ukuran peta */
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        /* Optional: Styling popup */
+        .popup-content {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Peta Sekolah di Indonesia</h1>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Inisialisasi peta dan set tampilan awal
+        var map = L.map('map').setView([-2.548926, 118.0148634], 5); // Koordinat pusat Indonesia
+
+        // Tambahkan layer peta dari OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Data provinsi dan sekolah
+        var dataProvinsi = [
+            {
+                nama: "Aceh",
+                koordinat: [4.595, 96.749], // Contoh koordinat Aceh
+                sekolah: ["Sekolah A", "Sekolah B", "Sekolah C"]
+            },
+            {
+                nama: "Sumatera Utara",
+                koordinat: [3.595, 98.672], // Contoh koordinat Sumatera Utara
+                sekolah: ["Sekolah D", "Sekolah E", "Sekolah F"]
+            },
+            // Tambahkan provinsi lain sesuai kebutuhan
+        ];
+
+        // Fungsi untuk membuat marker dan popup
+        dataProvinsi.forEach(function(provinsi) {
+            var marker = L.marker(provinsi.koordinat).addTo(map);
+            var sekolahList = "<ul>";
+            provinsi.sekolah.forEach(function(sekolah) {
+                sekolahList += "<li>" + sekolah + "</li>";
+            });
+            sekolahList += "</ul>";
+
+            var popupContent = "<div class='popup-content'><strong>" + provinsi.nama + "</strong>" + sekolahList + "</div>";
+
+            marker.bindPopup(popupContent);
+        });
+    </script>
+</body>
+</html>

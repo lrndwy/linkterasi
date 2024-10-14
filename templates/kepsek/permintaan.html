@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="Kepsek">
+    <c-slot name="sidebar">
+        <c-sidebar.kepsek></c-sidebar.kepsek>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Permintaan" deskripsi="Permintaan Form untuk membuat Permintaan" heading-image-url="https://img.icons8.com/?size=100&id=IA6GgS2nbpmB&format=png&color=000000"></c-headingCard>
+        <div class="flex flex-col">
+            <div>
+                <c-kspForm kategori="Permintaan"></c-kspForm>
+            </div>
+            <div>
+              <c-kspStatus></c-kspStatus>
+            </div>
+        </div>
+    </c-slot>
+    
+</c-layouts.dashboard>
+{% endblock %}

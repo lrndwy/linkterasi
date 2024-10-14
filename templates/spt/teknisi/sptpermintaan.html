@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Teknisi">
+    <c-slot name="sidebar">
+        <c-sidebar.sptteknisi></c-sidebar.sptteknisi>
+    </c-slot>
+
+    <c-slot name="content">
+        <c-headingCard judul="Permintaan SPT" deskripsi="Daftar permintaan SPT" heading_image_url="https://img.icons8.com/?size=100&id=LdBR9a3vFiwK&format=png&color=000000"></c-headingCard>
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div class="flex flex-wrap justify-between items-center w-full gap-2">
+            <h2 for="produk" class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Pengguna Produk</h2>
+            <select name="produk" id="produk" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="semua">Semua</option>
+              <option value="hafiz">Hafiz</option>
+              <option value="alif">Alif</option>
+            </select>
+          </div>
+        </section>
+        <section class="mt-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Daftar Permintaan SPT</h2>
+                <div class="relative overflow-x-auto sm:rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Judul</th>
+                                <th scope="col" class="px-6 py-3">Keterangan</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Kategori</th>
+                                <th scope="col" class="px-6 py-3">File</th>
+                                <th scope="col" class="px-6 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="permintaanSPTTable">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </c-slot>
+</c-layouts.dashboard>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.getElementById('permintaanSPTTable');
+      
+      // Data dummy untuk permintaan SPT
+      const dummyPermintaanSPT = [
+          { id: 1, judul: "Permintaan SPT untuk Proyek A", ket: "Diperlukan untuk presentasi ke klien", status: "menunggu", kategori: "produk", file: null },
+          { id: 2, judul: "SPT Pelatihan Karyawan Baru", ket: "Untuk program orientasi bulan depan", status: "menunggu", kategori: "teknisi", file: "file1.pdf" },
+          { id: 3, judul: "Permintaan SPT Kunjungan Pabrik", ket: "Untuk tim quality control", status: "menunggu", kategori: "sales", file: null },
+          { id: 4, judul: "SPT Perjalanan Dinas Luar Kota", ket: "Meeting dengan supplier di Surabaya", status: "menunggu", kategori: "sales", file: "file2.pdf" },
+          { id: 5, judul: "Permintaan SPT Seminar Teknologi", ket: "Untuk divisi IT", status: "menunggu", kategori: "teknisi", file: null }
+      ];
+      
+      // Fungsi untuk memuat data dummy ke dalam tabel
+      function loadDummyData() {
+          tableBody.innerHTML = '';
+          dummyPermintaanSPT.forEach(item => {
+              const row = `
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          ${item.judul}
+                      </td>
+                      <td class="px-6 py-4">${item.ket}</td>
+                      <td class="px-6 py-4">${item.status}</td>
+                      <td class="px-6 py-4">${item.kategori}</td>
+                      <td class="px-6 py-4">
+                          ${item.file ? `<a href="#" class="text-blue-600 hover:underline">Lihat File</a>` : 'Tidak ada file'}
+                      </td>
+                      <td class="px-6 py-4">
+                          <button onclick="terimaPermintaan(${item.id})" class="font-medium text-green-600 dark:text-green-500 hover:underline mr-2">Terima</button>
+                          <button onclick="tolakPermintaan(${item.id})" class="font-medium text-red-600 dark:text-red-500 hover:underline">Tolak</button>
+                      </td>
+                  </tr>
+              `;
+              tableBody.innerHTML += row;
+          });
+      }
+      
+      // Memuat data dummy
+      loadDummyData();
+  });
+
+  function terimaPermintaan(id) {
+      // Implementasi logika untuk menerima permintaan
+      console.log('Permintaan dengan ID ' + id + ' diterima');
+      // Di sini Anda bisa menambahkan logika untuk mengubah status permintaan, dll.
+  }
+
+  function tolakPermintaan(id) {
+      // Implementasi logika untuk menolak permintaan
+      console.log('Permintaan dengan ID ' + id + ' ditolak');
+      // Di sini Anda bisa menambahkan logika untuk mengubah status permintaan, dll.
+  }
+</script>
+{% endblock %}
