@@ -20,14 +20,13 @@
           </tr>
         </thead>
         <tbody id="saranTableBody">
-          <!-- Table body akan diisi oleh JavaScript -->
           {% for saran in daftar_saran %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <td class="px-6 py-4">{{ saran.judul }}</td>
               <td class="px-6 py-4">{{ saran.keterangan }}</td>
               <td class="px-6 py-4">{{ saran.kategori }}</td>
               <td class="px-6 py-4">{{ saran.tanggal }}</td>
-              <td class="px-6 py-4">{{ saran.sekolah.nama }}</td>
+              <td class="px-6 py-4">{{ saran.sekolah }}</td>
               <td class="px-6 py-4">
                 {% if saran.file %}
                   <a href="{{ saran.file.url }}" class="text-blue-600 hover:underline">Lihat File</a>
@@ -52,49 +51,25 @@
     const searchInput = document.getElementById('searchInput');
     const tableBody = document.getElementById('saranTableBody');
 
-    // Data dummy untuk saran
-    const dummySaran = [
-      { judul: "Saran Peningkatan Produk A", keterangan: "Menambahkan fitur baru", kategori: "produk", tanggal: "2023-11-01", sekolah: "SMA Negeri 1", file: null },
-      { judul: "Saran Pelatihan Teknisi", keterangan: "Pelatihan untuk meningkatkan keterampilan", kategori: "teknisi", tanggal: "2023-11-02", sekolah: "SMK Negeri 2", file: "file1.pdf" },
-      { judul: "Saran Pengembangan Produk B", keterangan: "Ide untuk produk baru", kategori: "produk", tanggal: "2023-11-03", sekolah: "SMP Negeri 3", file: null },
-      { judul: "Saran Perbaikan Layanan", keterangan: "Meningkatkan kecepatan respon", kategori: "teknisi", tanggal: "2023-11-04", sekolah: "SD Negeri 4", file: "file2.pdf" },
-      { judul: "Saran Kemasan Produk", keterangan: "Desain kemasan yang lebih menarik", kategori: "produk", tanggal: "2023-11-05", sekolah: "SMA Negeri 5", file: null }
-    ];
-
-    // Fungsi untuk memuat data ke dalam tabel
-    function loadTableData(data) {
-      tableBody.innerHTML = '';
-      data.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4">${item.judul}</td>
-            <td class="px-6 py-4">${item.keterangan}</td>
-            <td class="px-6 py-4">${item.kategori}</td>
-            <td class="px-6 py-4">${item.tanggal}</td>
-            <td class="px-6 py-4">${item.sekolah}</td>
-            <td class="px-6 py-4">
-              ${item.file ? `<a href="#" class="text-blue-600 hover:underline">Lihat File</a>` : 'Tidak ada file'}
-            </td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-
-    // Memuat data awal
-    loadTableData(dummySaran);
-
     function filterTable() {
       const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
 
-      const filteredData = dummySaran.filter(item => {
-        return item.judul.toLowerCase().includes(searchTerm) ||
-               item.keterangan.toLowerCase().includes(searchTerm) ||
-               item.kategori.toLowerCase().includes(searchTerm) ||
-               item.sekolah.toLowerCase().includes(searchTerm);
-      });
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
 
-      loadTableData(filteredData);
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
     }
 
     searchInput.addEventListener('input', filterTable);

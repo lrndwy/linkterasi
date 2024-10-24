@@ -1,70 +1,301 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <c-layouts.dashboard dashboard-name="SPT Produk">
     <c-slot name="sidebar">
         <c-sidebar.sptproduk></c-sidebar.sptproduk>
     </c-slot>
+    
+    {% if edit == True %}
+        <c-slot name="content">
+            <c-headingCard judul="Edit Penggajian" deskripsi="Edit Penggajian" heading_image_url="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000"></c-headingCard>
+            <section>
+              <div class="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                <form method="POST" action="{% url 'penggajian_sptproduk' %}?edit={{ penggajian.id }}">
+                  {% csrf_token %}
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="karyawan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Karyawan</label>
+                      <select id="karyawan" name="karyawan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                        <option value="">Pilih Karyawan</option>
+                        {% for karyawan in daftar_karyawan %}
+                          <option value="{{ karyawan.id }}" {% if karyawan.id == karyawan.id %}selected{% endif %}>{{ karyawan.nama }} - {{ karyawan.jenis }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div>
+                      <label for="no_bpjs_kesehatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No BPJS Kesehatan</label>
+                      <input type="text" id="no_bpjs_kesehatan" name="no_bpjs_kesehatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_kesehatan }}">
+                    </div>
+                    <div>
+                      <label for="no_bpjs_naker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No BPJS Naker</label>
+                      <input type="text" id="no_bpjs_naker" name="no_bpjs_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_naker }}">
+                    </div>
+                    <div>
+                      <label for="tunjangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan</label>
+                      <input type="number" id="tunjangan" name="tunjangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.tunjangan }}">
+                    </div>
+                    <div>
+                      <label for="THR" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">THR</label>
+                      <input type="number" id="THR" name="THR" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.THR }}">
+                    </div>
+                  </div>
+                  
+                  <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Januari</label>
+                      <input type="number" id="januari" name="januari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.januari }}">
+                    </div>
+                    <div>
+                      <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Februari</label>
+                      <input type="number" id="februari" name="februari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.februari }}">
+                    </div>
+                    <div>
+                      <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Maret</label>
+                      <input type="number" id="maret" name="maret" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.maret }}">
+                    </div>
+                    <div>
+                      <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">April</label>
+                      <input type="number" id="april" name="april" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.april }}">
+                    </div>
+                    <div>
+                      <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Mei</label>
+                      <input type="number" id="mei" name="mei" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.mei }}">
+                    </div>
+                    <div>
+                      <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juni</label>
+                      <input type="number" id="juni" name="juni" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juni }}">
+                    </div>
+                    <div>
+                      <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juli</label>
+                      <input type="number" id="juli" name="juli" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juli }}">
+                    </div>
+                    <div>
+                      <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Agustus</label>
+                      <input type="number" id="agustus" name="agustus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.agustus }}">
+                    </div>
+                    <div>
+                      <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">September</label>
+                      <input type="number" id="september" name="september" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.september }}">
+                    </div>
+                    <div>
+                      <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Oktober</label>
+                      <input type="number" id="oktober" name="oktober" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.oktober }}">
+                    </div>
+                    <div>
+                      <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">November</label>
+                      <input type="number" id="november" name="november" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.november }}">
+                    </div>
+                    <div>
+                      <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Desember</label>
+                      <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.desember }}">
+                    </div>
+                  </div>
+                  <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Penggajian</button>
+                </form>
+              </div>
+            </section>
+        </c-slot>    
+    {% else %}
+        <c-slot name="content">
+            <c-headingCard judul="Penggajian" deskripsi="Penggajian" heading_image_url="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000"></c-headingCard>
 
-    <c-slot name="content">
-        <c-headingCard judul="Penggajian" deskripsi="Penggajian" heading_image_url="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000"></c-headingCard>
-        <section>
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white">Data Penggajian</h2>
-              <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                Tambah Data
-              </button>
-            </div>
-            <div class="mb-4">
-              <input type="text" id="penggajianSearch" placeholder="Cari data penggajian..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
-            </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">NIK</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Nama</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Jenis</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Jenjang</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Bank</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Gaji Pokok</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tunjangan</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">THR</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Uang Admin</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="penggajianTableBody">
-                  {% for item in data_penggajian %}
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.NIK }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.nama }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.jenis }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.jenjang }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.bank }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.gaji_pokok }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tunjangan }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.THR }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.uang_admin }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">
-                        <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded mr-2">
-                          Update
-                        </button>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-    </c-slot>
+            <!-- Grafik Pengeluaran -->
+            <section class="flex flex-col md:flex-row gap-4 mb-4">
+                <!-- Pie Chart 1: Total Pengeluaran per Jenis -->
+                <div class="w-full md:w-1/2 bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="py-6" id="pie-chart-pengeluaran-jenis"></div>
+                  <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                      <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pengeluaran per Jenis</h5>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">Distribusi pengeluaran berdasarkan jenis</p>
+                      </div>
+                  </div>
+                </div>
+
+                <!-- Card: Total Pengeluaran -->
+                <div class="w-full md:w-1/2 bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="flex flex-col justify-center items-center h-full">
+                      <h5 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Total Pengeluaran</h5>
+                      <p id="total-pengeluaran" class="text-4xl font-bold text-blue-600 dark:text-blue-400"></p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Total pengeluaran untuk penggajian</p>
+                  </div>
+                </div>
+            </section>
+
+            <!-- Table Penggajian -->
+            <section class="mt-4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Penggajian</h2>
+                    <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+                        <div class="mb-4 w-full">
+                            <input type="text" id="penggajianSearch" placeholder="Cari data penggajian..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                        <div class="mb-4 w-full sm:w-auto flex gap-2">
+                            <button data-modal-target="tambah-data-penggajian-modal" data-modal-toggle="tambah-data-penggajian-modal" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                                Tambah
+                            </button>
+                            <div class="relative">
+                                <button id="dropdownPenggajianButton" data-dropdown-toggle="dropdownPenggajian" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                                <div id="dropdownPenggajian" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownPenggajianButton">
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('penggajianTable', 'excel', 'data_penggajian')">Excel</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('penggajianTable', 'csv', 'data_penggajian')">CSV</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('penggajianTable', 'pdf', 'data_penggajian')">PDF</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative overflow-x-auto sm:rounded-lg">
+                        <table id="penggajianTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Karyawan</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Bank</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">No BPJS Kesehatan</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">No BPJS Naker</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Gaji Pokok</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tunjangan</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">THR</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Uang Admin</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Januari</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Februari</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Maret</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">April</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Mei</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Juni</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Juli</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Agustus</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">September</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Oktober</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">November</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Desember</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Pengeluaran Gaji</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="penggajianTableBody">
+                                {% for item in daftar_penggajian %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.karyawan.nama }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.bank }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.no_bpjs_kesehatan }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.no_bpjs_naker }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.gaji_pokok }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tunjangan }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.THR }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.uang_admin }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.januari }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.februari }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.maret }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.april }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.mei }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.juni }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.juli }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.agustus }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.september }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.oktober }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.november }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.desember }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.total_pengeluaran_gaji }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{% url 'penggajian_sptproduk' %}?edit={{ item.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+                                        <a href="{% url 'penggajian_sptproduk' %}?hapus={{ item.id }}" class="text-red-600 hover:underline mr-2">Hapus</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td colspan="22" class="px-6 py-4 text-center">Tidak ada data penggajian</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </c-slot>
+    {% endif %}
 </c-layouts.dashboard>
 
+<script src="{% static 'apexcharts/dist/apexcharts.min.js' %}"></script>
+
 <script>
+
+  function getChartOptions(chartId, labels, series) {
+      return {
+          series: series,
+          chart: {
+              height: 320,
+              width: "100%",
+              type: "pie",
+          },
+          stroke: {
+              colors: ["#fff"]
+          },
+          labels: labels,
+          colors: ['#1C64F2', '#16BDCA', '#9061F9', '#FFA500', '#E74694', '#34D399', '#F87171'],
+          dataLabels: {
+              enabled: true,
+              style: {
+                  fontFamily: "Inter, sans-serif",
+              },
+          },
+          legend: {
+              position: "bottom",
+              fontFamily: "Inter, sans-serif",
+          },
+          yaxis: {
+              labels: {
+                  formatter: function (value) {
+                      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value)
+                  },
+              },
+          },
+          xaxis: {
+              labels: {
+                  formatter: function (value) {
+                      return value
+                  },
+              },
+              axisTicks: {
+                  show: false,
+              },
+              axisBorder: {
+                  show: false,
+              },
+          },
+      }
+  }
+
+  // Data untuk grafik dari context
+  var chartData = {
+      jenis_pengeluaran: {
+          labels: JSON.parse('{{ pengeluaran_per_jenis_labels|safe }}'),
+          series: JSON.parse('{{ pengeluaran_per_jenis_values|safe }}')
+      }
+  };
+
+  // Membuat grafik pie
+  if (document.getElementById("pie-chart-pengeluaran-jenis") && typeof ApexCharts !== 'undefined') {
+      const chart1 = new ApexCharts(document.getElementById("pie-chart-pengeluaran-jenis"), getChartOptions("pie-chart-pengeluaran-jenis", chartData.jenis_pengeluaran.labels, chartData.jenis_pengeluaran.series));
+      chart1.render();
+  }
+
+  // Menampilkan total pengeluaran
+  document.getElementById('total-pengeluaran').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format({{ total_pengeluaran }});
+
   document.getElementById('penggajianSearch').addEventListener('keyup', function() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("penggajianSearch");
@@ -86,6 +317,25 @@
       }
     }
   });
+</script>
+
+<script>
+  function konfirmasiHapus(url, nama) {
+      Swal.fire({
+          title: 'Apakah Anda yakin?',
+          text: `Anda akan menghapus karyawan ${nama}`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, hapus!',
+          cancelButtonText: 'Batal'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              window.location.href = url;
+          }
+      });
+  }
 </script>
 
 {% endblock %}

@@ -2,43 +2,75 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah</h2>
 
-    <div class="mb-4">
-      <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+    <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+      <div class="w-full sm:w-1/2">
+        <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+      </div>
+      <div class="w-full sm:w-auto">
+        <div class="relative">
+          <button id="dropdownSekolahButton" data-dropdown-toggle="dropdownSekolah" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <div id="dropdownSekolah" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSekolahButton">
+              <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'excel', 'data_sekolah')">Excel</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'csv', 'data_sekolah')">CSV</a>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'pdf', 'data_sekolah')">PDF</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
     
     <!-- Table -->
     <div class="overflow-x-auto rounded-lg">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table id="sekolahTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">Nama</th>
-            <th scope="col" class="px-6 py-3">Alamat</th>
-            <th scope="col" class="px-6 py-3">Kontak</th>
-            <th scope="col" class="px-6 py-3">Email</th>
-            <th scope="col" class="px-6 py-3">Jenjang</th>
-            <th scope="col" class="px-6 py-3">Jenis</th>
-            <th scope="col" class="px-6 py-3">Provinsi</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Yayasan</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Sekolah</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
           </tr>
         </thead>
         <tbody id="sekolahTableBody">
           <!-- Table body akan diisi oleh JavaScript -->
           {% for sekolah in daftar_sekolah %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td class="px-6 py-4">{{ sekolah.nama }}</td>
-              <td class="px-6 py-4">{{ sekolah.alamat }}</td>
-              <td class="px-6 py-4">{{ sekolah.kontak }}</td>
-              <td class="px-6 py-4">{{ sekolah.email }}</td>
-              <td class="px-6 py-4">
-                {% for jenjang in sekolah.jenjang.all %}
-                  {{ jenjang.nama }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </td>
-              <td class="px-6 py-4">{{ sekolah.get_jenis_display }}</td>
-              <td class="px-6 py-4">{{ sekolah.provinsi.nama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.tipe_sekolah }}</td>
             </tr>
           {% empty %}
             <tr>
-              <td colspan="7" class="px-6 py-4 text-center">Tidak ada data sekolah</td>
+              <td colspan="13" class="px-6 py-4 text-center">Tidak ada data sekolah</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -47,57 +79,95 @@
   </div>
 </section>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 <script>
+  function exportTable(tableId, format, filename) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    // Ambil header dari baris pertama tabel
+    const headers = Array.from(rows[0].querySelectorAll('th')).map(header => header.textContent.trim());
+    
+    // Ambil data dari baris-baris yang terlihat (tidak disembunyikan oleh filter)
+    const data = rows.slice(1)
+      .filter(row => row.style.display !== 'none')
+      .map(row => Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()));
+    
+    if (format === 'excel' || format === 'csv') {
+      let csvContent = headers.join('\t') + '\n';
+      csvContent += data.map(row => row.join('\t')).join('\n');
+      
+      const blob = new Blob([csvContent], { type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
+      link.click();
+    } else if (format === 'pdf') {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'pt'
+      });
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        columnStyles: {
+          0: {cellWidth: 'auto'},
+          1: {cellWidth: 'auto'},
+          2: {cellWidth: 'auto'},
+          3: {cellWidth: 'auto'},
+          4: {cellWidth: 'auto'},
+          5: {cellWidth: 'auto'},
+          6: {cellWidth: 'auto'},
+          7: {cellWidth: 'auto'},
+          8: {cellWidth: 'auto'},
+          9: {cellWidth: 'auto'},
+          10: {cellWidth: 'auto'},
+          11: {cellWidth: 'auto'},
+          12: {cellWidth: 'auto'},
+        },
+        didDrawPage: function (data) {
+          // Header
+          doc.setFontSize(18);
+          doc.setTextColor(40);
+          doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+        },
+        margin: { top: 30 },
+      });
+      doc.save(`${filename}.pdf`);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const tableBody = document.getElementById('sekolahTableBody');
 
-    // Data dummy untuk sekolah
-    const dummySekolah = [
-      { nama: "SMA Negeri 1", alamat: "Jl. Pendidikan No. 1", kontak: "08123456789", email: "sman1@example.com", jenjang: "SMA", jenis: "Tik", provinsi: "Jawa Barat" },
-      { nama: "SMK Negeri 2", alamat: "Jl. Teknologi No. 2", kontak: "08234567890", email: "smkn2@example.com", jenjang: "SMK", jenis: "Robotik", provinsi: "Jawa Tengah" },
-      { nama: "SMP Negeri 3", alamat: "Jl. Ilmu No. 3", kontak: "08345678901", email: "smpn3@example.com", jenjang: "SMP", jenis: "Tik", provinsi: "Jawa Timur" },
-      { nama: "SD Negeri 4", alamat: "Jl. Dasar No. 4", kontak: "08456789012", email: "sdn4@example.com", jenjang: "SD", jenis: "Tik", provinsi: "DKI Jakarta" },
-      { nama: "SMA Swasta 5", alamat: "Jl. Mandiri No. 5", kontak: "08567890123", email: "smas5@example.com", jenjang: "SMA", jenis: "Robotik", provinsi: "Banten" }
-    ];
-
-    // Fungsi untuk memuat data ke dalam tabel
-    function loadTableData(data) {
-      tableBody.innerHTML = '';
-      data.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4">${item.nama}</td>
-            <td class="px-6 py-4">${item.alamat}</td>
-            <td class="px-6 py-4">${item.kontak}</td>
-            <td class="px-6 py-4">${item.email}</td>
-            <td class="px-6 py-4">${item.jenjang}</td>
-            <td class="px-6 py-4">${item.jenis}</td>
-            <td class="px-6 py-4">${item.provinsi}</td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-
-    // Memuat data awal
-    loadTableData(dummySekolah);
-
     function filterTable() {
       const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
 
-      const filteredData = dummySekolah.filter(item => {
-        return item.nama.toLowerCase().includes(searchTerm) ||
-               item.alamat.toLowerCase().includes(searchTerm) ||
-               item.jenjang.toLowerCase().includes(searchTerm) ||
-               item.jenis.toLowerCase().includes(searchTerm) ||
-               item.provinsi.toLowerCase().includes(searchTerm);
-      });
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
 
-      loadTableData(filteredData);
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
     }
 
     searchInput.addEventListener('input', filterTable);
   });
 </script>
-

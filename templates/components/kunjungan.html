@@ -1,14 +1,40 @@
-
 {% comment %} Section Form Kunjungan {% endcomment %}
 
-{% comment %} {% if kunjunganForm == True %} {% endcomment %}
+
+  
+
+
+{% comment %} Section TTD {% endcomment %}
+
+{% if kunjunganTTD %}
+<section>
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Isi tanda tangan kunjungan dari Kepala Sekolah atau Guru</h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="aksi" value="ttd">
+      <input type="hidden" name="kunjungan_id" value="{{ kunjungan.id }}">
+      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Kunjungan ID:</strong> {{ kunjungan.id }}</p>
+      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Judul:</strong> {{ kunjungan.judul }}</p>
+      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Sekolah:</strong> {{ kunjungan.sekolah }}</p>
+      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Tanggal Kunjungan:</strong> {{ kunjungan.tanggal }}</p>
+      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Deskripsi:</strong> {{ kunjungan.deskripsi }}</p>
+      <c-signature></c-signature>
+      <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:text-base w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        Kirim Tanda Tangan
+      </button>
+    </form>
+  </div>
+</section>
+{% else %}
 <section>
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
       <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Form Kunjungan</h2>
-      <form class="max-w-full mx-auto" method="POST" action="">
+      <form class="max-w-full mx-auto" method="POST">
         {% csrf_token %}
         <!-- Input tersembunyi untuk geolokasi -->
         <input type="hidden" id="geolocation" name="geolocation">
+        <input type="hidden" name="aksi" value="buat">
         
         <div class="mb-4 sm:mb-5">
           <label for="judul" class="block mb-2 text-sm sm:text-base font-medium text-gray-900 dark:text-white">Judul Kunjungan</label>
@@ -35,7 +61,7 @@
           <select id="sekolah" name="sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
             <option value="">Pilih Sekolah</option>
             {% for sekolah in sekolah_list %}
-              <option value="{{ sekolah.id }}">{{ sekolah.nama }}</option>
+              <option value="{{ sekolah.id }}">{{ sekolah }}</option>
             {% endfor %}
           </select>
         </div>
@@ -46,33 +72,7 @@
       </form>
   </div>
 </section>
-{% comment %} {% endif %} {% endcomment %}
-  
-
-
-{% comment %} Section TTD {% endcomment %}
-
-{% comment %} {% if kunjunganTTD == True %} {% endcomment %}
-<section>
-  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Isi tanda tangan kunjungan dari Kepala Sekolah atau Guru</h2>
-    <form action="" method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      <input type="hidden" name="kunjungan_id" value="{{ kunjungan.id }}">
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Kunjungan ID:</strong> {{ kunjungan.id }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Judul:</strong> {{ kunjungan.judul }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Sekolah:</strong> {{ kunjungan.sekolah.nama }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Tanggal Kunjungan:</strong> {{ kunjungan.tanggal }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Deskripsi:</strong> {{ kunjungan.deskripsi }}</p>
-      <c-signature></c-signature>
-      <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:text-base w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Kirim Tanda Tangan
-      </button>
-    </form>
-  </div>
-</section>
-{% comment %} {% endif %} {% endcomment %}
-
+{% endif %}
 <script>
   // Fungsi untuk mendapatkan geolokasi
   function getGeolocation() {

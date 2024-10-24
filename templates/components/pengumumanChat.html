@@ -1,105 +1,108 @@
-<section class="h-[500px] overflow-y-auto rounded-lg p-4 bg-white dark:bg-gray-800">
+<section class="h-[500px] overflow-y-auto rounded-lg p-4 bg-white dark:bg-gray-800" id="chatSection">
     <div class="flex flex-col space-y-4" id="chatContainer">
-        {% for pengumuman in pengumuman_list %}
-        {% if kategori == 'produk' and pengumuman.kategori == 'Produk' %}
-        <div class="flex items-start gap-2.5">
-            <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
-            <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
-                <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ pengumuman.user.username }}</span>
-                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ pengumuman.waktu }}</span>
-                </div>
-                <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ pengumuman.pesan }}</p>
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Kategori: {{ pengumuman.kategori }}</span>
-            </div>
-        </div>
-        {% elif kategori == 'teknisi' and pengumuman.kategori == 'Teknisi' %}
-        <div class="flex items-start gap-2.5">
-            <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
-            <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
-                <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ pengumuman.user.username }}</span>
-                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ pengumuman.waktu }}</span>
-                </div>
-                <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ pengumuman.pesan }}</p>
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Kategori: {{ pengumuman.kategori }}</span>
-            </div>
-        </div>
-        {% elif kategori == 'sales' and pengumuman.kategori == 'Sales' %}
-        <div class="flex items-start gap-2.5">
-            <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
-            <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
-                <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ pengumuman.user.username }}</span>
-                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{{ pengumuman.waktu }}</span>
-                </div>
-                <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">{{ pengumuman.pesan }}</p>
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Kategori: {{ pengumuman.kategori }}</span>
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
+        <!-- Pengumuman akan dirender di sini -->
     </div>
 </section>
 
 <script>
-    // Dummy data untuk pengumuman
-    const pengumuman_list = [
-        {
-            waktu: "09:30",
-            pesan: "Selamat pagi! Hari ini ada pembaruan sistem pada pukul 14:00. Mohon siapkan data Anda sebelum waktu tersebut.",
-            kategori: "Produk",
-            user: { username: "AdminSistem" }
-        },
-        {
-            waktu: "11:15",
-            pesan: "Pengumuman: Rapat tim akan diadakan besok pukul 10:00 di ruang konferensi utama.",
-            kategori: "Teknisi",
-            user: { username: "ManagerTim" }
-        },
-        {
-            waktu: "13:45",
-            pesan: "Perhatian kepada seluruh sales: Target penjualan bulan ini telah diperbarui. Silakan cek dashboard Anda untuk informasi lebih lanjut.",
-            kategori: "Sales",
-            user: { username: "KepalaSales" }
-        },
-        {
-            waktu: "16:20",
-            pesan: "Maintenance server akan dilakukan malam ini pukul 23:00. Mohon simpan pekerjaan Anda sebelum waktu tersebut.",
-            kategori: "Produk",
-            user: { username: "AdminIT" }
-        }
-    ];
+    // Ambil kategori pengumuman dari JSON yang di-parse
+    const kategoriPengumuman = '{{ kategori_pengumuman|escapejs }}';
+    const apiKey = 'NeIbk0mV.PsHGZSs1blcM6JvJCv0v0QPcbezHE9be';
 
     // Fungsi untuk merender pengumuman
-    function renderPengumuman() {
+    function renderPengumuman(pengumuman, prepend = false) {
         const container = document.getElementById('chatContainer');
-        container.innerHTML = ''; // Bersihkan container
-
-        const kategori = '{{ kategori }}'; // Ambil kategori dari konteks Django
-
-        pengumuman_list.forEach(pengumuman => {
-            if ((kategori === 'produk' && pengumuman.kategori === 'Produk') ||
-                (kategori === 'teknisi' && pengumuman.kategori === 'Teknisi') ||
-                (kategori === 'sales' && pengumuman.kategori === 'Sales')) {
-                const pengumumanElement = document.createElement('div');
-                pengumumanElement.className = 'flex items-start gap-2.5';
-                pengumumanElement.innerHTML = `
-                    <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
-                    <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white">${pengumuman.user.username}</span>
-                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">${pengumuman.waktu}</span>
-                        </div>
-                        <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">${pengumuman.pesan}</p>
-                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Kategori: ${pengumuman.kategori}</span>
-                    </div>
-                `;
-                container.appendChild(pengumumanElement);
-            }
-        });
+        const pengumumanElement = document.createElement('div');
+        pengumumanElement.className = 'flex items-start gap-2.5';
+        pengumumanElement.dataset.id = pengumuman.id_chat;
+        
+        // Ubah format waktu menjadi HH.MM
+        const waktuParts = pengumuman.waktu.split(':');
+        const formattedWaktu = `${waktuParts[0]}.${waktuParts[1]}`;
+        
+        pengumumanElement.innerHTML = `
+            <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
+            <div class="flex flex-col w-fit max-w-[80%] leading-1.5 p-2 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
+                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">${pengumuman.user}</span>
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">${formattedWaktu}</span>
+                </div>
+                <p class="text-sm font-normal py-1.5 text-gray-900 dark:text-white break-words whitespace-pre-wrap">${pengumuman.pesan}</p>
+            </div>
+        `;
+        if (prepend) {
+            container.prepend(pengumumanElement);
+        } else {
+            container.appendChild(pengumumanElement);
+        }
     }
 
-    // Panggil fungsi render saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', renderPengumuman);
+    // Fungsi untuk mengambil data pengumuman dari API
+    async function fetchPengumuman() {
+      try {
+          const response = await fetch(`/api/pengumuman/?kategori=${kategoriPengumuman}`, {
+              headers: {
+                  'Authorization': `Api-Key ${apiKey}`
+              }
+          });
+          if (!response.ok) {
+              throw new Error('Gagal mengambil data pengumuman');
+          }
+          const data = await response.json();
+          return data.reverse(); // Membalik urutan data agar yang terbaru di akhir
+      } catch (error) {
+          console.error('Error:', error);
+          return [];
+      }
+  }
+
+    // Fungsi untuk memperbarui pengumuman secara real-time
+    async function updatePengumuman() {
+        const newData = await fetchPengumuman();
+        const container = document.getElementById('chatContainer');
+        const existingIds = Array.from(container.children).map(child => child.dataset.id);
+
+        newData.forEach(pengumuman => {
+            if (!existingIds.includes(pengumuman.id_chat.toString())) {
+                renderPengumuman(pengumuman);
+            }
+        });
+
+        // Scroll ke bagian bawah setelah memperbarui pengumuman
+        scrollToBottom();
+    }
+
+    // Fungsi untuk scroll ke bagian bawah room chat
+    function scrollToBottom() {
+        const chatSection = document.getElementById('chatSection');
+        chatSection.scrollTop = chatSection.scrollHeight;
+    }
+
+    // Panggil fungsi updatePengumuman saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        updatePengumuman().then(() => {
+            // Scroll ke bagian bawah setelah semua pengumuman dirender
+            scrollToBottom();
+        });
+    });
+
+    // Perbarui pengumuman secara real-time menggunakan polling
+    setInterval(updatePengumuman, 5000); // Periksa setiap 5 detik
+
+    // Opsional: Gunakan WebSocket jika tersedia
+    if ('WebSocket' in window) {
+      const socket = new WebSocket(`ws://${window.location.host}/ws/pengumuman/${kategoriPengumuman}/`);
+
+      socket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+          if (data.type === 'new_pengumuman' && data.pengumuman.kategori === kategoriPengumuman) {
+              renderPengumuman(data.pengumuman);
+              scrollToBottom();
+          }
+      };
+
+        socket.onclose = function(e) {
+            console.error('WebSocket ditutup secara tidak terduga');
+        };
+    }
 </script>

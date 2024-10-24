@@ -35,16 +35,32 @@
 </li>
 <li>
   <a href="{% url 'pengumuman_sptproduk' %}"
-      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-700 group {% if request.resolver_match.url_name == 'pengumuman_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'pengumuman_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
       <img src="https://img.icons8.com/?size=100&id=CLuWGSvnuOz9&format=png&color=000000" alt="pengumuman Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
       <span class="flex-1 ms-3 whitespace-nowrap">Pengumuman</span>
   </a>
 </li>
 <li>
+  <a href="{% url 'karyawan_sptproduk' %}"
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'karyawan_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      <img src="https://img.icons8.com/?size=100&id=ecsbFcFA5RS7&format=png&color=000000" alt="Karyawan Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+      <span class="flex-1 ms-3 whitespace-nowrap">Karyawan</span>
+  </a>
+</li>
+<li>
   <a href="{% url 'penggajian_sptproduk' %}"
-      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-700 group {% if request.resolver_match.url_name == 'penggajian_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'penggajian_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
       <img src="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000" alt="penggajian Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
       <span class="flex-1 ms-3 whitespace-nowrap">Penggajian</span>
   </a>
 </li>
+<li>
+  <a href="{% url 'customer_sptproduk' %}"
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'customer_sptproduk' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      <img src="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000" alt="Customer Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+      <span class="flex-1 ms-3 whitespace-nowrap">Customer</span>
+  </a>
+</li>
+
+
 

@@ -12,16 +12,39 @@
         {% comment %} Heading Card {% endcomment %}
         <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard SPT Produk" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
 
-        {% comment %} Pilih Produk {% endcomment %}
+        <!-- Filter Section -->
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
-          <div class="flex flex-wrap justify-between items-center w-full gap-2">
-            <h2 for="produk" class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Pengguna Produk</h2>
-            <select name="produk" id="produk" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="semua">Semua</option>
-              <option value="hafiz">Hafiz</option>
-              <option value="alif">Alif</option>
-            </select>
-          </div>
+            <div class="flex flex-wrap justify-between items-center w-full gap-2">
+                <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+                <div class="flex flex-wrap gap-2">
+                  <form action="" method="get">
+                    <select id="produk_filter" name="produk" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="semua">Semua Produk</option>
+                        {% for produk in daftar_produk %}
+                            <option value="{{ produk.user.username }}" {% if produk.user.username == filter_produk %}selected{% endif %}>{{ produk.user.username }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="semua">Semua Bulan</option>
+                        <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
+                        <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
+                        <option value="maret" {% if filter_bulan == 'maret' %}selected{% endif %}>Maret</option>
+                        <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
+                        <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
+                        <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
+                        <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
+                        <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
+                        <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
+                        <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
+                        <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
+                        <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+                    </select>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Filter
+                    </button>
+                  </form>
+                </div>
+            </div>
         </section>
 
         {% comment %} Grafik Sekolah {% endcomment %}
@@ -58,83 +81,91 @@
 
         {% comment %} List Sekolah {% endcomment %}
         <c-tableSekolah></c-tableSekolah>
-        
-        {% comment %} Pilih Bulan {% endcomment %}
-        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
-          <div class="flex flex-wrap justify-between items-center w-full gap-2">
-            <h2 for="bulan" class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Bulan</h2>
-            <select name="bulan" id="bulan" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="semua">Semua</option>
-              <option value="januari">Januari</option>
-              <option value="februari">Februari</option>
-              <option value="maret">Maret</option>
-              <option value="april">April</option>
-              <option value="mei">Mei</option>
-              <option value="juni">Juni</option>
-              <option value="juli">Juli</option>
-              <option value="agustus">Agustus</option>
-              <option value="september">September</option>
-              <option value="oktober">Oktober</option>
-              <option value="november">November</option>
-              <option value="desember">Desember</option>
-            </select>
-          </div>
-        </section>
 
-        {% comment %} Jumlah Sekolah Dikunjungi/Dikontak {% endcomment %}
+        {% comment %} Jumlah Kunjungan Produk {% endcomment %}
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
-              <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Sekolah Dikunjungi Icon" class="w-8 h-8 mr-2">
+              <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
-                <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Sekolah Dikunjungi</h3>
-                <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ sekolah_dikunjungi }}</p>
+                <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan</h3>
+                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan }}</p>
                 <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
               </div>
             </div>
             <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
-              <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Sekolah Dikontak Icon" class="w-8 h-8 mr-2">
+              <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
-                <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Sekolah Dikontak</h3>
-                <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ sekolah_dikontak }}</p>
+                <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak</h3>
+                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak }}</p>
                 <p class="text-sm text-blue-600 dark:text-blue-400">Bulan ini</p>
               </div>
             </div>
-            <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
-              <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Sekolah Belum Dikunjungi/Dikontak Icon" class="w-8 h-8 mr-2">
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+              <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
-                <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
-                <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ sekolah_belum_dikunjungi_dikontak }}</p>
-                <p class="text-sm text-red-600 dark:text-red-400">Bulan ini</p>
+                <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
+                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi }}</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
               </div>
             </div>
           </div>
         </section>
 
-        {% comment %} Riwayat Kunjungan {% endcomment %}
+        {% comment %} Riwayat Kunjungan Produk {% endcomment %}
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan</h2>
-            <div class="mb-4">
-              <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Produk</h2>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="kunjunganSearch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari riwayat kunjungan...">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownKunjunganButton" data-dropdown-toggle="dropdownKunjungan" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  <div id="dropdownKunjungan" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKunjunganButton">
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'excel', 'riwayat_kunjungan_produk')">Excel</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'csv', 'riwayat_kunjungan_produk')">CSV</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'pdf', 'riwayat_kunjungan_produk')">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+              <table id="riwayatKunjunganTable" class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Nama Sekolah</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal Kunjungan</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Teknisi</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Judul</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Deskripsi</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Produk</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
                   </tr>
                 </thead>
-                <tbody id="kunjunganTableBody">
+                <tbody id="riwayatKunjunganTableBody">
                   {% for item in riwayat_kunjungan %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.nama_sekolah }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal_kunjungan }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.teknisi }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama }}</td>
                       <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah }}</td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -146,156 +177,225 @@
 </c-layouts.dashboard>
 
 <script src="{% static 'apexcharts/dist/apexcharts.min.js' %}"></script>
-<script src="{% static 'apexcharts/dist/apexcharts.js' %}"></script>
 <script>
-    const getChartOptions1 = () => {
-      return {
-        series: [52.8, 26.8, 20.4],
-        colors: ["#1C64F2", "#16BDCA", "#9061F9"],
-        chart: {
-          height: 420,
-          width: "100%",
-          type: "pie",
-        },
-        stroke: {
-          colors: ["white"],
-          lineCap: "",
-        },
-        plotOptions: {
-          pie: {
-            labels: {
-              show: true,
-            },
-            size: "100%",
-            dataLabels: {
-              offset: -25
-            }
+  const totalPerJenjang = JSON.parse("{{ total_per_jenjang|escapejs }}");
+  const totalSiswaPerJenjang = JSON.parse("{{ total_siswa_per_jenjang|escapejs }}");
+  const daftarJenjang = JSON.parse("{{ daftar_jenjang|escapejs }}");
+
+  const getChartOptions1 = () => {
+    return {
+      series: totalPerJenjang,
+      labels: daftarJenjang,
+      colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500"],
+      chart: {
+        height: 420,
+        width: "100%",
+        type: "pie",
+      },
+      stroke: {
+        colors: ["white"],
+        lineCap: "",
+      },
+      plotOptions: {
+        pie: {
+          labels: {
+            show: true,
           },
+          size: "100%",
+          dataLabels: {
+            offset: -25
+          }
         },
-        labels: ["Direct", "Organic search", "Referrals"],
-        dataLabels: {
-          enabled: true,
-          style: {
-            fontFamily: "Inter, sans-serif",
-          },
-        },
-        legend: {
-          position: "bottom",
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
           fontFamily: "Inter, sans-serif",
         },
-        yaxis: {
-          labels: {
-            formatter: function (value) {
-              return value + "%"
-            },
+      },
+      legend: {
+        position: "bottom",
+        fontFamily: "Inter, sans-serif",
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Sekolah"
           },
         },
-        xaxis: {
-          labels: {
-            formatter: function (value) {
-              return value  + "%"
-            },
-          },
-          axisTicks: {
-            show: false,
-          },
-          axisBorder: {
-            show: false,
+      },
+      xaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Sekolah"
           },
         },
-      }
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+      },
     }
+  }
 
-    const getChartOptions2 = () => {
-      return {
-        series: [52.8, 26.8, 20.4],
-        colors: ["#1C64F2", "#16BDCA", "#9061F9"],
-        chart: {
-          height: 420,
-          width: "100%",
-          type: "pie",
-        },
-        stroke: {
-          colors: ["white"],
-          lineCap: "",
-        },
-        plotOptions: {
-          pie: {
-            labels: {
-              show: true,
-            },
-            size: "100%",
-            dataLabels: {
-              offset: -25
-            }
+  const getChartOptions2 = () => {
+    return {
+      series: totalSiswaPerJenjang,
+      labels: daftarJenjang,
+      colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500"],
+      chart: {
+        height: 420,
+        width: "100%",
+        type: "pie",
+      },
+      stroke: {
+        colors: ["white"],
+        lineCap: "",
+      },
+      plotOptions: {
+        pie: {
+          labels: {
+            show: true,
           },
+          size: "100%",
+          dataLabels: {
+            offset: -25
+          }
         },
-        labels: ["Direct", "Organic search", "Referrals"],
-        dataLabels: {
-          enabled: true,
-          style: {
-            fontFamily: "Inter, sans-serif",
-          },
-        },
-        legend: {
-          position: "bottom",
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
           fontFamily: "Inter, sans-serif",
         },
-        yaxis: {
-          labels: {
-            formatter: function (value) {
-              return value + "%"
-            },
+      },
+      legend: {
+        position: "bottom",
+        fontFamily: "Inter, sans-serif",
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Siswa"
           },
         },
-        xaxis: {
-          labels: {
-            formatter: function (value) {
-              return value  + "%"
-            },
-          },
-          axisTicks: {
-            show: false,
-          },
-          axisBorder: {
-            show: false,
+      },
+      xaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Siswa"
           },
         },
-      }
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+      },
     }
+  }
 
-    if (document.getElementById("pie-chart1") && typeof ApexCharts !== 'undefined') {
-      const chart = new ApexCharts(document.getElementById("pie-chart1"), getChartOptions1());
-      chart.render();
-    }
+  if (document.getElementById("pie-chart1") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart1"), getChartOptions1());
+    chart.render();
+  }
 
-    if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
-      const chart = new ApexCharts(document.getElementById("pie-chart2"), getChartOptions2());
-      chart.render();
-    }
+  if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart2"), getChartOptions2());
+    chart.render();
+  }
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 <script>
-  document.getElementById('kunjunganSearch').addEventListener('keyup', function() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("kunjunganSearch");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("kunjunganTableBody");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
+  function exportTable(tableId, format, filename) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    // Ambil header dari baris pertama tabel
+    const headers = Array.from(rows[0].querySelectorAll('th')).map(header => header.textContent.trim());
+    
+    // Ambil data dari baris-baris yang terlihat (tidak disembunyikan oleh filter)
+    const data = rows.slice(1)
+      .filter(row => row.style.display !== 'none')
+      .map(row => Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()));
+    
+    if (format === 'excel' || format === 'csv') {
+      let csvContent = headers.join('\t') + '\n';
+      csvContent += data.map(row => row.join('\t')).join('\n');
+      
+      const blob = new Blob([csvContent], { type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
+      link.click();
+    } else if (format === 'pdf') {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'pt'
+      });
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        columnStyles: {
+          0: {cellWidth: 'auto'},
+          1: {cellWidth: 'auto'},
+          2: {cellWidth: 'auto'},
+          3: {cellWidth: 'auto'},
+          4: {cellWidth: 'auto'},
+          5: {cellWidth: 'auto'},
+        },
+        didDrawPage: function (data) {
+          // Header
+          doc.setFontSize(18);
+          doc.setTextColor(40);
+          doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+        },
+        margin: { top: 30 },
+      });
+      doc.save(`${filename}.pdf`);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('kunjunganSearch');
+    const tableBody = document.getElementById('riwayatKunjunganTableBody');
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
         }
+
+        row.style.display = shouldShow ? '' : 'none';
       }
     }
+
+    searchInput.addEventListener('input', filterTable);
   });
 </script>
 
 
 
 {% endblock %}
+

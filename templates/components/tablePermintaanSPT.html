@@ -1,8 +1,14 @@
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
+    
+    <!-- Input pencarian -->
+    <div class="mb-4">
+      <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari di semua kolom...">
+    </div>
+    
     <div class="relative overflow-x-auto sm:rounded-lg">
-      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table id="sptTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" class="px-6 py-3">Judul</th>
@@ -10,10 +16,11 @@
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Kategori</th>
             <th scope="col" class="px-6 py-3">File</th>
+            <th scope="col" class="px-6 py-3">Aksi</th>
           </tr>
         </thead>
         <tbody>
-          {% for permintaan in permintaan_spt %}
+          {% for permintaan in daftar_permintaan %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ permintaan.judul }}
@@ -45,42 +52,26 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const tableBody = document.querySelector('tbody');
-    
-    // Data dummy untuk permintaan SPT
-    const dummyPermintaanSPT = [
-      { judul: "Permintaan SPT untuk Proyek A", ket: "Diperlukan untuk presentasi ke klien", status: "menunggu", kategori: "produk", file: null },
-      { judul: "SPT Pelatihan Karyawan Baru", ket: "Untuk program orientasi bulan depan", status: "diterima", kategori: "teknisi", file: "file1.pdf" },
-      { judul: "Permintaan SPT Kunjungan Pabrik", ket: "Untuk tim quality control", status: "ditolak", kategori: "sales", file: null },
-      { judul: "SPT Perjalanan Dinas Luar Kota", ket: "Meeting dengan supplier di Surabaya", status: "menunggu", kategori: "sales", file: "file2.pdf" },
-      { judul: "Permintaan SPT Seminar Teknologi", ket: "Untuk divisi IT", status: "diterima", kategori: "teknisi", file: null }
-    ];
-    
-    // Fungsi untuk memuat data dummy ke dalam tabel
-    function loadDummyData() {
-      tableBody.innerHTML = '';
-      dummyPermintaanSPT.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              ${item.judul}
-            </td>
-            <td class="px-6 py-4">${item.ket}</td>
-            <td class="px-6 py-4">${item.status}</td>
-            <td class="px-6 py-4">${item.kategori}</td>
-            <td class="px-6 py-4">
-              ${item.file ? `<a href="#" class="text-blue-600 hover:underline">Lihat File</a>` : 'Tidak ada file'}
-            </td>
-            <td class="px-6 py-4">
-              <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-            </td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-    
-    // Memuat data dummy
-    loadDummyData();
+    const searchInput = document.getElementById('searchInput');
+    const table = document.getElementById('sptTable');
+    const rows = table.getElementsByTagName('tr');
+
+    searchInput.addEventListener('keyup', function() {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      for (let i = 1; i < rows.length; i++) {
+        let rowVisible = false;
+        const cells = rows[i].getElementsByTagName('td');
+
+        for (let j = 0; j < cells.length; j++) {
+          if (cells[j].textContent.toLowerCase().indexOf(searchTerm) > -1) {
+            rowVisible = true;
+            break;
+          }
+        }
+
+        rows[i].style.display = rowVisible ? '' : 'none';
+      }
+    });
   });
 </script>

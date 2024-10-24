@@ -1,0 +1,548 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Sales">
+    <c-slot name="sidebar">
+        <c-sidebar.sptsales></c-sidebar.sptsales>
+    </c-slot>
+
+    
+    {% if edit == True %}
+      <c-slot name="content">
+        <c-headingCard judul="Edit Pembayaran" deskripsi="Edit pembayaran" heading_image_url="https://img.icons8.com/?size=100&id=JQX2fDPyQq4E&format=png&color=000000"></c-headingCard>
+        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <form method="POST" action="{% url 'pembayaran_sptsales' %}?edit={{ pembayaran.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="pembayaran_id" value="{{ pembayaran.id }}">
+            
+            <div class="grid grid-cols-1 gap-4">
+              <div>
+                <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
+                <input type="text" id="nama_sekolah_input_edit" name="nama_sekolah_baru" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ pembayaran.nama_sekolah }}" readonly>
+              </div>
+              <div>
+                <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
+                <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  <option value="">Pilih Jenjang</option>
+                  <option value="SD" {% if pembayaran.jenjang == "SD" %}selected{% endif %}>SD</option>
+                  <option value="SMP" {% if pembayaran.jenjang == "SMP" %}selected{% endif %}>SMP</option>
+                  <option value="SMA" {% if pembayaran.jenjang == "SMA" %}selected{% endif %}>SMA</option>
+                  <option value="SMK" {% if pembayaran.jenjang == "SMK" %}selected{% endif %}>SMK</option>
+                </select>
+              </div>
+              <div>
+                <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
+                <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  {% for value, label in JENIS_PRODUK_CHOICES %}
+                    <option value="{{ value }}" {% if value == pembayaran.jenis_produk %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div id="status_div_edit" class="{% if pembayaran.nama_sekolah not in daftar_sekolah %}{% endif %}">
+                <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                <select id="status_edit" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  {% for value, label in STATUS_CHOICES %}
+                    <option value="{{ value }}" {% if value == pembayaran.status %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Januari</label>
+                <input type="number" id="januari" name="januari" value="{{ pembayaran.januari }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Februari</label>
+                <input type="number" id="februari" name="februari" value="{{ pembayaran.februari }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Maret</label>
+                <input type="number" id="maret" name="maret" value="{{ pembayaran.maret }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">April</label>
+                <input type="number" id="april" name="april" value="{{ pembayaran.april }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mei</label>
+                <input type="number" id="mei" name="mei" value="{{ pembayaran.mei }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juni</label>
+                <input type="number" id="juni" name="juni" value="{{ pembayaran.juni }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juli</label>
+                <input type="number" id="juli" name="juli" value="{{ pembayaran.juli }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Agustus</label>
+                <input type="number" id="agustus" name="agustus" value="{{ pembayaran.agustus }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">September</label>
+                <input type="number" id="september" name="september" value="{{ pembayaran.september }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Oktober</label>
+                <input type="number" id="oktober" name="oktober" value="{{ pembayaran.oktober }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">November</label>
+                <input type="number" id="november" name="november" value="{{ pembayaran.november }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Desember</label>
+                <input type="number" id="desember" name="desember" value="{{ pembayaran.desember }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+            </div>
+            <input type="hidden" name="tipe_pembayaran" value="{{ pembayaran.tipe_pembayaran }}">
+            <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan</button>
+            <button type="button" onclick="window.history.back()" class="mt-4 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batal</button>
+          </form>
+          
+        </div>
+      </c-slot>
+    {% else %}
+      <c-slot name="content">
+          <c-headingCard judul="Pembayaran" deskripsi="Daftar pembayaran" heading_image_url="https://img.icons8.com/?size=100&id=JQX2fDPyQq4E&format=png&color=000000"></c-headingCard>
+          
+          <!-- Filter Section -->
+          <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+              <div class="flex flex-wrap justify-between items-center w-full gap-2">
+                  <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+                  <div class="flex flex-wrap gap-2">
+                      <select id="sales_filter" name="sales" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option value="semua">Semua Sales</option>
+                          {% for sales in daftar_sales %}
+                              <option value="{{ sales.user.username }}" {% if sales.user.username == sales_filter %}selected{% endif %}>{{ sales.user.username }}</option>
+                          {% endfor %}
+                      </select>
+                      <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                          <option value="semua">Semua Bulan</option>
+                          <option value="januari" {% if bulan_filter == 'januari' %}selected{% endif %}>Januari</option>
+                          <option value="februari" {% if bulan_filter == 'februari' %}selected{% endif %}>Februari</option>
+                          <option value="maret" {% if bulan_filter == 'maret' %}selected{% endif %}>Maret</option>
+                          <option value="april" {% if bulan_filter == 'april' %}selected{% endif %}>April</option>
+                          <option value="mei" {% if bulan_filter == 'mei' %}selected{% endif %}>Mei</option>
+                          <option value="juni" {% if bulan_filter == 'juni' %}selected{% endif %}>Juni</option>
+                          <option value="juli" {% if bulan_filter == 'juli' %}selected{% endif %}>Juli</option>
+                          <option value="agustus" {% if bulan_filter == 'agustus' %}selected{% endif %}>Agustus</option>
+                          <option value="september" {% if bulan_filter == 'september' %}selected{% endif %}>September</option>
+                          <option value="oktober" {% if bulan_filter == 'oktober' %}selected{% endif %}>Oktober</option>
+                          <option value="november" {% if bulan_filter == 'november' %}selected{% endif %}>November</option>
+                          <option value="desember" {% if bulan_filter == 'desember' %}selected{% endif %}>Desember</option>
+                      </select>
+                      <button id="apply_filter" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                          Filter
+                      </button>
+                  </div>
+              </div>
+          </section>
+
+          <!-- Grafik Pembayaran -->
+          <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <!-- Pie Chart 1: Total Pembayaran per Jenis dari Omset -->
+              <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="py-6" id="pie-chart-omset-jenis"></div>
+                  <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                      <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pembayaran per Jenis (Omset)</h5>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">Distribusi pembayaran berdasarkan jenis produk</p>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Pie Chart 2: Total Pembayaran per Jenis dari Pemasukan -->
+              <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="py-6" id="pie-chart-pemasukan-jenis"></div>
+                  <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                      <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pembayaran per Jenis (Pemasukan)</h5>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">Distribusi pemasukan berdasarkan jenis produk</p>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <!-- Pie Chart 3: Total Pembayaran per Status dari Omset -->
+              <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="py-6" id="pie-chart-omset-status"></div>
+                  <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                      <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pembayaran per Status (Omset)</h5>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">Distribusi pembayaran berdasarkan status sekolah</p>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Pie Chart 4: Total Pembayaran per Status dari Pemasukan -->
+              <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+                  <div class="py-6" id="pie-chart-pemasukan-status"></div>
+                  <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                      <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pembayaran per Status (Pemasukan)</h5>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">Distribusi pemasukan berdasarkan status sekolah</p>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+
+          <!-- Tabel Pembayaran Omset -->
+          <section class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4">
+              <h2 class="text-xl font-bold mb-4">Pembayaran Omset</h2>
+              <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                  <div class="w-full sm:w-1/2">
+                      <input type="text" id="omsetSearch" placeholder="Cari pembayaran omset..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  </div>
+                  <div class="flex flex-col sm:flex-row gap-2">
+                      <div class="relative">
+                          <button id="dropdownOmsetButton" data-dropdown-toggle="dropdownOmset" class="w-full sm:w-auto text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                              Ekspor 
+                              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                          </button>
+                          <div id="dropdownOmset" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownOmsetButton">
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('omsetTable', 'excel', 'pembayaran_omset')">Excel</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('omsetTable', 'csv', 'pembayaran_omset')">CSV</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('omsetTable', 'pdf', 'pembayaran_omset')">PDF</a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                      <button data-modal-target="tambah-pembayaran-omset-modal" data-modal-toggle="tambah-pembayaran-omset-modal" class="w-full sm:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                          Tambah
+                      </button>
+                  </div>
+              </div>
+              <div class="relative overflow-x-auto">
+                  <table id="omsetTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jan</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Feb</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Mar</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Apr</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Mei</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jun</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jul</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Agu</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Sep</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Okt</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Nov</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Des</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Total</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                          </tr>
+                      </thead>
+                      <tbody id="omsetTableBody">
+                          {% for pembayaran in pembayaran_omset %}
+                          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.januari|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.februari|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.maret|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.april|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.mei|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.juni|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.juli|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.agustus|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.september|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.oktober|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.november|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.desember|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                  <a href="?edit={{ pembayaran.id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                  <a href="?delete={{ pembayaran.id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</a>
+                              </td>
+                              
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </section>
+
+
+          <!-- Tabel Pembayaran Pemasukan -->
+          <section class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4">
+              <h2 class="text-xl font-bold mb-4">Pembayaran Pemasukan</h2>
+              <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                  <div class="w-full sm:w-1/2">
+                      <input type="text" id="pemasukanSearch" placeholder="Cari pembayaran pemasukan..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  </div>
+                  <div class="flex flex-col sm:flex-row gap-2">
+                      <div class="relative">
+                          <button id="dropdownPemasukanButton" data-dropdown-toggle="dropdownPemasukan" class="w-full sm:w-auto text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                              Ekspor 
+                              <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                          </button>
+                          <div id="dropdownPemasukan" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownPemasukanButton">
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pemasukanTable', 'excel', 'pembayaran_pemasukan')">Excel</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pemasukanTable', 'csv', 'pembayaran_pemasukan')">CSV</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pemasukanTable', 'pdf', 'pembayaran_pemasukan')">PDF</a>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                      <button data-modal-target="tambah-pembayaran-pemasukan-modal" data-modal-toggle="tambah-pembayaran-pemasukan-modal" class="w-full sm:w-auto text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                          Tambah
+                      </button>
+                  </div>
+              </div>
+              <div class="relative overflow-x-auto">
+                  <table id="pemasukanTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jan</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Feb</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Mar</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Apr</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Mei</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jun</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Jul</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Agu</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Sep</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Okt</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Nov</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Des</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Total</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                          </tr>
+                      </thead>
+                      <tbody id="pemasukanTableBody">
+                          {% for pembayaran in pembayaran_pemasukan %}
+                          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.januari|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.februari|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.maret|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.april|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.mei|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.juni|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.juli|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.agustus|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.september|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.oktober|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.november|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.desember|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">
+                                  <a href="?edit={{ pembayaran.id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                  <a href="?delete={{ pembayaran.id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</a>
+                              </td>
+                              
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </section>
+      </c-slot>
+    {% endif %}
+</c-layouts.dashboard>
+
+{% include 'components/modals/pembayaranModal.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    function getChartOptions(chartId, labels, series) {
+        return {
+            series: series,
+            chart: {
+                height: 320,
+                width: "100%",
+                type: "pie",
+            },
+            stroke: {
+                colors: ["#fff"]
+            },
+            labels: labels,
+            colors: ['#1C64F2', '#16BDCA', '#9061F9', '#FFA500', '#E74694', '#34D399', '#F87171'],
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontFamily: "Inter, sans-serif",
+                },
+            },
+            legend: {
+                position: "bottom",
+                fontFamily: "Inter, sans-serif",
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return value
+                    },
+                },
+            },
+            xaxis: {
+                labels: {
+                    formatter: function (value) {
+                        return value
+                    },
+                },
+                axisTicks: {
+                    show: false,
+                },
+                axisBorder: {
+                    show: false,
+                },
+            },
+        }
+    }
+
+    // Parse chart data from Django context
+    var chartData = JSON.parse('{{ chart_data|safe }}');
+
+    // Create pie charts
+    if (document.getElementById("pie-chart-omset-jenis") && typeof ApexCharts !== 'undefined') {
+        const chart1 = new ApexCharts(document.getElementById("pie-chart-omset-jenis"), getChartOptions("pie-chart-omset-jenis", chartData.jenis_produk_omset.labels, chartData.jenis_produk_omset.series));
+        chart1.render();
+    }
+
+    if (document.getElementById("pie-chart-pemasukan-jenis") && typeof ApexCharts !== 'undefined') {
+        const chart2 = new ApexCharts(document.getElementById("pie-chart-pemasukan-jenis"), getChartOptions("pie-chart-pemasukan-jenis", chartData.jenis_produk_pemasukan.labels, chartData.jenis_produk_pemasukan.series));
+        chart2.render();
+    }
+
+    if (document.getElementById("pie-chart-omset-status") && typeof ApexCharts !== 'undefined') {
+        const chart3 = new ApexCharts(document.getElementById("pie-chart-omset-status"), getChartOptions("pie-chart-omset-status", chartData.status_omset.labels, chartData.status_omset.series));
+        chart3.render();
+    }
+
+    if (document.getElementById("pie-chart-pemasukan-status") && typeof ApexCharts !== 'undefined') {
+        const chart4 = new ApexCharts(document.getElementById("pie-chart-pemasukan-status"), getChartOptions("pie-chart-pemasukan-status", chartData.status_pemasukan.labels, chartData.status_pemasukan.series));
+        chart4.render();
+    }
+
+    // Fungsi untuk menerapkan filter
+    document.getElementById('apply_filter').addEventListener('click', function() {
+        var salesFilter = document.getElementById('sales_filter').value;
+        var bulanFilter = document.getElementById('bulan_filter').value;
+        window.location.href = '?sales=' + salesFilter + '&bulan=' + bulanFilter;
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+    function exportTable(tableId, format, filename) {
+        var table = document.getElementById(tableId);
+        var rows = Array.from(table.querySelectorAll('tr'));
+        
+        var data = rows.map(row => {
+            return Array.from(row.querySelectorAll('th,td')).map(cell => cell.textContent);
+        });
+        
+        if (format === 'csv') {
+            var csvContent = data.map(row => row.join(',')).join('\n');
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement("a");
+            if (link.download !== undefined) {
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename + ".csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } else if (format === 'excel') {
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, filename + ".xlsx");
+        } else if (format === 'pdf') {
+            var doc = new jspdf.jsPDF('l', 'pt', 'a4');
+            doc.autoTable({
+                head: [data[0]],
+                body: data.slice(1),
+                startY: 20,
+                styles: { fontSize: 8 },
+                columnStyles: { 0: { cellWidth: 100 } },
+                margin: { top: 20 },
+            });
+            doc.save(filename + ".pdf");
+        }
+    }
+</script>
+
+<script>
+    function setupSearch(inputId, tableBodyId) {
+        document.getElementById(inputId).addEventListener('keyup', function() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById(inputId);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableBodyId);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupSearch('omsetSearch', 'omsetTableBody');
+        setupSearch('pemasukanSearch', 'pemasukanTableBody');
+    });
+</script>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+

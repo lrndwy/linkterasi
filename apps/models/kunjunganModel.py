@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from apps.models.mainModel import *
 
-from .penggunaModel import *
-from .sekolahModel import *
 
 STATUS_CHOICES = [
     ("menunggu", "Menunggu"),
@@ -15,7 +14,7 @@ JUDUL_PRODUK_CHOICES = [
 ]
 
 JUDUL_TEKNISI_CHOICES = [
-  ("kunjungan rutin", "Kunjungan Rutin"),
+  ("maintenance", "Maintenance"),
   ("trouble shooting", "Trouble Shooting"),
 ]
 
@@ -25,7 +24,7 @@ class kunjungan_produk(models.Model):
     geolocation = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="menunggu")
     tanggal = models.DateField(max_length=255)
-    sekolah = models.ForeignKey(sekolah, on_delete=models.CASCADE, related_name="kunjungan_produk")
+    sekolah = models.ForeignKey(master, on_delete=models.CASCADE, related_name="kunjungan_produk")
     produk = models.ForeignKey(produk, on_delete=models.CASCADE, related_name="kunjungan_produk")
     ttd = models.FileField(null=True, blank=True, upload_to="ttd/")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,7 +46,7 @@ class kunjungan_teknisi(models.Model):
     geolocation = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="menunggu")
     tanggal = models.DateField(max_length=255)
-    sekolah = models.ForeignKey(sekolah, on_delete=models.CASCADE, related_name="kunjungan_teknisi")
+    sekolah = models.ForeignKey(master, on_delete=models.CASCADE, related_name="kunjungan_teknisi")
     teknisi = models.ForeignKey(teknisi, on_delete=models.CASCADE, related_name="kunjungan_teknisi")
     ttd = models.FileField(null=True, blank=True, upload_to="ttd/")
     user = models.ForeignKey(User, on_delete=models.CASCADE)

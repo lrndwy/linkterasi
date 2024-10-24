@@ -8,7 +8,84 @@
 
     <c-slot name="content">
         <c-headingCard judul="Saran" deskripsi="Daftar saran" heading_image_url="https://img.icons8.com/?size=100&id=outGJp6v2Y0y&format=png&color=000000"></c-headingCard>
-        <c-sTable></c-sTable>
+
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Saran</h2>
+        
+            <div class="mb-4">
+              <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+            </div>
+            
+            <!-- Table -->
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Judul</th>
+                    <th scope="col" class="px-6 py-3">Keterangan</th>
+                    <th scope="col" class="px-6 py-3">Kategori</th>
+                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                    <th scope="col" class="px-6 py-3">File</th>
+                    <th scope="col" class="px-6 py-3">Sekolah</th>
+                  </tr>
+                </thead>
+                <tbody id="saranTableBody">
+                  {% for saran in daftar_saran %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4">{{ saran.judul }}</td>
+                      <td class="px-6 py-4">{{ saran.keterangan }}</td>
+                      <td class="px-6 py-4">{{ saran.kategori }}</td>
+                      <td class="px-6 py-4">{{ saran.tanggal }}</td>
+                      <td class="px-6 py-4">
+                        {% if saran.file %}
+                          <a href="{{ saran.file.url }}" class="text-blue-600 hover:underline">Lihat File</a>
+                        {% else %}
+                          Tidak ada file
+                        {% endif %}
+                      </td>
+                      <td class="px-6 py-4">{{ saran.sekolah }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="6" class="px-6 py-4 text-center">Tidak ada data saran</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tableBody = document.getElementById('saranTableBody');
+        
+            function filterTable() {
+              const searchTerm = searchInput.value.toLowerCase();
+              const rows = tableBody.getElementsByTagName('tr');
+        
+              for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
+                let shouldShow = false;
+        
+                for (let j = 0; j < cells.length; j++) {
+                  const cellText = cells[j].textContent.toLowerCase();
+                  if (cellText.includes(searchTerm)) {
+                    shouldShow = true;
+                    break;
+                  }
+                }
+        
+                row.style.display = shouldShow ? '' : 'none';
+              }
+            }
+        
+            searchInput.addEventListener('input', filterTable);
+          });
+        </script>
     </c-slot>
 </c-layouts.dashboard>
 {% endblock %}

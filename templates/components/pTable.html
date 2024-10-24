@@ -22,11 +22,10 @@
           </tr>
         </thead>
         <tbody id="permintaanTableBody">
-          <!-- Table body akan diisi oleh JavaScript -->
           {% for permintaan in daftar_permintaan %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <td class="px-6 py-4">{{ permintaan.judul }}</td>
-              <td class="px-6 py-4">{{ permintaan.deskripsi }}</td>
+              <td class="px-6 py-4">{{ permintaan.keterangan }}</td>
               <td class="px-6 py-4">{{ permintaan.kategori }}</td>
               <td class="px-6 py-4">{{ permintaan.tanggal }}</td>
               <td class="px-6 py-4">{{ permintaan.status }}</td>
@@ -40,7 +39,11 @@
               <td class="px-6 py-4">{{ permintaan.sekolah }}</td>
               <td class="px-6 py-4">
                 {% if permintaan.status == 'menunggu' %}
-                  <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Proses</button>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="permintaan_id" value="{{ permintaan.id }}">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Proses</button>
+                  </form>
                 {% endif %}
               </td>
             </tr>
@@ -60,53 +63,25 @@
     const searchInput = document.getElementById('searchInput');
     const tableBody = document.getElementById('permintaanTableBody');
 
-    // Data dummy untuk permintaan
-    const dummyPermintaan = [
-      { judul: "Permintaan Produk Baru", deskripsi: "Meminta produk versi terbaru", kategori: "produk", tanggal: "2023-11-01", status: "menunggu", file: null, sekolah: "SMA Negeri 1" },
-      { judul: "Permintaan Layanan Khusus", deskripsi: "Membutuhkan layanan tambahan", kategori: "layanan", tanggal: "2023-11-02", status: "diproses", file: "file1.pdf", sekolah: "SMK Negeri 2" },
-      { judul: "Permintaan Upgrade Sistem", deskripsi: "Upgrade sistem ke versi terbaru", kategori: "produk", tanggal: "2023-11-03", status: "menunggu", file: null, sekolah: "SMP Negeri 3" },
-      { judul: "Permintaan Konsultasi", deskripsi: "Konsultasi penggunaan produk", kategori: "layanan", tanggal: "2023-11-04", status: "disetujui", file: "file2.pdf", sekolah: "SD Negeri 4" },
-      { judul: "Permintaan Pelatihan", deskripsi: "Pelatihan untuk tim", kategori: "layanan", tanggal: "2023-11-05", status: "menunggu", file: null, sekolah: "SMA Negeri 5" }
-    ];
-
-    // Fungsi untuk memuat data ke dalam tabel
-    function loadTableData(data) {
-      tableBody.innerHTML = '';
-      data.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4">${item.judul}</td>
-            <td class="px-6 py-4">${item.deskripsi}</td>
-            <td class="px-6 py-4">${item.kategori}</td>
-            <td class="px-6 py-4">${item.tanggal}</td>
-            <td class="px-6 py-4">${item.status}</td>
-            <td class="px-6 py-4">
-              ${item.file ? `<a href="#" class="text-blue-600 hover:underline">Lihat File</a>` : 'Tidak ada file'}
-            </td>
-            <td class="px-6 py-4">${item.sekolah}</td>
-            <td class="px-6 py-4">
-              ${item.status === 'menunggu' ? `<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Proses</button>` : ''}
-            </td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-
-    // Memuat data awal
-    loadTableData(dummyPermintaan);
-
     function filterTable() {
       const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
 
-      const filteredData = dummyPermintaan.filter(item => {
-        return item.judul.toLowerCase().includes(searchTerm) ||
-               item.deskripsi.toLowerCase().includes(searchTerm) ||
-               item.kategori.toLowerCase().includes(searchTerm) ||
-               item.sekolah.toLowerCase().includes(searchTerm);
-      });
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
 
-      loadTableData(filteredData);
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
     }
 
     searchInput.addEventListener('input', filterTable);

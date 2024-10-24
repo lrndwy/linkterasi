@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Produk">
+    <c-slot name="sidebar">
+        <c-sidebar.sptproduk></c-sidebar.sptproduk>
+    </c-slot>
+
+    
+    {% if edit == True %}
+        <c-slot name="content">
+            <c-headingCard judul="Karyawan" deskripsi="Daftar karyawan" heading_image_url="https://img.icons8.com/?size=100&id=ecsbFcFA5RS7&format=png&color=000000"></c-headingCard>
+            <div class="p-4 bg-white dark:bg-gray-800 rounded-lg">
+              <form method="POST" action="{% url 'karyawan_sptproduk' %}?edit={{ karyawan.id }}">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="NIK" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIK</label>
+                    <input type="text" id="NIK" name="NIK" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.NIK }}">
+                  </div>
+                  <div>
+                    <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
+                    <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.nama }}">
+                  </div>
+                  <div>
+                    <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat</label>
+                    <input type="text" id="alamat" name="alamat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.alamat }}">
+                  </div>
+                  <div>
+                    <label for="jenis" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis</label>
+                    <select id="jenis" name="jenis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                      <option value="">Pilih Jenis</option>
+                      <option value="guru profesional" {% if karyawan.jenis == 'guru profesional' %}selected{% endif %}>Guru Profesional</option>
+                      <option value="guru bulanan" {% if karyawan.jenis == 'guru bulanan' %}selected{% endif %}>Guru Bulanan</option>
+                      <option value="guru ekstrakurikuler" {% if karyawan.jenis == 'guru ekstrakurikuler' %}selected{% endif %}>Guru Ekstrakurikuler</option>
+                      <option value="korlap" {% if karyawan.jenis == 'korlap' %}selected{% endif %}>Korlap</option>
+                      <option value="teknisi" {% if karyawan.jenis == 'teknisi' %}selected{% endif %}>Teknisi</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sekolah</label>
+                    <input type="text" id="sekolah" name="sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.sekolah }}">
+                  </div>
+                  <div>
+                    <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
+                    <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                      <option value="">Pilih Jenjang</option>
+                      <option value="SD" {% if karyawan.jenjang == 'SD' %}selected{% endif %}>SD</option>
+                      <option value="SMP" {% if karyawan.jenjang == 'SMP' %}selected{% endif %}>SMP</option>
+                      <option value="SMA" {% if karyawan.jenjang == 'SMA' %}selected{% endif %}>SMA</option>
+                      <option value="SMK" {% if karyawan.jenjang == 'SMK' %}selected{% endif %}>SMK</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="gaji_pokok" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gaji Pokok</label>
+                    <input type="number" id="gaji_pokok" name="gaji_pokok" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.gaji_pokok }}">
+                  </div>
+                  <div>
+                    <label for="tunjangan_nakes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan Nakes</label>
+                    <input type="number" id="tunjangan_nakes" name="tunjangan_nakes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_nakes }}">
+                  </div>
+                  <div>
+                    <label for="tunjangan_naker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan Naker</label>
+                    <input type="number" id="tunjangan_naker" name="tunjangan_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_naker }}">
+                  </div>
+                  <div>
+                    <label for="uang_admin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uang Admin</label>
+                    <input type="number" id="uang_admin" name="uang_admin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_admin }}">
+                  </div>
+                  <div>
+                    <label for="uang_bonus_hari_raya" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uang Bonus Hari Raya</label>
+                    <input type="number" id="uang_bonus_hari_raya" name="uang_bonus_hari_raya" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_bonus_hari_raya }}">
+                  </div>
+                  <div>
+                    <label for="bank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank</label>
+                    <input type="text" id="bank" name="bank" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.bank }}">
+                  </div>
+                  <div>
+                    <label for="no_rekening" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Rekening</label>
+                    <input type="text" id="no_rekening" name="no_rekening" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.no_rekening }}">
+                  </div>
+                </div>
+                
+                
+                <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Karyawan</button>
+              </form>
+            </div>
+        </c-slot>    
+    {% else %}
+        <c-slot name="content">
+            <c-headingCard judul="Karyawan" deskripsi="Daftar karyawan" heading_image_url="https://img.icons8.com/?size=100&id=ecsbFcFA5RS7&format=png&color=000000"></c-headingCard>
+            
+            <!-- Tabel Karyawan -->
+            <section class="mt-4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Karyawan</h2>
+                    <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+                        <div class="mb-4 w-full">
+                            <input type="text" id="karyawanSearch" placeholder="Cari data karyawan..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        </div>
+                        <div class="mb-4 w-full sm:w-auto flex gap-2">
+                            <button data-modal-target="tambah-data-karyawan-modal" data-modal-toggle="tambah-data-karyawan-modal" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                                Tambah
+                            </button>
+                            <div class="relative">
+                                <button id="dropdownKaryawanButton" data-dropdown-toggle="dropdownKaryawan" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                    </svg>
+                                </button>
+                                <div id="dropdownKaryawan" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKaryawanButton">
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('karyawanTable', 'excel', 'data_karyawan')">Excel</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('karyawanTable', 'csv', 'data_karyawan')">CSV</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('karyawanTable', 'pdf', 'data_karyawan')">PDF</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative overflow-x-auto sm:rounded-lg">
+                        <table id="karyawanTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">NIK</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Alamat</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Sekolah</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Gaji Pokok</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tunjangan Nakes</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tunjangan Naker</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Uang Admin</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Uang Bonus Hari Raya</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Bank</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">No Rekening</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="karyawanTableBody">
+                                {% for karyawan in daftar_karyawan %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.NIK }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.nama }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.alamat }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenis }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.sekolah }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenjang }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.gaji_pokok }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_nakes }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_naker }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_admin }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_bonus_hari_raya }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.bank }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.no_rekening }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{% url 'karyawan_sptproduk' %}?edit={{ karyawan.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+                                        <a href="{% url 'karyawan_sptproduk' %}?hapus={{ karyawan.id }}" class="text-red-600 hover:underline">Hapus</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td colspan="13" class="px-6 py-4 text-center">Tidak ada data karyawan</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </c-slot>
+    {% endif %}
+</c-layouts.dashboard>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function exportTable(tableId, format, filename) {
+        var table = document.getElementById(tableId);
+        var rows = Array.from(table.querySelectorAll('tr'));
+        
+        var data = rows.map(row => {
+            return Array.from(row.querySelectorAll('th,td')).slice(0, -1).map(cell => cell.textContent);
+        });
+        
+        if (format === 'csv') {
+            var csvContent = data.map(row => row.join(',')).join('\n');
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement("a");
+            if (link.download !== undefined) {
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename + ".csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } else if (format === 'excel') {
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, filename + ".xlsx");
+        } else if (format === 'pdf') {
+            var doc = new jspdf.jsPDF('l', 'pt'); // Ubah orientasi ke landscape
+            doc.autoTable({
+                head: [data[0]],
+                body: data.slice(1),
+                startY: 20,
+                styles: { fontSize: 8, cellPadding: 2, halign: 'center' }, // Tambahkan halign: 'center' untuk posisi teks di tengah
+                columnStyles: {
+                    0: {cellWidth: 50},  // NIK
+                    1: {cellWidth: 70},  // Nama
+                    2: {cellWidth: 80},  // Alamat
+                    3: {cellWidth: 60},  // Jenis
+                    4: {cellWidth: 70},  // Sekolah
+                    5: {cellWidth: 40},  // Jenjang
+                    6: {cellWidth: 50},  // Gaji Pokok
+                    7: {cellWidth: 50},  // Tunjangan Nakes
+                    8: {cellWidth: 50},  // Tunjangan Naker
+                    9: {cellWidth: 50},  // Uang Admin
+                    10: {cellWidth: 60}, // Uang Bonus Hari Raya
+                    11: {cellWidth: 50}, // Bank
+                    12: {cellWidth: 60},  // No Rekening
+                },
+                didDrawPage: function (data) {
+                    doc.setFontSize(14);
+                    doc.text('Data Karyawan', 40, 15);
+                }
+            });
+            doc.save(filename + ".pdf");
+        }
+    }
+
+    function setupSearch(inputId, tableBodyId) {
+        document.getElementById(inputId).addEventListener('keyup', function() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById(inputId);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableBodyId);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupSearch('karyawanSearch', 'karyawanTableBody');
+    });
+</script>
+{% endblock %}

@@ -9,10 +9,11 @@
             <th scope="col" class="px-6 py-3">Deskripsi</th>
             <th scope="col" class="px-6 py-3">Tanggal</th>
             <th scope="col" class="px-6 py-3">Sales</th>
+            <th scope="col" class="px-6 py-3">Sekolah</th>
           </tr>
         </thead>
         <tbody>
-          {% for kegiatan in kegiatan_list %}
+          {% for kegiatan in daftar_kegiatan %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ kegiatan.judul }}
@@ -20,6 +21,7 @@
             <td class="px-6 py-4">{{ kegiatan.deskripsi }}</td>
             <td class="px-6 py-4">{{ kegiatan.tanggal }}</td>
             <td class="px-6 py-4">{{ kegiatan.sales }}</td>
+            <td class="px-6 py-4">{{ kegiatan.sekolah }}</td>
           </tr>
           {% empty %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -35,35 +37,5 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.querySelector('tbody');
-    
-    // Data dummy untuk kegiatan
-    const dummyKegiatan = [
-      { judul: "Meeting dengan Klien A", deskripsi: "Presentasi produk baru", tanggal: "2023-06-15", sales: "John Doe" },
-      { judul: "Kunjungan Pabrik", deskripsi: "Inspeksi fasilitas produksi", tanggal: "2023-06-18", sales: "Jane Smith" },
-      { judul: "Pelatihan Tim Sales", deskripsi: "Workshop teknik penjualan", tanggal: "2023-06-20", sales: "Mike Johnson" },
-      { judul: "Pameran Industri", deskripsi: "Booth produk terbaru", tanggal: "2023-06-25", sales: "Sarah Brown" },
-      { judul: "Negosiasi Kontrak", deskripsi: "Finalisasi kesepakatan dengan Perusahaan B", tanggal: "2023-06-30", sales: "Tom Wilson" }
-    ];
-    
-    // Fungsi untuk memuat data dummy ke dalam tabel
-    function loadDummyData() {
-      tableBody.innerHTML = '';
-      dummyKegiatan.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              ${item.judul}
-            </td>
-            <td class="px-6 py-4">${item.deskripsi}</td>
-            <td class="px-6 py-4">${item.tanggal}</td>
-            <td class="px-6 py-4">${item.sales}</td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-    
-    // Memuat data dummy
-    loadDummyData();
   });
 </script>

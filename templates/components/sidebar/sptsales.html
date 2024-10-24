@@ -6,13 +6,6 @@
   </a>
 </li>
 <li>
-    <a href="{% url 'jadwal_sptsales' %}"
-        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'jadwal_sptsales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
-        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Jadwal Kegiatan Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-        <span class="ms-3">Jadwal Kegiatan</span>
-    </a>
-</li>
-<li>
     <a href="{% url 'sptpermintaan_sptsales' %}"
         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'sptpermintaan_sptsales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
         <img src="https://img.icons8.com/?size=100&id=LdBR9a3vFiwK&format=png&color=000000" alt="Permintaan SPT Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
@@ -25,4 +18,26 @@
         <img src="https://img.icons8.com/?size=100&id=CLuWGSvnuOz9&format=png&color=000000" alt="pengumuman Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
         <span class="flex-1 ms-3 whitespace-nowrap">Pengumuman</span>
     </a>
+</li>
+
+<li>
+    <a href="{% url 'pembayaran_sptsales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'pembayaran_sptsales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=JQX2fDPyQq4E&format=png&color=000000" alt="Pembayaran Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="flex-1 ms-3 whitespace-nowrap">Pembayaran</span>
+    </a>
+</li>
+<li>
+    <a href="{% url 'adendum_sptsales' %}"
+        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'adendum_sptsales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+        <img src="https://img.icons8.com/?size=100&id=VAWRtFeMYjrX&format=png&color=000000" alt="Adendum Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+        <span class="flex-1 ms-3 whitespace-nowrap">Adendum</span>
+    </a>
+</li>
+<li>
+  <a href="{% url 'customer_sptsales' %}"
+      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {% if request.resolver_match.url_name == 'customer_sptsales' %}bg-gray-100 dark:bg-gray-700{% endif %}">
+      <img src="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000" alt="Customer Icon" class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+      <span class="flex-1 ms-3 whitespace-nowrap">Customer</span>
+  </a>
 </li>

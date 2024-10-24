@@ -47,7 +47,6 @@ urlpatterns = [
     path("sales/jadwal/", salesViews.jadwal, name="jadwal_sales"),
     path("sales/sptpermintaan/", salesViews.sptpermintaan, name="sptpermintaan_sales"),
     path("sales/pengumuman/", salesViews.pengumuman, name="pengumuman_sales"),
-    path("sales/omset/", salesViews.omset, name="omset_sales"),
     
     # SPT Teknisi
     path("spt/teknisi/", sptteknisiViews.index, name="sptteknisi"),
@@ -56,7 +55,7 @@ urlpatterns = [
     path("spt/teknisi/saran/", sptteknisiViews.saran, name="saran_sptteknisi"),
     path("spt/teknisi/sptpermintaan/", sptteknisiViews.sptpermintaan, name="sptpermintaan_sptteknisi"),
     path("spt/teknisi/pengumuman/", sptteknisiViews.pengumuman, name="pengumuman_sptteknisi"),
-    
+    path("spt/teknisi/customer/", sptteknisiViews.customer, name="customer_sptteknisi"),
     # SPT Produk
     path("spt/produk/", sptprodukViews.index, name="sptproduk"),
     path("spt/produk/komplain/", sptprodukViews.komplain, name="komplain_sptproduk"),
@@ -64,16 +63,22 @@ urlpatterns = [
     path("spt/produk/saran/", sptprodukViews.saran, name="saran_sptproduk"),
     path("spt/produk/sptpermintaan/", sptprodukViews.sptpermintaan, name="sptpermintaan_sptproduk"),
     path("spt/produk/pengumuman/", sptprodukViews.pengumuman, name="pengumuman_sptproduk"),
+    path("spt/produk/karyawan/", sptprodukViews.karyawan, name="karyawan_sptproduk"),
     path("spt/produk/penggajian/", sptprodukViews.penggajian, name="penggajian_sptproduk"),
+    path("spt/produk/customer/", sptprodukViews.customer, name="customer_sptproduk"),
     
     # SPT Sales
     path("spt/sales/", sptsalesViews.index, name="sptsales"),
-    path("spt/sales/jadwal/", sptsalesViews.jadwal, name="jadwal_sptsales"),
     path("spt/sales/sptpermintaan/", sptsalesViews.sptpermintaan, name="sptpermintaan_sptsales"),
     path("spt/sales/pengumuman/", sptsalesViews.pengumuman, name="pengumuman_sptsales"),
-    
+    path("spt/sales/customer/", sptsalesViews.customer, name="customer_sptsales"),
+    path("spt/sales/pembayaran/", sptsalesViews.pembayaran, name="pembayaran_sptsales"),
+    path("spt/sales/adendum/", sptsalesViews.adendum, name="adendum_sptsales"),
+
+     
     # Main
     path("", mainViews.index, name="index"),
-    path("login/", mainViews.login, name="login"),
+    path("login/", mainViews.login_view, name="login"),
+    path("logout/", mainViews.logout_view, name="logout"),
     path("testing/", mainViews.testing, name="testing"),
 ]

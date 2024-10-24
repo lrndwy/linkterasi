@@ -1,12 +1,40 @@
+<section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+  <div class="flex flex-wrap justify-between items-center w-full gap-2">
+      <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+      <div class="flex flex-wrap gap-2">
+        <form action="" method="get">
+          <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="semua">Semua Bulan</option>
+              <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
+              <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
+              <option value="maret" {% if filter_bulan == 'maret' %}selected{% endif %}>Maret</option>
+              <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
+              <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
+              <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
+              <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
+              <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
+              <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
+              <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
+              <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
+              <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+          </select>
+          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              Filter
+          </button>
+        </form>
+      </div>
+  </div>
+</section>
+
 <section>
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan</h2>
-    <div class="grid grid-col sm:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Rutin Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Maintenance Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
-          <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Kunjungan Rutin</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ kunjungan_rutin }}</p>
+          <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Maintenance</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ maintenance }}</p>
           <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
         </div>
       </div>
@@ -18,18 +46,26 @@
           <p class="text-sm text-red-600 dark:text-red-400">Bulan ini</p>
         </div>
       </div>
-      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Kunjungan Icon" class="w-8 h-8 mr-2">
+      <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+        <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
-          <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Kunjungan</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_kunjungan }}</p>
+          <h3 class="text-base sm:text-xl font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi }}</p>
+          <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
+        </div>
+      </div>
+      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
+        <div class="ml-2">
+          <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Sekolah</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah }}</p>
         </div>
       </div>
       <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Komputer Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
-          <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Sekolah</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_sekolah }}</p>
+          <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Komputer</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_komputer }}</p>
         </div>
       </div>
     </div>
@@ -38,7 +74,7 @@
 
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Teknisi</h2>
+    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan</h2>
     <div class="mb-4">
       <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
     </div>
@@ -51,10 +87,11 @@
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Tanggal</th>
             <th scope="col" class="px-6 py-3">Sekolah</th>
+            <th scope="col" class="px-6 py-3">TTD</th>
           </tr>
         </thead>
         <tbody id="kunjunganTableBody">
-          {% for kunjungan in kunjungan_teknisi %}
+          {% for kunjungan in daftar_kunjungan %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ kunjungan.judul }}
@@ -62,11 +99,18 @@
             <td class="px-6 py-4">{{ kunjungan.deskripsi }}</td>
             <td class="px-6 py-4">{{ kunjungan.status }}</td>
             <td class="px-6 py-4">{{ kunjungan.tanggal }}</td>
-            <td class="px-6 py-4">{{ kunjungan.sekolah.nama }}</td>
+            <td class="px-6 py-4">{{ kunjungan.sekolah }}</td>
+            <td class="px-6 py-4">
+              {% if kunjungan.ttd %}
+                <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
+              {% else %}
+                Tidak ada tanda tangan
+              {% endif %}
+            </td>
           </tr>
           {% empty %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td colspan="5" class="px-6 py-4 text-center">Tidak ada data kunjungan teknisi</td>
+            <td colspan="6" class="px-6 py-4 text-center">Tidak ada data kunjungan</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -75,44 +119,81 @@
   </div>
 </section>
 
-<c-tablePermintaanSPT></c-tablePermintaanSPT>
+<section class="mt-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
+    
+    <!-- Input pencarian -->
+    <div class="mb-4">
+      <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari di semua kolom...">
+    </div>
+    
+    <div class="relative overflow-x-auto sm:rounded-lg">
+      <table id="sptTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Judul</th>
+            <th scope="col" class="px-6 py-3">Keterangan</th>
+            <th scope="col" class="px-6 py-3">Status</th>
+            <th scope="col" class="px-6 py-3">Kategori</th>
+            <th scope="col" class="px-6 py-3">File</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for permintaan in daftar_permintaan_spt %}
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+              {{ permintaan.judul }}
+            </td>
+            <td class="px-6 py-4">{{ permintaan.ket }}</td>
+            <td class="px-6 py-4">{{ permintaan.status }}</td>
+            <td class="px-6 py-4">{{ permintaan.kategori }}</td>
+            <td class="px-6 py-4">
+              {% if permintaan.file %}
+                <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>
+              {% else %}
+                Tidak ada file
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td colspan="5" class="px-6 py-4 text-center">Tidak ada data permintaan SPT</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const tableBody = document.querySelector('#kunjunganTableBody');
-    
-    // Data dummy untuk kunjungan teknisi
-    const dummyKunjunganTeknisi = [
-      { judul: "Kunjungan Rutin", deskripsi: "Pemeriksaan rutin perangkat", status: "selesai", tanggal: "2023-06-15", sekolah: "SMA Negeri 1" },
-      { judul: "Trouble Shooting", deskripsi: "Perbaikan jaringan", status: "menunggu", tanggal: "2023-06-18", sekolah: "SMK Swasta 2" },
-      { judul: "Kunjungan Rutin", deskripsi: "Pembaruan software", status: "selesai", tanggal: "2023-06-20", sekolah: "SMP Negeri 3" },
-      { judul: "Trouble Shooting", deskripsi: "Perbaikan hardware", status: "menunggu", tanggal: "2023-06-25", sekolah: "SD Swasta 4" },
-      { judul: "Kunjungan Rutin", deskripsi: "Pelatihan penggunaan alat baru", status: "selesai", tanggal: "2023-06-30", sekolah: "SMA Negeri 5" }
-    ];
-    
-    // Fungsi untuk memuat data dummy ke dalam tabel
-    function loadDummyData() {
-      tableBody.innerHTML = '';
-      dummyKunjunganTeknisi.forEach(item => {
-        const row = `
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              ${item.judul}
-            </td>
-            <td class="px-6 py-4">${item.deskripsi}</td>
-            <td class="px-6 py-4">${item.status}</td>
-            <td class="px-6 py-4">${item.tanggal}</td>
-            <td class="px-6 py-4">${item.sekolah}</td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-    
-    // Memuat data dummy
-    loadDummyData();
-  });
+    const searchInput = document.getElementById('searchInput');
+    const table = document.getElementById('sptTable');
+    const rows = table.getElementsByTagName('tr');
 
+    searchInput.addEventListener('keyup', function() {
+      const searchTerm = searchInput.value.toLowerCase();
+
+      for (let i = 1; i < rows.length; i++) {
+        let rowVisible = false;
+        const cells = rows[i].getElementsByTagName('td');
+
+        for (let j = 0; j < cells.length; j++) {
+          if (cells[j].textContent.toLowerCase().indexOf(searchTerm) > -1) {
+            rowVisible = true;
+            break;
+          }
+        }
+
+        rows[i].style.display = rowVisible ? '' : 'none';
+      }
+    });
+  });
+</script>
+
+<script>
   document.getElementById('kunjunganSearch').addEventListener('keyup', function() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("kunjunganSearch");

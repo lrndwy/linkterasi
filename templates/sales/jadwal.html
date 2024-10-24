@@ -16,7 +16,13 @@
               {% csrf_token %}
               <div class="mb-4 sm:mb-5">
                 <label for="judul" class="block mb-2 text-sm sm:text-base font-medium text-gray-900 dark:text-white">Judul</label>
-                <input type="text" id="judul" name="judul" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Judul" required>
+                <select id="judul" name="judul" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  <option value="">Pilih Judul</option>
+                  <option value="Kunjungan Sekolah Baru">Kunjungan Sekolah Baru</option>
+                  <option value="Kunjungan Sekolah Existing">Kunjungan Sekolah Existing</option>
+                  <option value="Kunjungan Sekolah Event">Kunjungan Sekolah Event</option>
+                  <option value="Pertemuan Client">Pertemuan Client</option>
+                </select>
               </div>
               
               <div class="mb-4 sm:mb-5">
@@ -27,6 +33,16 @@
               <div class="mb-4 sm:mb-5">
                 <label for="tanggal" class="block mb-2 text-sm sm:text-base font-medium text-gray-900 dark:text-white">Tanggal</label>
                 <input type="date" id="tanggal" name="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+              </div>
+
+              <div class="mb-4 sm:mb-5">
+                <label for="sekolah" class="block mb-2 text-sm sm:text-base font-medium text-gray-900 dark:text-white">Sekolah</label>
+                <select id="sekolah" name="sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  <option value="">Pilih Sekolah</option>
+                  {% for sekolah in daftar_sekolah %}
+                    <option value="{{ sekolah.id }}">{{ sekolah }}</option>
+                  {% endfor %}
+                </select>
               </div>
               
               <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:text-base w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-2">

@@ -31,45 +31,33 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat</h2>
     <div class="mb-4">
-      <input type="text" id="kspSearch" placeholder="Cari riwayat Komplain, Permintaan, atau Saran..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+      <input type="text" id="kspSearch" placeholder="Cari riwayat Komplain, Permintaan, atau Saran..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm sm:text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Judul</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Keterangan</th>
             <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Kategori</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Jenis</th>
             <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal</th>
             <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
+            <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">File</th>
           </tr>
         </thead>
         <tbody id="kspTableBody">
-          <!-- {% for item in ksp_history %}
+          {% for ksp in ksp_history %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
-              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.kategori }}</td>
-              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
-              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.judul }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.keterangan }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.kategori }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.jenis }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.tanggal }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.status }}</td>
+              <td class="px-3 sm:px-6 py-2 sm:py-4">{{ ksp.file }}</td>
             </tr>
-          {% endfor %} -->
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Komplain Jaringan Lambat</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Komplain</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-15</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Menunggu</td>
-          </tr>
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Permintaan Perangkat Baru</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Permintaan</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-10</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Disetujui</td>
-          </tr>
-          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Saran Peningkatan Keamanan</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Saran</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">2023-11-05</td>
-            <td class="px-3 sm:px-6 py-2 sm:py-4">Ditinjau</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
@@ -78,19 +66,22 @@
 
 <script>
   document.getElementById('kspSearch').addEventListener('keyup', function() {
-    var input, filter, table, tr, td, i, txtValue;
+    var input, filter, table, tr, td, i, j, txtValue;
     input = document.getElementById("kspSearch");
     filter = input.value.toUpperCase();
     table = document.getElementById("kspTableBody");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
+      td = tr[i].getElementsByTagName("td");
+      for (j = 0; j < td.length; j++) {
+        if (td[j]) {
+          txtValue = td[j].textContent || td[j].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } else {
+            tr[i].style.display = "none";
+          }
         }
       }
     }

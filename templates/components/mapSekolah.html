@@ -9,57 +9,14 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Inisialisasi peta dan set tampilan awal
-    var map = L.map('map').setView([-2.548926, 118.0148634], 5); // Koordinat pusat Indonesia
+    var map = L.map('map').setView([-2.548926, 118.0148634], 5);
 
-    // Tambahkan layer peta dari OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Data provinsi dan sekolah
-    var dataProvinsi = [
-      { nama: "Nanggroe Aceh Darussalam", koordinat: [4.695135, 96.749397], sekolah: ["Sekolah A", "Sekolah B", "Sekolah C"], ibukota: "Banda Aceh" },
-      { nama: "Sumatera Utara", koordinat: [2.124970, 99.545032], sekolah: ["Sekolah D", "Sekolah E", "Sekolah F"], ibukota: "Medan" },
-      { nama: "Sumatera Barat", koordinat: [-0.739940, 100.800004], sekolah: ["Sekolah G", "Sekolah H", "Sekolah I"], ibukota: "Padang" },
-      { nama: "Riau", koordinat: [0.293347, 101.706825], sekolah: ["Sekolah J", "Sekolah K", "Sekolah L"], ibukota: "Pekanbaru" },
-      { nama: "Jambi", koordinat: [-1.485148, 102.438057], sekolah: ["Sekolah M", "Sekolah N", "Sekolah O"], ibukota: "Jambi" },
-      { nama: "Sumatera Selatan", koordinat: [-3.319437, 103.914399], sekolah: ["Sekolah P", "Sekolah Q", "Sekolah R"], ibukota: "Palembang" },
-      { nama: "Bengkulu", koordinat: [-3.792845, 102.260764], sekolah: ["Sekolah S", "Sekolah T", "Sekolah U"], ibukota: "Bengkulu" },
-      { nama: "Lampung", koordinat: [-4.558700, 105.406807], sekolah: ["Sekolah V", "Sekolah W", "Sekolah X"], ibukota: "Bandar Lampung" },
-      { nama: "Kepulauan Bangka Belitung", koordinat: [-2.741480, 106.440727], sekolah: ["Sekolah Y", "Sekolah Z", "Sekolah AA"], ibukota: "Pangkal Pinang" },
-      { nama: "Kepulauan Riau", koordinat: [3.945651, 108.142951], sekolah: ["Sekolah AB", "Sekolah AC", "Sekolah AD"], ibukota: "Tanjung Pinang" },
-      { nama: "DKI Jakarta", koordinat: [-6.200000, 106.816666], sekolah: ["Sekolah AE", "Sekolah AF", "Sekolah AG"], ibukota: "Jakarta" },
-      { nama: "Jawa Barat", koordinat: [-6.914744, 107.609810], sekolah: ["Sekolah AH", "Sekolah AI", "Sekolah AJ"], ibukota: "Bandung" },
-      { nama: "Jawa Tengah", koordinat: [-7.150975, 110.140259], sekolah: ["Sekolah AK", "Sekolah AL", "Sekolah AM"], ibukota: "Semarang" },
-      { nama: "DI Yogyakarta", koordinat: [-7.795580, 110.369490], sekolah: ["Sekolah AN", "Sekolah AO", "Sekolah AP"], ibukota: "Yogyakarta" },
-      { nama: "Jawa Timur", koordinat: [-7.536064, 112.238402], sekolah: ["Sekolah AQ", "Sekolah AR", "Sekolah AS"], ibukota: "Surabaya" },
-      { nama: "Banten", koordinat: [-6.446008, 106.137571], sekolah: ["Sekolah AT", "Sekolah AU", "Sekolah AV"], ibukota: "Serang" },
-      { nama: "Bali", koordinat: [-8.409518, 115.188916], sekolah: ["Sekolah AW", "Sekolah AX", "Sekolah AY"], ibukota: "Denpasar" },
-      { nama: "Nusa Tenggara Barat", koordinat: [-8.652933, 117.361649], sekolah: ["Sekolah AZ", "Sekolah BA", "Sekolah BB"], ibukota: "Mataram" },
-      { nama: "Nusa Tenggara Timur", koordinat: [-8.657382, 121.079370], sekolah: ["Sekolah BC", "Sekolah BD", "Sekolah BE"], ibukota: "Kupang" },
-      { nama: "Kalimantan Barat", koordinat: [-0.278781, 111.475285], sekolah: ["Sekolah BF", "Sekolah BG", "Sekolah BH"], ibukota: "Pontianak" },
-      { nama: "Kalimantan Tengah", koordinat: [-1.681488, 113.382355], sekolah: ["Sekolah BI", "Sekolah BJ", "Sekolah BK"], ibukota: "Palangkaraya" },
-      { nama: "Kalimantan Selatan", koordinat: [-3.092642, 115.283760], sekolah: ["Sekolah BL", "Sekolah BM", "Sekolah BN"], ibukota: "Banjarbaru" },
-      { nama: "Kalimantan Timur", koordinat: [0.538659, 116.419389], sekolah: ["Sekolah BO", "Sekolah BP", "Sekolah BQ"], ibukota: "Samarinda" },
-      { nama: "Kalimantan Utara", koordinat: [3.073153, 116.041210], sekolah: ["Sekolah BR", "Sekolah BS", "Sekolah BT"], ibukota: "Tanjung Selor" },
-      { nama: "Sulawesi Utara", koordinat: [0.624693, 123.974998], sekolah: ["Sekolah BU", "Sekolah BV", "Sekolah BW"], ibukota: "Manado" },
-      { nama: "Sulawesi Tengah", koordinat: [-1.430025, 121.445618], sekolah: ["Sekolah BX", "Sekolah BY", "Sekolah BZ"], ibukota: "Palu" },
-      { nama: "Sulawesi Selatan", koordinat: [-3.668790, 119.974052], sekolah: ["Sekolah CA", "Sekolah CB", "Sekolah CC"], ibukota: "Makassar" },
-      { nama: "Sulawesi Tenggara", koordinat: [-4.144910, 122.174605], sekolah: ["Sekolah CD", "Sekolah CE", "Sekolah CF"], ibukota: "Kendari" },
-      { nama: "Gorontalo", koordinat: [0.556174, 123.058548], sekolah: ["Sekolah CG", "Sekolah CH", "Sekolah CI"], ibukota: "Gorontalo" },
-      { nama: "Sulawesi Barat", koordinat: [-2.844137, 119.232078], sekolah: ["Sekolah CJ", "Sekolah CK", "Sekolah CL"], ibukota: "Mamuju" },
-      { nama: "Maluku", koordinat: [-3.238462, 130.145273], sekolah: ["Sekolah CM", "Sekolah CN", "Sekolah CO"], ibukota: "Ambon" },
-      { nama: "Maluku Utara", koordinat: [1.570999, 127.808769], sekolah: ["Sekolah CP", "Sekolah CQ", "Sekolah CR"], ibukota: "Sofifi" },
-      { nama: "Papua Barat", koordinat: [-1.336115, 133.174716], sekolah: ["Sekolah CS", "Sekolah CT", "Sekolah CU"], ibukota: "Manokwari" },
-      { nama: "Papua", koordinat: [-4.269928, 138.080353], sekolah: ["Sekolah CV", "Sekolah CW", "Sekolah CX"], ibukota: "Jayapura" },
-      { nama: "Papua Tengah", koordinat: [-3.3977, 135.4951], sekolah: ["Sekolah CY", "Sekolah CZ", "Sekolah DA"], ibukota: "Nabire" },
-      { nama: "Papua Pegunungan", koordinat: [-4.0699, 138.7879], sekolah: ["Sekolah DB", "Sekolah DC", "Sekolah DD"], ibukota: "Jayawijaya" },
-      { nama: "Papua Selatan", koordinat: [-7.6145, 139.5370], sekolah: ["Sekolah DE", "Sekolah DF", "Sekolah DG"], ibukota: "Merauke" },
-      { nama: "Papua Barat Daya", koordinat: [-1.8711, 132.2784], sekolah: ["Sekolah DH", "Sekolah DI", "Sekolah DJ"], ibukota: "Sorong" }
-    ];
+    var dataProvinsi = {{ provinsi_sekolah|safe }};
 
-    // Fungsi untuk membuat marker dan popup
     dataProvinsi.forEach(function(provinsi) {
       var marker = L.marker(provinsi.koordinat).addTo(map);
       var sekolahList = "<ul class='list-disc pl-5'>";

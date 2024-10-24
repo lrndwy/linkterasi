@@ -2,7 +2,7 @@
     <div class="fixed top-0 left-0 right-0 flex items-start justify-center pointer-events-none mt-4" style="z-index: 100;">
         <div class="max-w-xs w-full">
             {% for message in messages %}
-                <div id="toast-{{ message.tags|default:'default' }}" class="flex items-center w-full p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 pointer-events-auto animate-slide-in-down" role="alert">
+                <div id="toast-{{ message.tags|default:'default' }}" class="flex items-center w-full p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-lg dark:text-gray-400 dark:bg-gray-800 pointer-events-auto animate-slide-in-down" role="alert">
                     <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg
                         {% if message.tags == 'success' %}
                             text-green-500 bg-green-100 dark:bg-green-800 dark:text-green-200
