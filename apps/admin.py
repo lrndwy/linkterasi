@@ -36,7 +36,6 @@ class masterAdmin(ModelAdmin):
         "jenis_produk",
         "pembayaran",
         "harga_buku",
-        "tipe_sekolah",
     )
     compressed_fields = True
     warn_unsaved_form = True
@@ -46,6 +45,32 @@ class masterAdmin(ModelAdmin):
         "jenis_kerjasama": lambda content: content.strip(),
     }
 
+
+@admin.register(master_ekstrakulikuler)
+class master_ekstrakulikulerAdmin(ModelAdmin):
+    list_display = (
+        "no_mou",
+        "nama_yayasan",
+        "kepala_yayasan",
+        "nama_sekolah",
+        "nama_kepsek",
+        "provinsi",
+        "jenjang",
+        "awal_kerjasama",
+        "akhir_kerjasama",
+        "status",
+        "jenis_kerjasama",
+        "jenis_produk",
+        "pembayaran",
+        "harga_buku",
+    )
+    compressed_fields = True
+    warn_unsaved_form = True
+    # Preprocess content of readonly fields before render
+    readonly_preprocess_fields = {
+        "status": lambda content: content.strip(),
+        "jenis_kerjasama": lambda content: content.strip(),
+    }
 
 @admin.register(history_adendum)
 class history_adendumAdmin(ModelAdmin):

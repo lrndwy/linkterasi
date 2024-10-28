@@ -31,9 +31,9 @@
     </div>
     
     <!-- Table -->
-    <div class="overflow-x-auto rounded-lg">
+    <div class="overflow-x-auto rounded-lg w-full max-h-[500px] overflow-y-auto">
       <table id="sekolahTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
           <tr>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
@@ -47,7 +47,6 @@
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
             <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
-            <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
           </tr>
         </thead>
         <tbody id="sekolahTableBody">
@@ -66,7 +65,6 @@
               <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama }}</td>
               <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status }}</td>
               <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.tipe_sekolah }}</td>
             </tr>
           {% empty %}
             <tr>

@@ -9,6 +9,72 @@
     <c-slot name="content">
         <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard sales" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
         <c-tableKegiatan></c-tableKegiatan>
+        
+        <!-- Tambahkan section tabel sekolah di sini -->
+        <section class="mt-4">
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah</h2>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="searchSekolahInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownSekolahButton" data-dropdown-toggle="dropdownSekolah" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  <div id="dropdownSekolah" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSekolahButton">
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'excel', 'data_sekolah')">Excel</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'csv', 'data_sekolah')">CSV</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'pdf', 'data_sekolah')">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Table -->
+            <div class="overflow-x-auto rounded-lg w-full max-h-[500px] overflow-y-auto">
+              <table id="sekolahTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Siswa</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Komputer</th>
+                  </tr>
+                </thead>
+                <tbody id="sekolahTableBody">
+                  {% for sekolah in daftar_sekolah %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_seluruh_siswa }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_komputer }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="5" class="px-6 py-4 text-center">Tidak ada data sekolah</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
         <section class="mt-4">
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
             <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
@@ -82,6 +148,33 @@
         rows[i].style.display = rowVisible ? '' : 'none';
       }
     });
+
+    const searchSekolahInput = document.getElementById('searchSekolahInput');
+    const sekolahTable = document.getElementById('sekolahTable');
+    const sekolahRows = sekolahTable.getElementsByTagName('tr');
+
+    searchSekolahInput.addEventListener('keyup', function() {
+      const searchTerm = searchSekolahInput.value.toLowerCase();
+
+      for (let i = 1; i < sekolahRows.length; i++) {
+        let rowVisible = false;
+        const cells = sekolahRows[i].getElementsByTagName('td');
+
+        for (let j = 0; j < cells.length; j++) {
+          if (cells[j].textContent.toLowerCase().indexOf(searchTerm) > -1) {
+            rowVisible = true;
+            break;
+          }
+        }
+
+        sekolahRows[i].style.display = rowVisible ? '' : 'none';
+      }
+    });
+
+    function exportTable(tableId, format, filename) {
+      // Implement the export functionality here
+      // You can reuse the code from the tableSekolah.html file
+    }
   });
 </script>
 {% endblock %}

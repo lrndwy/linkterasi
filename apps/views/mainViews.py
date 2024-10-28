@@ -5,6 +5,7 @@ from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework.permissions import IsAuthenticated
+from ..models.kunjunganModel import kunjungan_teknisi as kunjungan_teknisi_model
 
 from ..authentication import *
 from ..models.sptModel import pengumuman as pengumuman_model
@@ -113,6 +114,20 @@ class CustomerDetailViewSet(generics.RetrieveAPIView):
     queryset = master_model.objects.all()
     serializer_class = CustomerDetailSerializer
     permission_classes = [HasAPIKey]
+    
+def cetak_produk(request):
+    return render(request, 'cetak/produk.html')
+
+def cetak_teknisi(request):
+    if request.method == 'POST':
+        try:
+            id = request.POST.get('id')
+            kunjungan = kunjungan_teknisi_model.objects.get(id=id)
+            return render(request, 'cetak/teknisi.html', {'kunjungan': kunjungan})
+        except:
+            messages.error(request, 'Kunjungan tidak ditemukan')
+            return redirect('teknisi')
+    return render(request, 'cetak/teknisi.html')
 
 
 # NeIbk0mV.PsHGZSs1blcM6JvJCv0v0QPcbezHE9be

@@ -28,6 +28,7 @@ class kunjungan_produk(models.Model):
     produk = models.ForeignKey(produk, on_delete=models.CASCADE, related_name="kunjungan_produk")
     ttd = models.FileField(null=True, blank=True, upload_to="ttd/")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nama_kepsek_atau_guru = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.judul == "kontak":

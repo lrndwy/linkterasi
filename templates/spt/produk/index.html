@@ -9,10 +9,10 @@
     </c-slot>
 
     <c-slot name="content">
-        {% comment %} Heading Card {% endcomment %}
+        <!-- Heading Card -->
         <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard SPT Produk" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
 
-        <!-- Filter Section -->
+        <!-- Filter -->
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
             <div class="flex flex-wrap justify-between items-center w-full gap-2">
                 <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
@@ -47,7 +47,10 @@
             </div>
         </section>
 
-        {% comment %} Grafik Sekolah {% endcomment %}
+        <!-- Sekolah Biasa -->
+        <c-headingCard judul="Sekolah Biasa" deskripsi="Daftar Sekolah Biasa"></c-headingCard>
+
+        <!-- Grafik Sekolah -->
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <!-- Radial Chart 1 -->
             <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
@@ -76,13 +79,94 @@
             </div>
         </section>
 
-        {% comment %} Map Sekolah {% endcomment %}
-        <c-mapSekolah></c-mapSekolah>
+        <!-- Map Sekolah -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Sekolah di Indonesia</h2>
+            <div id="map" class="h-[600px] w-full rounded-lg"></div>
+          </div>
+        </section>
 
-        {% comment %} List Sekolah {% endcomment %}
-        <c-tableSekolah></c-tableSekolah>
+        <!-- List Sekolah -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah</h2>
 
-        {% comment %} Jumlah Kunjungan Produk {% endcomment %}
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownSekolahButton" data-dropdown-toggle="dropdownSekolah" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  <div id="dropdownSekolah" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSekolahButton">
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'excel', 'data_sekolah')">Excel</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'csv', 'data_sekolah')">CSV</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sekolahTable', 'pdf', 'data_sekolah')">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Table -->
+            <div class="overflow-x-auto rounded-lg w-full max-h-[500px] overflow-y-auto">
+              <table id="sekolahTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Yayasan</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Sekolah</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+                  </tr>
+                </thead>
+                <tbody id="sekolahTableBody">
+                  {% for sekolah in daftar_sekolah %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="13" class="px-6 py-4 text-center">Tidak ada data sekolah</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Jumlah Kunjungan Produk -->
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
@@ -112,7 +196,7 @@
           </div>
         </section>
 
-        {% comment %} Riwayat Kunjungan Produk {% endcomment %}
+        <!-- Riwayat Kunjungan Produk -->
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
             <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Produk</h2>
@@ -145,7 +229,7 @@
               </div>
             </div>
             
-            <div class="overflow-x-auto rounded-lg">
+            <div class="overflow-x-auto rounded-lg w-full max-h-[300px] overflow-y-auto">
               <table id="riwayatKunjunganTable" class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -173,6 +257,213 @@
             </div>
           </div>
         </section>
+
+        <!-- Ekstrakulikuler -->
+        <c-headingCard judul="Ekstrakulikuler" deskripsi="Daftar Ekstrakulikuler"></c-headingCard>
+
+        <!-- Grafik Ekstrakulikuler -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <!-- Radial Chart 1 -->
+            <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+              <div class="py-6" id="pie-chart-ekskul1"></div>
+              <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                  <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Ekstrakulikuler</h5>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Ekstrakulikuler per Jenjang</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Radial Chart 2 -->
+            <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+              <div class="py-6" id="pie-chart-ekskul2"></div>
+              <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                  <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Siswa Ekstrakulikuler</h5>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Siswa Ekstrakulikuler per Jenjang</p>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <!-- Map Ekstrakulikuler -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Ekstrakulikuler di Indonesia</h2>
+            <div id="map-ekskul" class="h-[600px] w-full rounded-lg"></div>
+          </div>
+        </section>
+
+        <!-- List Ekstrakulikuler -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Ekstrakulikuler</h2>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="searchEkskulInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari ekstrakulikuler...">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownEkskulButton" data-dropdown-toggle="dropdownEkskul" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  <div id="dropdownEkskul" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownEkskulButton">
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('ekskulTable', 'excel', 'data_ekstrakulikuler')">Excel</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('ekskulTable', 'csv', 'data_ekstrakulikuler')">CSV</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('ekskulTable', 'pdf', 'data_ekstrakulikuler')">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Table -->
+            <div class="overflow-x-auto rounded-lg w-full max-h-[500px] overflow-y-auto">
+              <table id="ekskulTable" class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Ekstrakulikuler</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembina</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+                  </tr>
+                </thead>
+                <tbody id="ekskulTableBody">
+                  {% for ekskul in daftar_ekskul %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.no_mou }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_ekskul }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_sekolah }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.pembina }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenjang }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_produk }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.awal_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.akhir_kerjasama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.status }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.provinsi.nama }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="11" class="px-6 py-4 text-center">Tidak ada data ekstrakulikuler</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Jumlah Kunjungan Ekstrakulikuler -->
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
+              <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan Ekskul</h3>
+                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan_ekskul }}</p>
+                <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
+              </div>
+            </div>
+            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+              <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak Ekskul</h3>
+                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak_ekskul }}</p>
+                <p class="text-sm text-blue-600 dark:text-blue-400">Bulan ini</p>
+              </div>
+            </div>
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+              <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
+                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi_ekskul }}</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Riwayat Kunjungan Ekstrakulikuler -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Ekstrakulikuler</h2>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="kunjunganEkskulSearch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari riwayat kunjungan ekstrakulikuler...">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownKunjunganEkskulButton" data-dropdown-toggle="dropdownKunjunganEkskul" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                    </svg>
+                  </button>
+                  <div id="dropdownKunjunganEkskul" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKunjunganEkskulButton">
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'excel', 'riwayat_kunjungan_ekskul')">Excel</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'csv', 'riwayat_kunjungan_ekskul')">CSV</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'pdf', 'riwayat_kunjungan_ekskul')">PDF</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="overflow-x-auto rounded-lg w-full max-h-[300px] overflow-y-auto">
+              <table id="riwayatKunjunganEkskulTable" class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Judul</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Deskripsi</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Produk</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Ekstrakulikuler</th>
+                  </tr>
+                </thead>
+                <tbody id="riwayatKunjunganEkskulTableBody">
+                  {% for item in riwayat_kunjungan_ekskul %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.ekskul }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
     </c-slot>
 </c-layouts.dashboard>
 
@@ -395,7 +686,228 @@
   });
 </script>
 
+{% block extra_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  // Map initialization
+  document.addEventListener('DOMContentLoaded', function() {
+    var map = L.map('map').setView([-2.548926, 118.0148634], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var dataProvinsi = JSON.parse("{{ provinsi_sekolah|escapejs }}");
+
+    dataProvinsi.forEach(function(provinsi) {
+      var marker = L.marker(provinsi.koordinat).addTo(map);
+      var sekolahList = "<ul class='list-disc pl-5'>";
+      provinsi.sekolah.forEach(function(sekolah) {
+        sekolahList += "<li class='text-sm'>" + sekolah + "</li>";
+      });
+      sekolahList += "</ul>";
+
+      var popupContent = "<div class='popup-content'><strong class='text-lg'>" + provinsi.nama + "</strong>" + sekolahList + "</div>";
+
+      marker.bindPopup(popupContent);
+    });
+  });
+
+  // Table export and search functionality
+  function exportTable(tableId, format, filename) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    const headers = Array.from(rows[0].querySelectorAll('th')).map(header => header.textContent.trim());
+    const data = rows.slice(1)
+      .filter(row => row.style.display !== 'none')
+      .map(row => Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()));
+    
+    if (format === 'excel' || format === 'csv') {
+      let csvContent = headers.join('\t') + '\n';
+      csvContent += data.map(row => row.join('\t')).join('\n');
+      
+      const blob = new Blob([csvContent], { type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
+      link.click();
+    } else if (format === 'pdf') {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'pt'
+      });
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        columnStyles: {
+          0: {cellWidth: 'auto'},
+          1: {cellWidth: 'auto'},
+          2: {cellWidth: 'auto'},
+          3: {cellWidth: 'auto'},
+          4: {cellWidth: 'auto'},
+          5: {cellWidth: 'auto'},
+          6: {cellWidth: 'auto'},
+          7: {cellWidth: 'auto'},
+          8: {cellWidth: 'auto'},
+          9: {cellWidth: 'auto'},
+          10: {cellWidth: 'auto'},
+          11: {cellWidth: 'auto'},
+          12: {cellWidth: 'auto'},
+        },
+        didDrawPage: function (data) {
+          doc.setFontSize(18);
+          doc.setTextColor(40);
+          doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+        },
+        margin: { top: 30 },
+      });
+      doc.save(`${filename}.pdf`);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('sekolahTableBody');
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
+    }
+
+    searchInput.addEventListener('input', filterTable);
+  });
+
+  // Chart Ekstrakulikuler
+  const totalPerJenjangEkskul = JSON.parse("{{ total_per_jenjang_ekskul|escapejs }}");
+  const totalSiswaPerJenjangEkskul = JSON.parse("{{ total_siswa_per_jenjang_ekskul|escapejs }}");
+
+  const getChartOptionsEkskul1 = () => {
+    return {
+      series: totalPerJenjangEkskul,
+      labels: daftarJenjang,
+      colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500"],
+      chart: {
+        height: 420,
+        width: "100%",
+        type: "pie",
+      },
+      // ... konfigurasi lainnya sama seperti chart sekolah ...
+    }
+  }
+
+  const getChartOptionsEkskul2 = () => {
+    return {
+      series: totalSiswaPerJenjangEkskul,
+      labels: daftarJenjang,
+      colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500"],
+      chart: {
+        height: 420,
+        width: "100%",
+        type: "pie",
+      },
+      // ... konfigurasi lainnya sama seperti chart sekolah ...
+    }
+  }
+
+  if (document.getElementById("pie-chart-ekskul1") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart-ekskul1"), getChartOptionsEkskul1());
+    chart.render();
+  }
+
+  if (document.getElementById("pie-chart-ekskul2") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart-ekskul2"), getChartOptionsEkskul2());
+    chart.render();
+  }
+
+  // Search functionality untuk tabel ekstrakulikuler
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchEkskulInput = document.getElementById('searchEkskulInput');
+    const ekskulTableBody = document.getElementById('ekskulTableBody');
+
+    function filterEkskulTable() {
+      const searchTerm = searchEkskulInput.value.toLowerCase();
+      const rows = ekskulTableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
+    }
+
+    searchEkskulInput.addEventListener('input', filterEkskulTable);
+  });
+
+  // Search functionality untuk riwayat kunjungan ekstrakulikuler
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('kunjunganEkskulSearch');
+    const tableBody = document.getElementById('riwayatKunjunganEkskulTableBody');
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
+        }
+
+        row.style.display = shouldShow ? '' : 'none';
+      }
+    }
+
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>
+{% endblock %}
+
 
 
 {% endblock %}
+
+
 

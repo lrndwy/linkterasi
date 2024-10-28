@@ -116,12 +116,38 @@
       <section>
         <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
           <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Teknisi</h2>
-          <div class="mb-4">
-            <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..." class="w-full p-2 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 rounded-lg text-sm sm:text-base">
+
+          <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+            <div class="w-full sm:w-1/2">
+              <input type="text" id="kunjunganSearch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari riwayat kunjungan...">
+            </div>
+            <div class="w-full sm:w-auto">
+              <div class="relative">
+                <button id="dropdownKunjunganButton" data-dropdown-toggle="dropdownKunjungan" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                  Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+                </button>
+                <div id="dropdownKunjungan" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKunjunganButton">
+                    <li>
+                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'excel', 'riwayat_kunjungan_teknisi')">Excel</a>
+                    </li>
+                    <li>
+                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'csv', 'riwayat_kunjungan_teknisi')">CSV</a>
+                    </li>
+                    <li>
+                      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'pdf', 'riwayat_kunjungan_teknisi')">PDF</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="overflow-x-auto rounded-lg">
-            <table class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+
+          <div class="overflow-x-auto rounded-lg w-full max-h-[300px] overflow-y-auto">
+            <table id="riwayatKunjunganTable" class="w-full text-xs sm:text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                 <tr>
                   <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Judul</th>
                   <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Deskripsi</th>
@@ -282,24 +308,32 @@
 </script>
 
 <script>
-  document.getElementById('kunjunganSearch').addEventListener('keyup', function() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("kunjunganSearch");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("riwayatKunjunganTableBody");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('kunjunganSearch');
+    const tableBody = document.getElementById('riwayatKunjunganTableBody');
+
+    function filterTable() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = tableBody.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let shouldShow = false;
+
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchTerm)) {
+            shouldShow = true;
+            break;
+          }
         }
+
+        row.style.display = shouldShow ? '' : 'none';
       }
     }
+
+    searchInput.addEventListener('input', filterTable);
   });
 </script>
 {% endblock %}
-

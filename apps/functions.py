@@ -1,9 +1,10 @@
 from apps.models.baseModel import JENJANG_CHOICES
 from apps.models.penggajianModel import penggajian, JENIS_CHOICES as JENIS_CHOICES_PENGGAJIAN
 import pandas as pd
+import csv
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
-from apps.models.mainModel import master as master_model
+from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
 import logging
 
 logger = logging.getLogger(__name__)
@@ -68,34 +69,53 @@ def impor_data_customer(file):
     try:
         # Cek ekstensi file
         if file.name.endswith('.csv'):
-            data = pd.read_csv(file)
+            data = pd.read_csv(file, quoting=csv.QUOTE_ALL, escapechar='\\')
         elif file.name.endswith('.xlsx'):
             data = pd.read_excel(file)
         else:
             raise ValidationError("Format file tidak didukung. Harap unggah file CSV atau Excel.")
 
-        # Iterasi setiap baris data
+        data.columns = data.columns.str.strip()
+
         for index, row in data.iterrows():
             try:
-                master_instance = master_model(
-                    no_mou=row.get('no_mou'),
-                    nama_yayasan=row.get('nama_yayasan'),
-                    kepala_yayasan=row.get('kepala_yayasan'),
-                    nama_sekolah=row.get('nama_sekolah'),
-                    nama_kepsek=row.get('nama_kepsek'),
-                    provinsi_id=row.get('provinsi_id'),
-                    jenjang=row.get('jenjang'),
-                    awal_kerjasama=pd.to_datetime(row.get('awal_kerjasama')).date() if pd.notna(row.get('awal_kerjasama')) else None,
-                    akhir_kerjasama=pd.to_datetime(row.get('akhir_kerjasama')).date() if pd.notna(row.get('akhir_kerjasama')) else None,
-                    jenis_kerjasama=row.get('jenis_kerjasama'),
-                    jenis_produk=row.get('jenis_produk'),
-                    pembayaran=row.get('pembayaran'),
-                    harga_buku=row.get('harga_buku'),
-                    jumlah_komputer=row.get('jumlah_komputer'),
-                    tipe_sekolah=row.get('tipe_sekolah')
-                )
+                if row.get('tipe_sekolah') == 'ekstrakulikuler':
+                    master_instance = master_ekstrakulikuler_model(
+                        no_mou=row.get('no_mou'),
+                        nama_yayasan=row.get('nama_yayasan'),
+                        kepala_yayasan=row.get('kepala_yayasan'),
+                        nama_sekolah=row.get('nama_sekolah'),
+                        nama_kepsek=row.get('nama_kepsek'),
+                        provinsi_id=row.get('provinsi_id'),
+                        jenjang=row.get('jenjang'),
+                        awal_kerjasama=pd.to_datetime(row.get('awal_kerjasama')).date() if pd.notna(row.get('awal_kerjasama')) else None,
+                        akhir_kerjasama=pd.to_datetime(row.get('akhir_kerjasama')).date() if pd.notna(row.get('akhir_kerjasama')) else None,
+                        jenis_kerjasama=row.get('jenis_kerjasama'),
+                        jenis_produk=row.get('jenis_produk'),
+                        pembayaran=row.get('pembayaran'),
+                        harga_buku=row.get('harga_buku'),
+                        jumlah_komputer=row.get('jumlah_komputer'),
+                        tipe_sekolah=row.get('tipe_sekolah')
+                    )
+                else:
+                    master_instance = master_model(
+                        no_mou=row.get('no_mou'),
+                        nama_yayasan=row.get('nama_yayasan'),
+                        kepala_yayasan=row.get('kepala_yayasan'),
+                        nama_sekolah=row.get('nama_sekolah'),
+                        nama_kepsek=row.get('nama_kepsek'),
+                        provinsi_id=row.get('provinsi_id'),
+                        jenjang=row.get('jenjang'),
+                        awal_kerjasama=pd.to_datetime(row.get('awal_kerjasama')).date() if pd.notna(row.get('awal_kerjasama')) else None,
+                        akhir_kerjasama=pd.to_datetime(row.get('akhir_kerjasama')).date() if pd.notna(row.get('akhir_kerjasama')) else None,
+                        jenis_kerjasama=row.get('jenis_kerjasama'),
+                        jenis_produk=row.get('jenis_produk'),
+                        pembayaran=row.get('pembayaran'),
+                        harga_buku=row.get('harga_buku'),
+                        jumlah_komputer=row.get('jumlah_komputer'),
+                        tipe_sekolah=row.get('tipe_sekolah')
+                    )
                 
-                # Simpan jumlah siswa per kelas
                 for i in range(1, 13):
                     setattr(master_instance, f'jumlah_siswa_kelas_{i}', row.get(f'jumlah_siswa_kelas_{i}'))
                 for i in range(10, 13):
@@ -106,5 +126,7 @@ def impor_data_customer(file):
                 raise ValidationError(f"Error pada baris {index + 2}: {str(e)}")
 
         return True, "Data customer berhasil diimpor"
+    except pd.errors.ParserError as e:
+        return False, f"Gagal mengimpor data: Kesalahan format CSV. {str(e)}"
     except Exception as e:
         return False, f"Gagal mengimpor data: {str(e)}"

@@ -5,7 +5,7 @@ from apps.models.sptModel import permintaanSPT as permintaanspt_model, pengumuma
 from django.contrib import messages
 from datetime import datetime, timedelta
 from apps.functions import func_total_siswa_per_jenjang
-from apps.models.mainModel import master as master_model
+from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
 from apps.models.kunjunganModel import kunjungan_produk as kunjungan_produk_model
 from apps.authentication import *
 from apps.models.kunjunganModel import JUDUL_PRODUK_CHOICES, JUDUL_TEKNISI_CHOICES
@@ -192,6 +192,7 @@ def pengumuman(request):
 def kunjungan_tik(request):
     try:
         user = request.user
+        produk = user.produk.first()
         if request.method == 'POST':
             aksi = request.POST.get('aksi')
             if aksi == 'buat':
@@ -253,11 +254,12 @@ def kunjungan_tik(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': user.produk.first().list_sekolah.filter(tipe_sekolah='tik'),
+            'sekolah_list': produk.list_sekolah.all(),
             'judul_list': LIST_JUDUL_PRODUK,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,
         }
+        print(context['sekolah_list'])
         return render(request, 'produk/kunjungan_tik.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
@@ -273,7 +275,7 @@ def kunjungan_robotik(request):
                 judul = request.POST.get('judul')
                 deskripsi = request.POST.get('deskripsi')
                 tanggal = request.POST.get('tanggal')
-                sekolah = master_model.objects.get(id=request.POST.get('sekolah'))
+                sekolah = master_ekstrakulikuler_model.objects.get(id=request.POST.get('sekolah'))
                 geolocation = request.POST.get('geolocation')
               
                 try:
@@ -326,7 +328,7 @@ def kunjungan_robotik(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': user.produk.first().list_sekolah.filter(tipe_sekolah='robotik'),
+            'sekolah_list': user.produk.first().list_sekolah_ekstrakulikuler.all(),
             'judul_list': LIST_JUDUL_PRODUK,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,

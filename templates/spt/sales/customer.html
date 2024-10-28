@@ -218,9 +218,10 @@
                     </div>
                 </div>
                 <div class="relative overflow-x-auto sm:rounded-lg">
-                    <table id="masterTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Kepala Yayasan</th>
@@ -252,13 +253,15 @@
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12 SMK</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Jumlah Siswa</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Komputer</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                
                             </tr>
                         </thead>
                         <tbody id="masterTableBody">
                             {% for data in master_data %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{% url 'customer_sptsales' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan }}</td>
@@ -290,10 +293,6 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.get_tipe_sekolah_display }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{% url 'customer_sptsales' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
-                                </td>
                             </tr>
                             {% empty %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

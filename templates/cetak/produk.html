@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Form Supervisi</title>
+{% endblock %}
+
+{% block head %}
+    <meta name="author" content="Diginusa">
+    <meta name="description" content="Form Supervisi">
+    <meta name="keywords" content="Form Supervisi">
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        @media print {
+            body {
+                width: 210mm;
+                height: 297mm;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col items-start mb-8">
+                <img src="{% static 'images/DiginusaLogo.png' %}" alt="Logo Perusahaan" class="w-40 mb-4">
+                <h1 class="text-3xl font-bold">Form Supervisi</h1>
+            </div>
+
+            <hr class="my-8 border-1.5 border-black dark:border-white">
+
+            <div class="space-y-4 mb-8">
+                <p><span class="font-semibold">Nama PIC:</span> {{ data.nama }}</p>
+                <p><span class="font-semibold">Nama Sekolah:</span> {{ data.nama_sekolah }}</p>
+                <p><span class="font-semibold">Jenjang:</span> {{ data.jenjang }}</p>
+                <p><span class="font-semibold">Tanggal:</span> {{ data.tanggal }}</p>
+            </div>
+
+            <hr class="my-8 border-1.5 border-black dark:border-white">
+
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold mb-4">Layanan Supervisi:</h2>
+                <p class="whitespace-pre-line">{{ data.layanan }}</p>
+            </div>
+
+            <div class="mt-16 flex justify-end">
+                <div class="flex flex-col items-center justify-center max-w-[200px] w-full">
+                    <img src="https://th.bing.com/th/id/OIP.BfWbytqnZBXzEztpn0Y2GQHaEm?rs=1&pid=ImgDetMain" alt="Tanda Tangan" class="mb-4 max-w-[200px]">
+                    <hr class="w-full border-1 border-black dark:border-white mb-4">
+                    <div class="flex flex-col items-center">
+                        <p class="font-semibold text-center">{{ data.nama_kepsek_atau_guru }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button class="no-print px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" onclick="window.print()">Cetak</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

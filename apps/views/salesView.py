@@ -12,12 +12,13 @@ def index(request):
         sales_instance = user.sales.first()
         context = {
             'daftar_kegiatan': kegiatan_model.objects.filter(sales=sales_instance).order_by('-id'),
-            'daftar_permintaan': permintaanSPT_model.objects.filter(kategori='sales').order_by('-id')
+            'daftar_permintaan': permintaanSPT_model.objects.filter(kategori='sales').order_by('-id'),
+            'daftar_sekolah': sales_instance.list_sekolah.all().order_by('-id')
         }
         return render(request, 'sales/index.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
-        return redirect('index_sales')
+        return redirect('sales')
 
 @sales_required
 def jadwal(request):
@@ -30,7 +31,7 @@ def jadwal(request):
                 deskripsi = request.POST.get('deskripsi')
                 tanggal = request.POST.get('tanggal')
                 sales = sales_instance
-                sekolah = master_model.objects.get(id=request.POST.get('sekolah'))
+                sekolah = request.POST.get('sekolah')
                 kegiatan_obj = kegiatan_model(
                     judul=judul,
                     deskripsi=deskripsi,

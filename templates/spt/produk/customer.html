@@ -7,8 +7,6 @@
     <c-slot name="sidebar">
         <c-sidebar.sptproduk></c-sidebar.sptproduk>
     </c-slot>
-
-    
     {% if edit %}
       <c-slot name="content">
         <c-headingCard judul="Edit Customer" deskripsi="Edit Customer" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
@@ -176,136 +174,147 @@
           </form>
         </section>
       </c-slot>
-    {% else %}
-    <c-slot name="content">
-        <c-headingCard judul="Customer" deskripsi="Data Customer" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
-        
-        <!-- Tabel Master -->
-        <section class="mt-4">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-                <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Customer</h2>
-                <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
-                    <div class="mb-4 w-full">
-                        <input type="text" id="masterSearch" placeholder="Cari data customer..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    </div>
-                    <div class="mb-4 w-full sm:w-auto flex gap-2">
-                        <button data-modal-target="tambah-data-customer-modal" data-modal-toggle="tambah-data-customer-modal" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                            Tambah
-                        </button>
-                        <div class="relative">
-                            <button id="dropdownMasterButton" data-dropdown-toggle="dropdownMaster" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-                                Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                </svg>
-                            </button>
-                            <div id="dropdownMaster" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMasterButton">
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'excel', 'data_master')">Excel</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'csv', 'data_master')">CSV</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'pdf', 'data_master')">PDF</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <button data-modal-target="import-data-customer-modal" data-modal-toggle="import-data-customer-modal" id="importButton" class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800" type="button">
-                          Impor
-                        </button>
-                    </div>
-                </div>
-                <div class="relative overflow-x-auto sm:rounded-lg">
-                    <table id="masterTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Kepala Yayasan</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepsek</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembayaran</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Harga Buku</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 1</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 2</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 3</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 4</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 5</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 6</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 7</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 8</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 9</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10 SMK</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11 SMK</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12 SMK</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Jumlah Siswa</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Komputer</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
-                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="masterTableBody">
-                            {% for data in master_data %}
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.get_status_display }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_kerjasama_display }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_3|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_4|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_5|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_6|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_7|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_8|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_9|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10_smk|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11_smk|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.get_tipe_sekolah_display }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{% url 'customer_sptproduk' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td colspan="33" class="px-6 py-4 text-center">Tidak ada data master</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </c-slot>
+    {% else %}  
+      <c-slot name="content">
+          <c-headingCard judul="Customer" deskripsi="Data Customer" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
+          
+          <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+              <div class="flex flex-wrap justify-between items-center w-full gap-2">
+                  <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Customer</h2>
+                  <div class="flex flex-wrap gap-2">
+                    <a href="{% url 'customer_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Biasa</a>
+                    <a href="{% url 'customer_ekskul_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Ekstrakulikuler</a>
+                  </div>
+              </div>
+          </section>
+
+
+          <!-- Tabel Master -->
+          <section class="mt-4">
+              <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                  <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Customer</h2>
+                  <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+                      <div class="mb-4 w-full">
+                          <input type="text" id="masterSearch" placeholder="Cari data customer..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                      </div>
+                      <div class="mb-4 w-full sm:w-auto flex gap-2">
+                          <button data-modal-target="tambah-data-customer-modal" data-modal-toggle="tambah-data-customer-modal" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                              Tambah
+                          </button>
+                          <div class="relative">
+                              <button id="dropdownMasterButton" data-dropdown-toggle="dropdownMaster" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                                  Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                  </svg>
+                              </button>
+                              <div id="dropdownMaster" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMasterButton">
+                                      <li>
+                                          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'excel', 'data_master')">Excel</a>
+                                      </li>
+                                      <li>
+                                          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'csv', 'data_master')">CSV</a>
+                                      </li>
+                                      <li>
+                                          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'pdf', 'data_master')">PDF</a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                          <button data-modal-target="import-data-customer-modal" data-modal-toggle="import-data-customer-modal" id="importButton" class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800" type="button">
+                            Impor
+                          </button>
+                      </div>
+                  </div>
+                  <div class="relative overflow-x-auto sm:rounded-lg">
+                      <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                          <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                              <tr>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Kepala Yayasan</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepsek</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembayaran</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Harga Buku</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 1</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 2</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 3</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 4</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 5</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 6</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 7</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 8</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 9</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10 SMK</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11 SMK</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12 SMK</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Jumlah Siswa</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Komputer</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
+                              </tr>
+                          </thead>
+                          <tbody id="masterTableBody">
+                              {% for data in master_data %}
+                              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  <td class="px-6 py-4 whitespace-nowrap">
+                                      <a href="{% url 'customer_sptproduk' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
+                                  </td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_status_display }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_kerjasama_display }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_3|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_4|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_5|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_6|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_7|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_8|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_9|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10_smk|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11_smk|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_tipe_sekolah_display }}</td>
+                              </tr>
+                              {% empty %}
+                              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                  <td colspan="33" class="px-6 py-4 text-center">Tidak ada data master</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </section>
+      </c-slot>
     {% endif %}
 </c-layouts.dashboard>
 

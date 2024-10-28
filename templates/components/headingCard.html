@@ -7,6 +7,7 @@
     </div>
     {% if heading_image_url %}
       <img src="{{ heading_image_url }}" alt="Icon" class="flex-shrink-0 w-8 h-8 sm:w-14 sm:h-14 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+      {{ slot }}
     {% endif %}
   </div>
 </div>

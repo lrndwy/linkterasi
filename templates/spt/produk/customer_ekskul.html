@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="SPT Produk">
+    <c-slot name="sidebar">
+        <c-sidebar.sptproduk></c-sidebar.sptproduk>
+    </c-slot>
+    {% if edit %}
+      <c-slot name="content">
+        <c-headingCard judul="Edit Customer Ekstrakulikuler" deskripsi="Edit Customer Ekstrakulikuler" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
+        <section>
+          <form method="POST" action="{% url 'customer_sptproduk_ekskul' %}?edit={{ master.id }}" class="p-4 bg-white rounded-lg">
+            {% csrf_token %}
+            <input type="hidden" name="edit_id" value="{{ master.id }}">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="no_mou" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor MOU</label>
+                <input type="text" id="no_mou" name="no_mou" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.no_mou }}">
+              </div>
+              <div>
+                <label for="nama_yayasan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Yayasan</label>
+                <input type="text" id="nama_yayasan" name="nama_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_yayasan }}">
+              </div>
+              <div>
+                <label for="kepala_yayasan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kepala Yayasan</label>
+                <input type="text" id="kepala_yayasan" name="kepala_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.kepala_yayasan }}">
+              </div>
+              <div>
+                <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
+                <input type="text" id="nama_sekolah" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_sekolah }}">
+              </div>
+              <div>
+                <label for="nama_kepsek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Kepala Sekolah</label>
+                <input type="text" id="nama_kepsek" name="nama_kepsek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_kepsek }}">
+              </div>
+              <div>
+                <label for="provinsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provinsi</label>
+                <select id="provinsi" name="provinsi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="">Pilih Provinsi</option>
+                  {% for prov in provinsi_list %}
+                    <option value="{{ prov.id }}" {% if prov.id == master.provinsi_id %}selected{% endif %}>{{ prov.nama }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
+                <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  <option value="">Pilih Jenjang</option>
+                  {% for jenjang, label in jenjang_choices %}
+                    <option value="{{ jenjang }}" {% if jenjang == master.jenjang %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label for="tipe_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe Sekolah</label>
+                <select id="tipe_sekolah" name="tipe_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                  <option value="">Pilih Tipe Sekolah</option>
+                  {% for tipe, label in tipe_sekolah_choices %}
+                    <option value="{{ tipe }}" {% if tipe == master.tipe_sekolah %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="mt-4">
+              <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan</button>
+            </div>
+          </form>
+        </section>
+      </c-slot>
+    {% else %}
+      <c-slot name="content">
+        <c-headingCard judul="Customer Ekstrakulikuler" deskripsi="Data Customer Ekstrakulikuler" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
+
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+            <div class="flex flex-wrap justify-between items-center w-full gap-2">
+                <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Customer</h2>
+                <div class="flex flex-wrap gap-2">
+                  <a href="{% url 'customer_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Biasa</a>
+                  <a href="{% url 'customer_ekskul_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Ekstrakulikuler</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tabel Master -->
+        <section class="mt-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Customer Ekstrakulikuler</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
+                    <div class="mb-4 w-full">
+                        <input type="text" id="masterSearch" placeholder="Cari data customer..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div class="mb-4 w-full sm:w-auto flex gap-2">
+                        <a href="{% url 'customer_ekskul_sptsales' %}?add=1" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Tambah Data
+                        </a>
+                        <button onclick="exportToExcel('masterTable', 'Data Customer Ekstrakulikuler')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                            Export Excel
+                        </button>
+                        <button onclick="exportToPDF('masterTable', 'Data Customer Ekstrakulikuler')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                            Export PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="relative overflow-x-auto sm:rounded-lg">
+                    <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">No MOU</th>
+                                <th scope="col" class="px-6 py-3">Nama Yayasan</th>
+                                <th scope="col" class="px-6 py-3">Kepala Yayasan</th>
+                                <th scope="col" class="px-6 py-3">Nama Sekolah</th>
+                                <th scope="col" class="px-6 py-3">Nama Kepsek</th>
+                                <th scope="col" class="px-6 py-3">Provinsi</th>
+                                <th scope="col" class="px-6 py-3">Jenjang</th>
+                                <th scope="col" class="px-6 py-3">Awal Kerjasama</th>
+                                <th scope="col" class="px-6 py-3">Akhir Kerjasama</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Jenis Kerjasama</th>
+                                <th scope="col" class="px-6 py-3">Jenis Produk</th>
+                                <th scope="col" class="px-6 py-3">Pembayaran</th>
+                                <th scope="col" class="px-6 py-3">Harga Buku</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 1</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 2</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 3</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 4</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 5</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 6</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 7</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 8</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 9</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 10</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 11</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 12</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 10 SMK</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 11 SMK</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 12 SMK</th>
+                                <th scope="col" class="px-6 py-3">Jumlah Komputer</th>
+                                <th scope="col" class="px-6 py-3">Tipe Sekolah</th>
+                                <th scope="col" class="px-6 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masterTableBody">
+                            {% for data in master_data %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-6 py-4">{{ data.no_mou }}</td>
+                                <td class="px-6 py-4">{{ data.nama_yayasan }}</td>
+                                <td class="px-6 py-4">{{ data.kepala_yayasan }}</td>
+                                <td class="px-6 py-4">{{ data.nama_sekolah }}</td>
+                                <td class="px-6 py-4">{{ data.nama_kepsek }}</td>
+                                <td class="px-6 py-4">{{ data.provinsi.nama }}</td>
+                                <td class="px-6 py-4">{{ data.jenjang }}</td>
+                                <td class="px-6 py-4">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
+                                <td class="px-6 py-4">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
+                                <td class="px-6 py-4">{{ data.status }}</td>
+                                <td class="px-6 py-4">{{ data.jenis_kerjasama }}</td>
+                                <td class="px-6 py-4">{{ data.jenis_produk }}</td>
+                                <td class="px-6 py-4">{{ data.pembayaran }}</td>
+                                <td class="px-6 py-4">{{ data.harga_buku }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_1 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_2 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_3 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_4 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_5 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_6 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_7 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_8 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_9 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_10 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_11 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_12 }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_10_smk }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_11_smk }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_12_smk }}</td>
+                                <td class="px-6 py-4">{{ data.jumlah_komputer }}</td>
+                                <td class="px-6 py-4">{{ data.tipe_sekolah }}</td>
+                                <td class="px-6 py-4">
+                                    <a href="{% url 'customer_ekskul_sptsales' %}?edit={{ data.id }}" class="text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td colspan="34" class="px-6 py-4 text-center">Tidak ada data customer ekstrakulikuler</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+      </c-slot>
+    {% endif %}
+</c-layouts.dashboard>
+
+<!-- Script untuk ekspor dan pencarian sama seperti customer.html -->
+{% endblock %}

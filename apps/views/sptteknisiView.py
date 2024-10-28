@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..authentication import *
-from apps.models.mainModel import master as master_model
+from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
 from apps.models.mainModel import teknisi as teknisi_model
 from apps.models.kunjunganModel import kunjungan_teknisi
 from django.utils import timezone
@@ -24,11 +24,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 DAFTAR_JENJANG = [item[0] for item in JENJANG_CHOICES]
-
-TIPE_SEKOLAH_MASTER_CHOICES = [
-  ('tik', 'Tik'),
-  ('robotik', 'Robotik'),
-]
 
 JENIS_KERJASAMA_MASTER_CHOICES = [
   ('sewa pinjam', 'Sewa Pinjam'),
@@ -252,7 +247,7 @@ def customer(request):
                     pembayaran = request.POST.get('pembayaran')
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
-                    tipe_sekolah = request.POST.get('tipe_sekolah')
+                    
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -276,7 +271,7 @@ def customer(request):
                     master.pembayaran = pembayaran
                     master.harga_buku = harga_buku
                     master.jumlah_komputer = jumlah_komputer
-                    master.tipe_sekolah = tipe_sekolah
+                    
                     
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
@@ -302,7 +297,7 @@ def customer(request):
                     'jenjang_list': DAFTAR_JENJANG,
                     'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-                    'TIPE_SEKOLAH': TIPE_SEKOLAH_MASTER_CHOICES,
+                
                 }
                 return render(request, 'spt/teknisi/customer.html', context)
             except master_model.DoesNotExist:
@@ -327,7 +322,7 @@ def customer(request):
                     pembayaran = request.POST.get('pembayaran')
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
-                    tipe_sekolah = request.POST.get('tipe_sekolah')
+                    
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -349,7 +344,7 @@ def customer(request):
                         pembayaran=pembayaran,
                         harga_buku=harga_buku,
                         jumlah_komputer=jumlah_komputer,
-                        tipe_sekolah=tipe_sekolah
+                        
                     )
                     
                     # Simpan jumlah siswa per kelas
@@ -390,7 +385,7 @@ def customer(request):
             'jenjang_list': DAFTAR_JENJANG,
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-            'TIPE_SEKOLAH': TIPE_SEKOLAH_MASTER_CHOICES,
+            
         }
         return render(request, 'spt/teknisi/customer.html', context)
     except Exception as e:

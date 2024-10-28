@@ -29,7 +29,7 @@ def index(request):
             bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
-        daftar_sekolah = teknisi_instance.list_sekolah.filter(tipe_sekolah='tik')
+        daftar_sekolah = teknisi_instance.list_sekolah.all()
         
         total_sekolah = daftar_sekolah.count()
         total_komputer = sum(sekolah.jumlah_komputer or 0 for sekolah in daftar_sekolah)
@@ -55,6 +55,25 @@ def index(request):
         
         daftar_permintaan_spt = permintaanSPT_model.objects.filter(kategori='teknisi', user=user).order_by('-id')[:5]
         
+        tabel_sekolah = []
+        for sekolah in daftar_sekolah:
+            kunjungan = kunjungan_teknisi_model.objects.filter(sekolah=sekolah, teknisi=teknisi_instance)
+            
+            if kunjungan.filter(judul='maintenance').exists():
+                status = 'Sudah Maintenance'
+            elif kunjungan.filter(judul='trouble shooting').exists():
+                status = 'Sudah Trouble Shooting'
+            else:
+                status = 'Belum Dikunjungi'
+            
+            tabel_sekolah.append({
+                'nama_yayasan': sekolah.nama_yayasan,
+                'jenjang': sekolah.jenjang,
+                'nama_sekolah': sekolah.nama_sekolah,
+                'total_komputer': sekolah.jumlah_komputer,
+                'status': status
+            })
+        
         context = {
             'daftar_kunjungan': daftar_kunjungan,
             'maintenance': maintenance,
@@ -64,6 +83,7 @@ def index(request):
             'total_komputer': total_komputer,
             'filter_bulan': filter_bulan,
             'daftar_permintaan_spt': daftar_permintaan_spt,
+            'tabel_sekolah': tabel_sekolah
         }
         return render(request, 'teknisi/index.html', context)
     except Exception as e:
@@ -236,7 +256,7 @@ def kunjungan(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': user.teknisi.first().list_sekolah.filter(tipe_sekolah='tik'),
+            'sekolah_list': user.teknisi.first().list_sekolah.all(),
             'judul_list': LIST_JUDUL_TEKNISI,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,

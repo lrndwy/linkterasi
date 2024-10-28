@@ -66,6 +66,7 @@ urlpatterns = [
     path("spt/produk/karyawan/", sptprodukViews.karyawan, name="karyawan_sptproduk"),
     path("spt/produk/penggajian/", sptprodukViews.penggajian, name="penggajian_sptproduk"),
     path("spt/produk/customer/", sptprodukViews.customer, name="customer_sptproduk"),
+    path("spt/produk/customer_ekskul/", sptprodukViews.customer_ekskul, name="customer_ekskul_sptproduk"),
     
     # SPT Sales
     path("spt/sales/", sptsalesViews.index, name="sptsales"),
@@ -81,4 +82,6 @@ urlpatterns = [
     path("login/", mainViews.login_view, name="login"),
     path("logout/", mainViews.logout_view, name="logout"),
     path("testing/", mainViews.testing, name="testing"),
+    path("cetak/produk/", mainViews.cetak_produk, name="cetak_produk"),
+    path("cetak/teknisi/", mainViews.cetak_teknisi, name="cetak_teknisi"),
 ]

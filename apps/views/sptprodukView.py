@@ -616,7 +616,8 @@ def customer(request):
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('customer_sptproduk')
 
-
+def customer_ekskul(request):
+    return render(request, 'spt/produk/customer_ekskul.html')
 
 
 
