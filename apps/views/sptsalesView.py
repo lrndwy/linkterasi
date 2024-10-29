@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from ..authentication import *
-from ..models.mainModel import master as master_model, sales as sales_model, sptsales as sptsales_model, provinsi as provinsi_model, history_adendum as adendum_model
+from ..models.mainModel import master as master_model, sales as sales_model, provinsi as provinsi_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model
 from ..models.baseModel import JENJANG_CHOICES
 from ..models.pembayaranModel import pembayaran as pembayaran_model, JENIS_PRODUK_CHOICES, STATUS_CHOICES
 from ..models.kunjunganModel import kunjungan_produk, kunjungan_teknisi
-from ..functions import func_total_siswa_per_jenjang, impor_data_customer
+from ..functions import func_total_siswa_per_jenjang, impor_data_customer, impor_data_customer_ekskul
 import json
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -14,13 +14,18 @@ from datetime import datetime, timedelta
 from ..models.baseModel import provinsi as provinsi_model
 from ..models.kegiatanModel import kegiatan as kegiatan_model
 from ..models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman as pengumuman_model
+from core.settings import API_KEY
 from django.utils.timezone import localtime, timezone
+
 import logging
 
 logger = logging.getLogger(__name__)
 
 DAFTAR_JENJANG = [item[0] for item in JENJANG_CHOICES]
-
+TIPE_SEKOLAH_MASTER_CHOICES = [
+  ('coding', 'Coding'),
+  ('robotik', 'Robotik'),
+]
 
 
 JENIS_KERJASAMA_MASTER_CHOICES = [
@@ -175,6 +180,7 @@ def sptpermintaan(request):
 def pengumuman(request):
     try:
         user = request.user
+        api_key = API_KEY
         if request.method == 'POST':
             pesan = request.POST.get('pesan')
             waktu = localtime()
@@ -187,7 +193,8 @@ def pengumuman(request):
             return redirect('pengumuman_sptsales')
           
         context = {
-            'kategori_pengumuman': 'sales'
+            'kategori_pengumuman': 'sales',
+            'api_key': api_key
         }
         return render(request, 'spt/sales/pengumuman.html', context)
     except Exception as e:
@@ -613,16 +620,273 @@ def adendum(request):
                 messages.error(request, f'Terjadi kesalahan: {str(e)}')
                 return redirect('adendum_sptsales')
         
+        api_key = API_KEY
         context = {
             'customers': master_model.objects.all(),
             'provinsis': provinsi_model.objects.all(),
             'jenjangs': DAFTAR_JENJANG,
             'daftar_adendum': adendum_model.objects.all().order_by('-tanggal_adendum'),
+            'api_key': api_key
         }
         return render(request, 'spt/sales/adendum.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('adendum_sptsales')
+
+@sptsales_required
+def adendum_ekskul(request):
+    try:
+        if request.method == 'POST':
+            id_customer = request.POST.get('customer')
+            no_mou = request.POST.get('no_mou')
+            nama_yayasan = request.POST.get('nama_yayasan')
+            kepala_yayasan = request.POST.get('kepala_yayasan')
+            nama_sekolah = request.POST.get('nama_sekolah')
+            nama_kepsek = request.POST.get('nama_kepsek')
+            provinsi = request.POST.get('provinsi')
+            jenjang = request.POST.get('jenjang')
+            awal_kerjasama = request.POST.get('awal_kerjasama')
+            akhir_kerjasama = request.POST.get('akhir_kerjasama')
+            jenis_kerjasama = request.POST.get('jenis_kerjasama')
+            jenis_produk = request.POST.get('jenis_produk')
+            pembayaran = request.POST.get('pembayaran')
+            harga_buku = request.POST.get('harga_buku')
+            jumlah_komputer = request.POST.get('jumlah_komputer')
+            tipe_sekolah = request.POST.get('tipe_sekolah')
+
+            
+            try:
+                master = master_ekstrakulikuler_model.objects.get(id=id_customer)
+                adendum = adendum_ekskul_model()
+                adendum.master_id = id_customer
+                adendum.no_mou = no_mou
+                adendum.nama_yayasan = nama_yayasan
+                adendum.kepala_yayasan = kepala_yayasan
+                adendum.nama_sekolah = nama_sekolah
+                adendum.nama_kepsek = nama_kepsek
+                adendum.provinsi_id = provinsi
+                adendum.jenjang = jenjang
+                adendum.awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
+                adendum.akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
+                adendum.jenis_kerjasama = jenis_kerjasama
+                adendum.jenis_produk = jenis_produk
+                adendum.pembayaran = pembayaran
+                adendum.harga_buku = harga_buku
+                adendum.jumlah_komputer = jumlah_komputer
+                adendum.jumlah_siswa_kelas_1 = master.jumlah_siswa_kelas_1
+                adendum.jumlah_siswa_kelas_2 = master.jumlah_siswa_kelas_2
+                adendum.jumlah_siswa_kelas_3 = master.jumlah_siswa_kelas_3
+                adendum.jumlah_siswa_kelas_4 = master.jumlah_siswa_kelas_4
+                adendum.jumlah_siswa_kelas_5 = master.jumlah_siswa_kelas_5
+                adendum.jumlah_siswa_kelas_6 = master.jumlah_siswa_kelas_6
+                adendum.jumlah_siswa_kelas_7 = master.jumlah_siswa_kelas_7
+                adendum.jumlah_siswa_kelas_8 = master.jumlah_siswa_kelas_8
+                adendum.jumlah_siswa_kelas_9 = master.jumlah_siswa_kelas_9
+                adendum.jumlah_siswa_kelas_10 = master.jumlah_siswa_kelas_10
+                adendum.jumlah_siswa_kelas_11 = master.jumlah_siswa_kelas_11
+                adendum.jumlah_siswa_kelas_12 = master.jumlah_siswa_kelas_12
+                adendum.jumlah_siswa_kelas_10_smk = master.jumlah_siswa_kelas_10_smk
+                adendum.jumlah_siswa_kelas_11_smk = master.jumlah_siswa_kelas_11_smk
+                adendum.jumlah_siswa_kelas_12_smk = master.jumlah_siswa_kelas_12_smk
+                adendum.tanggal_adendum = datetime.now().date()
+                adendum.tipe_sekolah = tipe_sekolah
+                adendum.save()
+                messages.success(request, 'Data adendum berhasil ditambahkan')
+                return redirect('adendum_ekskul_sptsales')
+            except master_model.DoesNotExist:
+                messages.error(request, 'Data customer tidak ditemukan')
+                return redirect('adendum_ekskul_sptsales')
+            except ValueError as e:
+                messages.error(request, f'Terjadi kesalahan: {str(e)}')
+                return redirect('adendum_ekskul_sptsales')
+        
+        api_key = API_KEY
+        context = {
+            'customers': master_ekstrakulikuler_model.objects.all(),
+            'provinsis': provinsi_model.objects.all(),
+            'jenjangs': DAFTAR_JENJANG,
+            'daftar_adendum': adendum_ekskul_model.objects.all().order_by('-tanggal_adendum'),
+            'api_key': api_key
+        }
+        return render(request, 'spt/sales/adendum_ekskul.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return redirect('adendum_ekskul_sptsales')
+      
+      
+
+@sptsales_required
+def customer_ekskul(request):
+    try:
+        # Tambahkan logika edit
+        edit_id = request.GET.get('edit')
+        if edit_id:
+            if request.method == 'POST':
+                try:
+                    # Ambil data dari form
+                    no_mou = request.POST.get('no_mou')
+                    nama_yayasan = request.POST.get('nama_yayasan')
+                    kepala_yayasan = request.POST.get('kepala_yayasan')
+                    nama_sekolah = request.POST.get('nama_sekolah')
+                    nama_kepsek = request.POST.get('nama_kepsek')
+                    provinsi_id = request.POST.get('provinsi')
+                    jenjang = request.POST.get('jenjang')
+                    awal_kerjasama = request.POST.get('awal_kerjasama')
+                    akhir_kerjasama = request.POST.get('akhir_kerjasama')
+                    jenis_kerjasama = request.POST.get('jenis_kerjasama')
+                    jenis_produk = request.POST.get('jenis_produk')
+                    pembayaran = request.POST.get('pembayaran')
+                    harga_buku = request.POST.get('harga_buku')
+                    jumlah_komputer = request.POST.get('jumlah_komputer')
+                    tipe_sekolah = request.POST.get('tipe_sekolah')
+                    
+                    # Konversi string tanggal ke objek datetime
+                    awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
+                    akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
+                    
+                    # Ambil objek master yang sudah ada
+                    master = get_object_or_404(master_ekstrakulikuler_model, id=edit_id)
+                    
+                    # Perbarui atribut-atribut master
+                    master.no_mou = no_mou
+                    master.nama_yayasan = nama_yayasan
+                    master.kepala_yayasan = kepala_yayasan
+                    master.nama_sekolah = nama_sekolah
+                    master.nama_kepsek = nama_kepsek
+                    master.provinsi_id = provinsi_id
+                    master.jenjang = jenjang
+                    master.awal_kerjasama = awal_kerjasama
+                    master.akhir_kerjasama = akhir_kerjasama
+                    master.jenis_kerjasama = jenis_kerjasama
+                    master.jenis_produk = jenis_produk
+                    master.pembayaran = pembayaran
+                    master.harga_buku = harga_buku
+                    master.jumlah_komputer = jumlah_komputer
+                    master.tipe_sekolah = tipe_sekolah
+                    
+                    # Perbarui jumlah siswa per kelas
+                    for i in range(1, 13):
+                        jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
+                        setattr(master, f'jumlah_siswa_kelas_{i}', jumlah_siswa if jumlah_siswa else None)
+                    for i in range(10, 13):
+                        jumlah_siswa_smk = request.POST.get(f'jumlah_siswa_kelas_{i}_smk')
+                        setattr(master, f'jumlah_siswa_kelas_{i}_smk', jumlah_siswa_smk if jumlah_siswa_smk else None)
+                    
+                    master.save()
+                    
+                    messages.success(request, 'Data customer ekstrakulikuler berhasil diubah')
+                    return redirect('customer_ekskul_sptsales')
+                except Exception as e:
+                    messages.error(request, f'Terjadi kesalahan: {str(e)}')
+                    return redirect('customer_ekskul_sptsales')
+            try:
+                master = get_object_or_404(master_ekstrakulikuler_model, id=edit_id)
+                context = {
+                    'edit': True,
+                    'master': master,
+                    'provinsi_list': provinsi_model.objects.all(),
+                    'jenjang_choices': JENJANG_CHOICES,
+                    'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
+                    'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
+                    'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+                }
+                return render(request, 'spt/sales/customer_ekskul.html', context)
+            except master_ekstrakulikuler_model.DoesNotExist:
+                messages.error(request, 'Data customer ekstrakulikuler tidak ditemukan')
+                return redirect('customer_ekskul_sptsales')
+
+        # Kode existing untuk POST dan tampilan normal
+        if request.method == 'POST':
+            try:
+                aksi = request.POST.get('aksi')
+                if aksi == 'tambah':
+                    try:
+                        # Ambil data dari form
+                        no_mou = request.POST.get('no_mou')
+                        nama_yayasan = request.POST.get('nama_yayasan')
+                        kepala_yayasan = request.POST.get('kepala_yayasan')
+                        nama_sekolah = request.POST.get('nama_sekolah')
+                        nama_kepsek = request.POST.get('nama_kepsek')
+                        provinsi_id = request.POST.get('provinsi')
+                        jenjang = request.POST.get('jenjang')
+                        awal_kerjasama = request.POST.get('awal_kerjasama')
+                        akhir_kerjasama = request.POST.get('akhir_kerjasama')
+                        jenis_kerjasama = request.POST.get('jenis_kerjasama')
+                        jenis_produk = request.POST.get('jenis_produk')
+                        pembayaran = request.POST.get('pembayaran')
+                        harga_buku = request.POST.get('harga_buku')
+                        jumlah_komputer = request.POST.get('jumlah_komputer')
+                        tipe_sekolah = request.POST.get('tipe_sekolah')
+                        
+                        # Konversi string tanggal ke objek datetime
+                        awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
+                        akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
+                        
+                        # Buat objek master baru
+                        master = master_ekstrakulikuler_model(
+                            no_mou=no_mou,
+                            nama_yayasan=nama_yayasan,
+                            kepala_yayasan=kepala_yayasan,
+                            nama_sekolah=nama_sekolah,
+                            nama_kepsek=nama_kepsek,
+                            provinsi_id=provinsi_id,
+                            jenjang=jenjang,
+                            awal_kerjasama=awal_kerjasama,
+                            akhir_kerjasama=akhir_kerjasama,
+                            jenis_kerjasama=jenis_kerjasama,
+                            jenis_produk=jenis_produk,
+                            pembayaran=pembayaran,
+                            harga_buku=harga_buku,
+                            jumlah_komputer=jumlah_komputer,
+                            tipe_sekolah=tipe_sekolah
+                        )
+                        
+                        # Simpan jumlah siswa per kelas
+                        for i in range(1, 13):
+                            jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
+                            setattr(master, f'jumlah_siswa_kelas_{i}', int(jumlah_siswa) if jumlah_siswa else None)
+                        for i in range(10, 13):
+                            jumlah_siswa_smk = request.POST.get(f'jumlah_siswa_kelas_{i}_smk')
+                            setattr(master, f'jumlah_siswa_kelas_{i}_smk', int(jumlah_siswa_smk) if jumlah_siswa_smk else None)
+                        
+                        master.save()
+                        
+                        messages.success(request, 'Data customer ekstrakulikuler berhasil ditambahkan')
+                        return redirect('customer_ekskul_sptsales')
+                    except Exception as e:
+                        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+                        return redirect('customer_ekskul_sptsales')
+                elif aksi == 'impor':
+                    try:
+                        file = request.FILES['file']
+                        success, message = impor_data_customer_ekskul(file)
+                        if success:
+                            logger.info(f"Import successful: {message}")
+                            messages.success(request, message)
+                        else:
+                            logger.error(f"Import failed: {message}")
+                            messages.error(request, message)
+                        return redirect('customer_ekskul_sptsales')
+                    except Exception as e:
+                        logger.exception(f"Unexpected error during import: {str(e)}")
+                        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+                        return redirect('customer_ekskul_sptsales')
+            except Exception as e:
+                messages.error(request, f'Terjadi kesalahan: {str(e)}')
+                return redirect('customer_ekskul_sptsales')
+
+        context = {
+            'master_data': master_ekstrakulikuler_model.objects.all(),
+            'provinsi_list': provinsi_model.objects.all(),
+            'jenjang_choices': JENJANG_CHOICES,
+            'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
+            'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
+            'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+        }
+        return render(request, 'spt/sales/customer_ekskul.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return redirect('customer_ekskul_sptsales')
 
 
 

@@ -179,6 +179,16 @@
     {% else %}
     <c-slot name="content">
         <c-headingCard judul="Customer" deskripsi="Data Customer" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
+
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div class="flex flex-wrap justify-between items-center w-full gap-2">
+              <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Customer</h2>
+              <div class="flex flex-wrap gap-2">
+                <a href="{% url 'customer_sptsales' %}" class="text-gray-800 border border-gray-300 bg-gray-100 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Biasa</a>
+                <a href="{% url 'customer_ekskul_sptsales' %}" class="text-gray-800 border border-gray-300 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Ekstrakulikuler</a>
+              </div>
+          </div>
+      </section>
         
         <!-- Tabel Master -->
         <section class="mt-4">

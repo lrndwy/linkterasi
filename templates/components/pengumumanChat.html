@@ -7,7 +7,7 @@
 <script>
     // Ambil kategori pengumuman dari JSON yang di-parse
     const kategoriPengumuman = '{{ kategori_pengumuman|escapejs }}';
-    const apiKey = 'NeIbk0mV.PsHGZSs1blcM6JvJCv0v0QPcbezHE9be';
+    const apiKey = '{{ api_key|escapejs }}';
 
     // Fungsi untuk merender pengumuman
     function renderPengumuman(pengumuman, prepend = false) {

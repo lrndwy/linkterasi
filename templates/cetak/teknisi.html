@@ -64,13 +64,14 @@
                 {% else %}
                     <div class="flex flex-col items-center justify-center max-w-xs w-full">
                         <p class="mb-4 italic">Tanda tangan tidak tersedia</p>
-                        <p class="font-semibold">{{ kunjungan.sekolah.nama_kepsek }}</p>
+                        <p class="font-semibold">{{ kunjungan.nama_kepsek_atau_guru }}</p>
                     </div>
                 {% endif %}
             </div>
 
-            <div class="mt-8 flex justify-center">
+            <div class="mt-8 flex justify-center gap-4">
                 <button class="no-print px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" onclick="window.print()">Cetak</button>
+                <button onclick="window.history.back()" class="no-print px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">Kembali</button>
             </div>
         </div>
     </div>

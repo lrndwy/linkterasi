@@ -22,6 +22,8 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ["192.168.100.7", "127.0.0.1", "localhost", "*", "192.168.100.8"]
 
+API_KEY = env("API_KEY")
+
 
 # Application definition
 

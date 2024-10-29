@@ -9,6 +9,7 @@ from apps.models.mainModel import master as master_model, master_ekstrakulikuler
 from apps.models.kunjunganModel import kunjungan_produk as kunjungan_produk_model
 from apps.authentication import *
 from apps.models.kunjunganModel import JUDUL_PRODUK_CHOICES, JUDUL_TEKNISI_CHOICES
+from core.settings import API_KEY
 
 LIST_JUDUL_PRODUK = [item[0] for item in JUDUL_PRODUK_CHOICES]
 LIST_JUDUL_TEKNISI = [item[0] for item in JUDUL_TEKNISI_CHOICES]
@@ -33,8 +34,8 @@ def index(request):
             bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
+        # Sekolah Biasa
         daftar_sekolah = produk_instance.list_sekolah.all()
-        
         if filter_tipe_sekolah != 'semua':
             daftar_sekolah = daftar_sekolah.filter(tipe_sekolah=filter_tipe_sekolah)
         
@@ -42,7 +43,8 @@ def index(request):
         
         kunjungan_filter = kunjungan_produk_model.objects.filter(
             produk=produk_instance,
-            sekolah__in=daftar_sekolah
+            sekolah__in=daftar_sekolah,
+            sekolah_ekskul__isnull=True # Memastikan ini bukan kunjungan ekskul
         )
         
         if filter_bulan != 'semua':
@@ -58,17 +60,92 @@ def index(request):
         total_siswa_per_jenjang = func_total_siswa_per_jenjang(daftar_sekolah)
         total_siswa_dipegang = sum(total_siswa_per_jenjang.values())
         
-        daftar_kunjungan = kunjungan_filter.order_by('-tanggal')
+        # Format daftar sekolah dengan status kunjungan
+        tabel_sekolah = []
+        for sekolah in daftar_sekolah:
+            kunjungan = kunjungan_produk_model.objects.filter(
+                sekolah=sekolah, 
+                produk=produk_instance,
+                sekolah_ekskul__isnull=True
+            )
+            
+            if kunjungan.filter(judul='kunjungan').exists():
+                status = 'Sudah Dikunjungi'
+            elif kunjungan.filter(judul='kontak').exists():
+                status = 'Sudah Dikontak'
+            else:
+                status = 'Belum Dikunjungi'
+            
+            tabel_sekolah.append({
+                'nama_yayasan': sekolah.nama_yayasan,
+                'nama_sekolah': sekolah.nama_sekolah,
+                'jenjang': sekolah.jenjang,
+                'status': status,
+                'jumlah_siswa': sekolah.jumlah_seluruh_siswa
+            })
+
+        # Sekolah Ekstrakulikuler
+        daftar_sekolah_ekskul = produk_instance.list_sekolah_ekstrakulikuler.all()
+        total_sekolah_ekskul = daftar_sekolah_ekskul.count()
         
+        kunjungan_ekskul_filter = kunjungan_produk_model.objects.filter(
+            produk=produk_instance,
+            sekolah_ekskul__in=daftar_sekolah_ekskul
+        )
+        
+        if filter_bulan != 'semua':
+            kunjungan_ekskul_filter = kunjungan_ekskul_filter.filter(
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan
+            )
+        
+        sekolah_ekskul_dikunjungi = kunjungan_ekskul_filter.values('sekolah_ekskul').distinct()
+        total_sekolah_ekskul_dikunjungi = sekolah_ekskul_dikunjungi.count()
+        total_sekolah_ekskul_belum = total_sekolah_ekskul - total_sekolah_ekskul_dikunjungi
+        
+        # Format daftar sekolah ekskul dengan status kunjungan
+        tabel_sekolah_ekskul = []
+        for sekolah in daftar_sekolah_ekskul:
+            kunjungan = kunjungan_produk_model.objects.filter(
+                sekolah_ekskul=sekolah, 
+                produk=produk_instance
+            )
+            
+            if kunjungan.filter(judul='kunjungan').exists():
+                status = 'Sudah Dikunjungi'
+            elif kunjungan.filter(judul='kontak').exists():
+                status = 'Sudah Dikontak'
+            else:
+                status = 'Belum Dikunjungi'
+            
+            tabel_sekolah_ekskul.append({
+                'nama_yayasan': sekolah.nama_yayasan,
+                'nama_sekolah': sekolah.nama_sekolah,
+                'jenjang': sekolah.jenjang,
+                'status': status,
+                'jumlah_siswa': sekolah.jumlah_seluruh_siswa,
+                'ekskul': sekolah.tipe_sekolah
+            })
+
+        # Hitung total siswa ekskul
+        total_siswa_ekskul = sum(sekolah.jumlah_seluruh_siswa for sekolah in daftar_sekolah_ekskul)
+
         context = {
-            'daftar_kunjungan': daftar_kunjungan,
+            'daftar_kunjungan': kunjungan_filter.order_by('-tanggal'),
+            'daftar_kunjungan_ekskul': kunjungan_ekskul_filter.order_by('-tanggal'),
             'total_sekolah_sudah_dikunjungi_dikontak': total_sekolah_sudah_dikunjungi_dikontak,
             'total_sekolah_belum_dikunjungi': total_sekolah_belum_dikunjungi,
             'total_sekolah_dipegang': total_sekolah_dipegang,
             'total_siswa_dipegang': total_siswa_dipegang,
+            'total_siswa_ekskul': total_siswa_ekskul,
+            'total_sekolah_ekskul': total_sekolah_ekskul,
+            'total_sekolah_ekskul_dikunjungi': total_sekolah_ekskul_dikunjungi,
+            'total_sekolah_ekskul_belum': total_sekolah_ekskul_belum,
             'filter_bulan': filter_bulan,
             'filter_tipe_sekolah': filter_tipe_sekolah,
-            'daftar_permintaan': permintaanspt_model.objects.filter(kategori='produk').order_by('-id')[:5]
+            'daftar_permintaan': permintaanspt_model.objects.filter(kategori='produk').order_by('-id')[:5],
+            'tabel_sekolah': tabel_sekolah,
+            'tabel_sekolah_ekskul': tabel_sekolah_ekskul
         }
         return render(request, 'produk/index.html', context)
     except Exception as e:
@@ -177,10 +254,12 @@ def sptpermintaan(request):
 def pengumuman(request):
     try:
         daftar_pengumuman = pengumuman_model.objects.filter(kategori='produk').order_by('-waktu')
+        api_key = API_KEY
         
         context = {
             'daftar_pengumuman': daftar_pengumuman,
-            'kategori_pengumuman': 'produk'
+            'kategori_pengumuman': 'produk',
+            'api_key': api_key
         }
         
         return render(request, 'produk/pengumuman.html', context)
@@ -223,6 +302,7 @@ def kunjungan_tik(request):
                 try:
                     kunjungan_produk_obj = kunjungan_produk_model.objects.get(id=kunjungan_id)
                     signature_data = request.POST.get('signature')  # Ubah ini
+                    nama_kepsek_atau_guru = request.POST.get('nama_kepsek_atau_guru')
                     if signature_data:
                         # Konversi data URL menjadi file
                         import base64
@@ -232,6 +312,7 @@ def kunjungan_tik(request):
                         data = ContentFile(base64.b64decode(imgstr), name=f'signature_{kunjungan_id}.{ext}')
                         
                         kunjungan_produk_obj.ttd = data
+                        kunjungan_produk_obj.nama_kepsek_atau_guru = nama_kepsek_atau_guru
                         kunjungan_produk_obj.status = 'selesai'  # Ubah status
                         kunjungan_produk_obj.save()
                         messages.success(request, 'Tanda tangan berhasil dikirim.')
@@ -245,8 +326,8 @@ def kunjungan_tik(request):
         try:
             kunjungan_tanpa_ttd = kunjungan_produk_model.objects.filter(
                 produk=user.produk.first(),
-                status='menunggu'
-                
+                status='menunggu',
+                sekolah__isnull=False
             ).order_by('-id').first()  # Mengambil kunjungan terbaru
         except kunjungan_produk_model.DoesNotExist:
             kunjungan_tanpa_ttd = None
@@ -266,7 +347,7 @@ def kunjungan_tik(request):
         return render(request, 'produk/kunjungan_tik.html', {})
 
 @produk_required
-def kunjungan_robotik(request):
+def kunjungan_ekskul(request):
     try:
         user = request.user
         if request.method == 'POST':
@@ -284,21 +365,22 @@ def kunjungan_robotik(request):
                         deskripsi=deskripsi,
                         geolocation=geolocation,
                         tanggal=tanggal,
-                        sekolah=sekolah,
+                        sekolah_ekskul=sekolah,
                         produk=user.produk.first(),
                         user=user
                     )
                     kunjungan_produk_obj.save()
                     messages.success(request, 'Kunjungan berhasil dibuat.')
-                    return redirect('kunjungan_produk_robotik')
+                    return redirect('kunjungan_produk_ekskul')
                 except Exception as e:
                     messages.error(request, f'Gagal membuat kunjungan: {e}')
-                    return redirect('kunjungan_produk_robotik')
+                    return redirect('kunjungan_produk_ekskul')
             elif aksi == 'ttd':
                 kunjungan_id = request.POST.get('kunjungan_id')
                 try:
                     kunjungan_produk_obj = kunjungan_produk_model.objects.get(id=kunjungan_id)
                     signature_data = request.POST.get('signature')
+                    nama_kepsek_atau_guru = request.POST.get('nama_kepsek_atau_guru')
                     if signature_data:
                         import base64
                         from django.core.files.base import ContentFile
@@ -308,19 +390,21 @@ def kunjungan_robotik(request):
                         
                         kunjungan_produk_obj.ttd = data
                         kunjungan_produk_obj.status = 'selesai'
+                        kunjungan_produk_obj.nama_kepsek_atau_guru = nama_kepsek_atau_guru
                         kunjungan_produk_obj.save()
                         messages.success(request, 'Tanda tangan berhasil dikirim.')
                     else:
                         messages.error(request, 'Tanda tangan tidak ditemukan.')
-                    return redirect('kunjungan_produk_robotik')
+                    return redirect('kunjungan_produk_ekskul')
                 except kunjungan_produk_model.DoesNotExist:
                     messages.error(request, 'Kunjungan tidak ditemukan.')
-                    return redirect('kunjungan_produk_robotik')
+                    return redirect('kunjungan_produk_ekskul')
         
         try:
             kunjungan_tanpa_ttd = kunjungan_produk_model.objects.filter(
                 produk=user.produk.first(),
-                status='menunggu'
+                status='menunggu',
+                sekolah_ekskul__isnull=False
             ).order_by('-id').first()
         except kunjungan_produk_model.DoesNotExist:
             kunjungan_tanpa_ttd = None
@@ -333,7 +417,12 @@ def kunjungan_robotik(request):
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,
         }
-        return render(request, 'produk/kunjungan_robotik.html', context)
+        return render(request, 'produk/kunjungan_ekskul.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
-        return render(request, 'produk/kunjungan_robotik.html', {})
+        return render(request, 'produk/kunjungan_ekskul.html', {})
+
+
+
+
+

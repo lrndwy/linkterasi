@@ -97,14 +97,7 @@
               <label for="jumlah_komputer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Komputer</label>
               <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
-            <div class="mb-4">
-              <label for="tipe_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe Sekolah</label>
-              <select id="tipe_sekolah" name="tipe_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="">Pilih Tipe Sekolah</option>
-                <option value="tik">TIK</option>
-                <option value="robotik">Robotik</option>
-              </select>
-            </div>
+
         
           </div>
           
@@ -122,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const customerSelect = document.getElementById('customer');
   const cariButton = document.getElementById('cariCustomer');
   const form = document.getElementById('adendumForm');
+  const apiKey = '{{ api_key|escapejs }}';
   
   if (!customerSelect || !cariButton || !form) {
     console.error('Satu atau lebih elemen tidak ditemukan');
@@ -134,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (customerId) {
       fetch(`/api/customer/${customerId}/`, {
         headers: {
-          'Authorization': 'Api-Key NeIbk0mV.PsHGZSs1blcM6JvJCv0v0QPcbezHE9be'
+          'Authorization': `Api-Key ${apiKey}`
         }
       })
         .then(response => {

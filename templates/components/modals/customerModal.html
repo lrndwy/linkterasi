@@ -72,18 +72,21 @@
               <label for="jenis_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kerjasama</label>
               <select id="jenis_kerjasama" name="jenis_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Pilih Jenis Kerjasama</option>
-                {% for jk in JENIS_KERJASAMA_CHOICES %}
-                  <option value="{{ jk.0 }}">{{ jk.1 }}</option>
-                {% endfor %}
+                <option value="sewa pinjam">Sewa Pinjam</option>
+                <option value="sewa beli">Sewa Beli</option>
+                <option value="lisensi">Lisensi</option>
+                <option value="kontrak pengajaran">Kontrak Pengajaran</option>
+                <option value="ekstrakulikuler">Ekstrakulikuler</option>
               </select>
             </div>
             <div>
               <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
               <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Pilih Jenis Produk</option>
-                {% for jp in JENIS_PRODUK_CHOICES %}
-                  <option value="{{ jp.0 }}">{{ jp.1 }}</option>
-                {% endfor %}
+                <option value="informatika">Informatika</option>
+                <option value="smart tk">Smart TK</option>
+                <option value="robotik">Robotik</option>
+                <option value="coding">Coding</option>
               </select>
             </div>
             <div>
@@ -98,15 +101,7 @@
               <label for="jumlah_komputer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Komputer</label>
               <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </div>
-            <div>
-              <label for="tipe_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe Sekolah</label>
-              <select id="tipe_sekolah" name="tipe_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="">Pilih Tipe Sekolah</option>
-                {% for ts in TIPE_SEKOLAH %}
-                  <option value="{{ ts.0 }}">{{ ts.1 }}</option>
-                {% endfor %}
-              </select>
-            </div>
+
           </div>
           
           <div class="mt-4">

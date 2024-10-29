@@ -69,8 +69,8 @@
         
             <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
               <div class="flex flex-col justify-center items-center pt-5 gap-2">
-                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Siswa</h5>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Siswa per Jenjang</p>
+                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Jumlah Komputer</h5>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Jumlah Komputer per Jenjang</p>
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@
 <script src="{% static 'apexcharts/dist/apexcharts.min.js' %}"></script>
 <script>
   const totalPerJenjang = JSON.parse("{{ total_per_jenjang|escapejs }}");
-  const totalSiswaPerJenjang = JSON.parse("{{ total_siswa_per_jenjang|escapejs }}");
+  const totalKomputerPerJenjang = JSON.parse("{{ total_komputer_per_jenjang|escapejs }}");
   const daftarJenjang = JSON.parse("{{ daftar_jenjang|escapejs }}");
 
   const getChartOptions1 = () => {
@@ -240,7 +240,7 @@
 
   const getChartOptions2 = () => {
     return {
-      series: totalSiswaPerJenjang,
+      series: totalKomputerPerJenjang,
       labels: daftarJenjang,
       colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500"],
       chart: {
@@ -276,14 +276,14 @@
       yaxis: {
         labels: {
           formatter: function (value) {
-            return value + " Siswa"
+            return value + " Komputer"
           },
         },
       },
       xaxis: {
         labels: {
           formatter: function (value) {
-            return value + " Siswa"
+            return value + " Komputer"
           },
         },
         axisTicks: {

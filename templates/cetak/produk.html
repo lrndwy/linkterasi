@@ -38,31 +38,37 @@
             <hr class="my-8 border-1.5 border-black dark:border-white">
 
             <div class="space-y-4 mb-8">
-                <p><span class="font-semibold">Nama PIC:</span> {{ data.nama }}</p>
-                <p><span class="font-semibold">Nama Sekolah:</span> {{ data.nama_sekolah }}</p>
-                <p><span class="font-semibold">Jenjang:</span> {{ data.jenjang }}</p>
-                <p><span class="font-semibold">Tanggal:</span> {{ data.tanggal }}</p>
+                <p><span class="font-semibold">Nama PIC:</span> {{ kunjungan.produk.nama }}</p>
+                {% if kunjungan.sekolah %}
+                    <p><span class="font-semibold">Nama Sekolah:</span> {{ kunjungan.sekolah.nama_sekolah }}</p>
+                    <p><span class="font-semibold">Jenjang:</span> {{ kunjungan.sekolah.jenjang }}</p>
+                {% else %}
+                    <p><span class="font-semibold">Nama Sekolah:</span> {{ kunjungan.sekolah_ekskul.nama_sekolah }}</p>
+                    <p><span class="font-semibold">Jenjang:</span> {{ kunjungan.sekolah_ekskul.jenjang }}</p>
+                {% endif %}
+                <p><span class="font-semibold">Tanggal:</span> {{ kunjungan.tanggal }}</p>
             </div>
 
             <hr class="my-8 border-1.5 border-black dark:border-white">
 
             <div class="mb-8">
                 <h2 class="text-xl font-semibold mb-4">Layanan Supervisi:</h2>
-                <p class="whitespace-pre-line">{{ data.layanan }}</p>
+                <p class="whitespace-pre-line">{{ kunjungan.deskripsi }}</p>
             </div>
 
             <div class="mt-16 flex justify-end">
                 <div class="flex flex-col items-center justify-center max-w-[200px] w-full">
-                    <img src="https://th.bing.com/th/id/OIP.BfWbytqnZBXzEztpn0Y2GQHaEm?rs=1&pid=ImgDetMain" alt="Tanda Tangan" class="mb-4 max-w-[200px]">
+                    <img src="{{ kunjungan.ttd.url }}" alt="Tanda Tangan" class="mb-4 max-w-[200px]">
                     <hr class="w-full border-1 border-black dark:border-white mb-4">
                     <div class="flex flex-col items-center">
-                        <p class="font-semibold text-center">{{ data.nama_kepsek_atau_guru }}</p>
+                        <p class="font-semibold text-center">{{ kunjungan.nama_kepsek_atau_guru }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 flex justify-center">
+            <div class="mt-8 flex justify-center gap-4">
                 <button class="no-print px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" onclick="window.print()">Cetak</button>
+                <button onclick="window.history.back()" class="no-print px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">Kembali</button>
             </div>
         </div>
     </div>

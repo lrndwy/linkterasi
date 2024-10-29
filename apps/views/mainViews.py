@@ -9,9 +9,10 @@ from ..models.kunjunganModel import kunjungan_teknisi as kunjungan_teknisi_model
 
 from ..authentication import *
 from ..models.sptModel import pengumuman as pengumuman_model
-from ..models.mainModel import master as master_model
-from ..serializers import PengumumanSerializer, CustomerSerializer, CustomerDetailSerializer
-
+from ..models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
+from ..serializers import PengumumanSerializer, CustomerSerializer, CustomerDetailSerializer, MasterEkstrakulikulerSerializer, MasterEkstrakulikulerDetailSerializer
+from ..models.kunjunganModel import kunjungan_produk as kunjungan_produk_model
+from django.shortcuts import get_object_or_404
 
 def index(request):
     return redirect('login')
@@ -115,19 +116,43 @@ class CustomerDetailViewSet(generics.RetrieveAPIView):
     serializer_class = CustomerDetailSerializer
     permission_classes = [HasAPIKey]
     
-def cetak_produk(request):
-    return render(request, 'cetak/produk.html')
+class MasterEkstrakulikulerViewSet(generics.ListAPIView):
+    queryset = master_ekstrakulikuler_model.objects.all()
+    serializer_class = MasterEkstrakulikulerSerializer
+    permission_classes = [HasAPIKey]
+    
+class MasterEkstrakulikulerDetailViewSet(generics.RetrieveAPIView):
+    queryset = master_ekstrakulikuler_model.objects.all()
+    serializer_class = MasterEkstrakulikulerDetailSerializer
+    permission_classes = [HasAPIKey]
 
 def cetak_teknisi(request):
-    if request.method == 'POST':
-        try:
-            id = request.POST.get('id')
-            kunjungan = kunjungan_teknisi_model.objects.get(id=id)
-            return render(request, 'cetak/teknisi.html', {'kunjungan': kunjungan})
-        except:
-            messages.error(request, 'Kunjungan tidak ditemukan')
-            return redirect('teknisi')
-    return render(request, 'cetak/teknisi.html')
-
+    try:
+        id = request.GET.get('id')
+        kunjungan = get_object_or_404(kunjungan_teknisi_model, id=id)
+        return render(request, 'cetak/teknisi.html', {'kunjungan': kunjungan})
+    except:
+        messages.error(request, 'Kunjungan tidak ditemukan')
+        return redirect('teknisi')
+  
+def cetak_produk(request):
+    try:
+        id = request.GET.get('id')
+        kunjungan = get_object_or_404(kunjungan_produk_model, id=id)
+        return render(request, 'cetak/produk.html', {'kunjungan': kunjungan})
+    except:
+        messages.error(request, 'Kunjungan tidak ditemukan')
+        return redirect('produk')
+    
+  
+def cetak_ekskul(request):
+    try:
+        id = request.GET.get('id')
+        kunjungan = get_object_or_404(kunjungan_produk_model, id=id)
+        return render(request, 'cetak/produk.html', {'kunjungan': kunjungan})
+    except:
+        messages.error(request, 'Kunjungan tidak ditemukan')
+        return redirect('produk')
+    
 
 # NeIbk0mV.PsHGZSs1blcM6JvJCv0v0QPcbezHE9be

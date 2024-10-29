@@ -5,6 +5,7 @@ from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
 from .models import *
+from .models.mainModel import *
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -90,9 +91,31 @@ class history_adendumAdmin(ModelAdmin):
         "jenis_produk",
         "pembayaran",
         "harga_buku",
+        "tanggal_adendum",
+    )
+
+@admin.register(history_adendum_ekskul)
+class history_adendum_ekskulAdmin(ModelAdmin):
+    list_display = (
+        "master",
+        "no_mou",
+        "nama_yayasan",
+        "kepala_yayasan",
+        "nama_sekolah",
+        "nama_kepsek",
+        "provinsi",
+        "jenjang",
+        "awal_kerjasama",
+        "akhir_kerjasama",
+        "status",
+        "jenis_kerjasama",
+        "jenis_produk",
+        "pembayaran",
+        "harga_buku",
         "tipe_sekolah",
         "tanggal_adendum",
     )
+
 
 
 @admin.register(kepsek)
@@ -262,8 +285,6 @@ class penggajianAdmin(ModelAdmin):
         "no_bpjs_kesehatan",
         "no_bpjs_naker",
         "gaji_pokok",
-        "tunjangan",
-        "THR",
         "uang_admin",
     )
 

@@ -31,7 +31,7 @@ urlpatterns = [
     path("produk/sptpermintaan/", produkViews.sptpermintaan, name="sptpermintaan_produk"),
     path("produk/pengumuman/", produkViews.pengumuman, name="pengumuman_produk"),
     path("produk/kunjungan_tik/", produkViews.kunjungan_tik, name="kunjungan_produk_tik"),
-    path("produk/kunjungan_robotik/", produkViews.kunjungan_robotik, name="kunjungan_produk_robotik"),
+    path("produk/kunjungan_ekskul/", produkViews.kunjungan_ekskul, name="kunjungan_produk_ekskul"),
 
     # Teknisi
     path("teknisi/", teknisiViews.index, name="teknisi"),
@@ -56,6 +56,7 @@ urlpatterns = [
     path("spt/teknisi/sptpermintaan/", sptteknisiViews.sptpermintaan, name="sptpermintaan_sptteknisi"),
     path("spt/teknisi/pengumuman/", sptteknisiViews.pengumuman, name="pengumuman_sptteknisi"),
     path("spt/teknisi/customer/", sptteknisiViews.customer, name="customer_sptteknisi"),
+    path("spt/teknisi/customer_ekskul/", sptteknisiViews.customer_ekskul, name="customer_ekskul_sptteknisi"),
     # SPT Produk
     path("spt/produk/", sptprodukViews.index, name="sptproduk"),
     path("spt/produk/komplain/", sptprodukViews.komplain, name="komplain_sptproduk"),
@@ -75,6 +76,8 @@ urlpatterns = [
     path("spt/sales/customer/", sptsalesViews.customer, name="customer_sptsales"),
     path("spt/sales/pembayaran/", sptsalesViews.pembayaran, name="pembayaran_sptsales"),
     path("spt/sales/adendum/", sptsalesViews.adendum, name="adendum_sptsales"),
+    path("spt/sales/adendum_ekskul/", sptsalesViews.adendum_ekskul, name="adendum_ekskul_sptsales"),
+    path("spt/sales/customer_ekskul/", sptsalesViews.customer_ekskul, name="customer_ekskul_sptsales"),
 
      
     # Main
@@ -84,4 +87,6 @@ urlpatterns = [
     path("testing/", mainViews.testing, name="testing"),
     path("cetak/produk/", mainViews.cetak_produk, name="cetak_produk"),
     path("cetak/teknisi/", mainViews.cetak_teknisi, name="cetak_teknisi"),
+    path("cetak/ekskul/", mainViews.cetak_ekskul, name="cetak_ekskul"),
+    path("cetak/produk/", mainViews.cetak_produk, name="cetak_produk"),
 ]

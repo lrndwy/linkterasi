@@ -26,7 +26,7 @@ JENIS_PRODUK_CHOICES = [
 
 TIPE_SEKOLAH = [
     ("robotik", "Robotik"),
-    ("ekstrakulikuler", "Coding"),
+    ("coding", "Coding"),
 ]
 
 
@@ -278,6 +278,73 @@ class history_adendum(models.Model):
     jumlah_siswa_kelas_11_smk = models.IntegerField(null=True, blank=True)
     jumlah_siswa_kelas_12_smk = models.IntegerField(null=True, blank=True)
     jumlah_komputer = models.IntegerField(null=True, blank=True)
+
+    tanggal_adendum = models.DateField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # Memperbarui data master sesuai dengan data adendum yang baru disimpan
+        master_instance = self.master
+        fields_to_update = [
+            f.name for f in self._meta.fields if f.name != "id" and f.name != "master"
+        ]
+
+        for field in fields_to_update:
+            setattr(master_instance, field, getattr(self, field))
+
+        master_instance.save()
+
+    def __str__(self):
+        return f"{self.nama_sekolah} - {self.jenjang}"
+
+    class Meta:
+        verbose_name_plural = "History Adendum"
+        
+class history_adendum_ekskul(models.Model):
+    master = models.ForeignKey(
+        master_ekstrakulikuler, on_delete=models.CASCADE, related_name="history_adendum_ekskul"
+    )
+    no_mou = models.CharField(max_length=255, null=True, blank=True)
+    nama_yayasan = models.CharField(max_length=255, null=True, blank=True)
+    kepala_yayasan = models.CharField(max_length=255, null=True, blank=True)
+    nama_sekolah = models.CharField(max_length=255, null=True, blank=True)
+    nama_kepsek = models.CharField(max_length=255, null=True, blank=True)
+    provinsi = models.ForeignKey(
+        provinsi, on_delete=models.CASCADE, null=True, blank=True
+    )
+    jenjang = models.CharField(
+        max_length=255, choices=JENJANG_CHOICES, null=True, blank=True
+    )
+    awal_kerjasama = models.DateField(null=True, blank=True)
+    akhir_kerjasama = models.DateField(null=True, blank=True)
+    status = models.CharField(
+        max_length=255, choices=STATUS_CHOICES, null=True, blank=True
+    )
+    jenis_kerjasama = models.CharField(
+        max_length=255, choices=JENIS_KERJASAMA_CHOICES, null=True, blank=True
+    )
+    jenis_produk = models.CharField(
+        max_length=255, choices=JENIS_PRODUK_CHOICES, null=True, blank=True
+    )
+    pembayaran = models.CharField(max_length=255, null=True, blank=True)
+    harga_buku = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_1 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_2 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_3 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_4 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_5 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_6 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_7 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_8 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_9 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_10 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_11 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_12 = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_10_smk = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_11_smk = models.IntegerField(null=True, blank=True)
+    jumlah_siswa_kelas_12_smk = models.IntegerField(null=True, blank=True)
+    jumlah_komputer = models.IntegerField(null=True, blank=True)
     tipe_sekolah = models.CharField(
         max_length=255, choices=TIPE_SEKOLAH, null=True, blank=True
     )
@@ -295,18 +362,14 @@ class history_adendum(models.Model):
         for field in fields_to_update:
             setattr(master_instance, field, getattr(self, field))
 
-        # Memperbarui ManyToMany fields
-        master_instance.user_produk.set(self.user_produk.all())
-        master_instance.user_teknisi.set(self.user_teknisi.all())
-        master_instance.user_sales.set(self.user_sales.all())
-
         master_instance.save()
 
     def __str__(self):
         return f"{self.nama_sekolah} - {self.jenjang}"
 
     class Meta:
-        verbose_name_plural = "History Adendum"
+        verbose_name_plural = "History Adendum Ekstrakulikuler"
+
 
 
 # Table Pengguna -------------------------------------------------------------

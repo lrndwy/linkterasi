@@ -128,6 +128,7 @@
                         <table id="karyawanTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">NIK</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Alamat</th>
@@ -141,12 +142,16 @@
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Uang Bonus Hari Raya</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Bank</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">No Rekening</th>
-                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="karyawanTableBody">
                                 {% for karyawan in daftar_karyawan %}
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{% url 'karyawan_sptproduk' %}?edit={{ karyawan.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+                                        <a href="{% url 'karyawan_sptproduk' %}?hapus={{ karyawan.id }}" class="text-red-600 hover:underline">Hapus</a>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.NIK }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.nama }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.alamat }}</td>
@@ -160,10 +165,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_bonus_hari_raya }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.bank }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.no_rekening }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{% url 'karyawan_sptproduk' %}?edit={{ karyawan.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
-                                        <a href="{% url 'karyawan_sptproduk' %}?hapus={{ karyawan.id }}" class="text-red-600 hover:underline">Hapus</a>
-                                    </td>
+                                    
                                 </tr>
                                 {% empty %}
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -189,7 +191,8 @@
         var rows = Array.from(table.querySelectorAll('tr'));
         
         var data = rows.map(row => {
-            return Array.from(row.querySelectorAll('th,td')).slice(0, -1).map(cell => cell.textContent);
+            var cells = Array.from(row.querySelectorAll('th,td'));
+            return cells.slice(1).map(cell => cell.textContent.trim());
         });
         
         if (format === 'csv') {
@@ -211,12 +214,12 @@
             XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
             XLSX.writeFile(wb, filename + ".xlsx");
         } else if (format === 'pdf') {
-            var doc = new jspdf.jsPDF('l', 'pt'); // Ubah orientasi ke landscape
+            var doc = new jspdf.jsPDF('l', 'pt');
             doc.autoTable({
                 head: [data[0]],
                 body: data.slice(1),
                 startY: 20,
-                styles: { fontSize: 8, cellPadding: 2, halign: 'center' }, // Tambahkan halign: 'center' untuk posisi teks di tengah
+                styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
                 columnStyles: {
                     0: {cellWidth: 50},  // NIK
                     1: {cellWidth: 70},  // Nama
@@ -230,7 +233,7 @@
                     9: {cellWidth: 50},  // Uang Admin
                     10: {cellWidth: 60}, // Uang Bonus Hari Raya
                     11: {cellWidth: 50}, // Bank
-                    12: {cellWidth: 60},  // No Rekening
+                    12: {cellWidth: 60}  // No Rekening
                 },
                 didDrawPage: function (data) {
                     doc.setFontSize(14);

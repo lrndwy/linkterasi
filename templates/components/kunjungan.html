@@ -14,12 +14,17 @@
       {% csrf_token %}
       <input type="hidden" name="aksi" value="ttd">
       <input type="hidden" name="kunjungan_id" value="{{ kunjungan.id }}">
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Kunjungan ID:</strong> {{ kunjungan.id }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Judul:</strong> {{ kunjungan.judul }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Sekolah:</strong> {{ kunjungan.sekolah }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Tanggal Kunjungan:</strong> {{ kunjungan.tanggal }}</p>
-      <p class="mb-2 text-sm font-semibold text-gray-900 dark:text-white"><strong>Deskripsi:</strong> {{ kunjungan.deskripsi }}</p>
+      <p class="mb-2 text-sm text-gray-900 dark:text-white"><strong>Kunjungan ID:</strong> {{ kunjungan.id }}</p>
+      <p class="mb-2 text-sm text-gray-900 dark:text-white"><strong>Judul:</strong> {{ kunjungan.judul }}</p>
+      <p class="mb-2 text-sm text-gray-900 dark:text-white"><strong>Sekolah:</strong> {{ kunjungan.sekolah }}</p>
+      <p class="mb-2 text-sm text-gray-900 dark:text-white"><strong>Tanggal Kunjungan:</strong> {{ kunjungan.tanggal }}</p>
+      <p class="mb-2 text-sm text-gray-900 dark:text-white"><strong>Deskripsi:</strong> {{ kunjungan.deskripsi }}</p>
+      <div class="mb-2 sm:mb-5 flex flex-col">
+        <label for="nama_kepsek_atau_guru" class="mb-2 text-sm font-semibold text-gray-900 dark:text-white">Nama Kepala Sekolah atau Guru</label>
+        <input type="text" name="nama_kepsek_atau_guru" class="mb-2 border border-gray-300 rounded-lg text-sm bg-gray-50 text-gray-900 dark:text-black" placeholder="Nama Kepala Sekolah atau Guru" required>
+      </div>
       <c-signature></c-signature>
+      
       <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:text-base w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
         Kirim Tanda Tangan
       </button>

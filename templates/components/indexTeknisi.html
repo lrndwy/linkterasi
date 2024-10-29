@@ -129,11 +129,7 @@
               {% endif %}
             </td>
             <td class="px-6 py-4">
-              <form action="{% url 'cetak_teknisi' %}" method="post" target="_blank">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ kunjungan.id }}">
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Cetak</button>
-              </form>
+                <a href="{% url 'cetak_teknisi' %}?id={{ kunjungan.id }}" target="_blank" class="text-blue-600 hover:underline">Cetak</a>
             </td>
           </tr>
           {% empty %}
@@ -208,9 +204,26 @@
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
     
-    <!-- Input pencarian -->
-    <div class="mb-4">
-      <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari di semua kolom...">
+    <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+      <div class="w-full sm:w-1/2">
+        <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari di semua kolom...">
+      </div>
+      <div class="w-full sm:w-auto">
+        <div class="relative">
+          <button id="dropdownSPTButton" data-dropdown-toggle="dropdownSPT" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+          </button>
+          <div id="dropdownSPT" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSPTButton">
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'excel', 'data_spt')">Excel</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'csv', 'data_spt')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'pdf', 'data_spt')">PDF</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="relative overflow-x-auto sm:rounded-lg">
@@ -323,27 +336,24 @@
   });
 </script>
 
-<!-- Tambahkan script untuk export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 function exportTable(tableId, format, filename) {
     const table = document.getElementById(tableId);
-    const visibleRows = Array.from(table.querySelectorAll('tr')).filter(row => row.style.display !== 'none');
+    const rows = Array.from(table.querySelectorAll('tr'));
     
-    // Ambil header dari baris pertama tabel (kecuali kolom aksi)
-    const headers = Array.from(visibleRows[0].querySelectorAll('th'))
+    // Ambil header dari baris pertama tabel (kecuali kolom file)
+    const headers = Array.from(rows[0].querySelectorAll('th'))
         .map(header => header.textContent.trim())
-        .filter(header => header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file' && header.toLowerCase() !== 'cetak');
+        .filter(header => header.toLowerCase() !== 'file');
     
-    // Ambil data dari baris-baris yang terlihat (kecuali kolom aksi)
-    const data = visibleRows.slice(1)
+    // Ambil data dari baris-baris yang terlihat (kecuali kolom file)
+    const data = rows.slice(1)
+        .filter(row => row.style.display !== 'none')
         .map(row => Array.from(row.querySelectorAll('td'))
-            .filter((cell, index) => {
-                const header = headers[index];
-                return header && header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file' && header.toLowerCase() !== 'cetak';
-            })
+            .filter((cell, index) => index !== 4) // Skip kolom file (index 4)
             .map(cell => cell.textContent.trim()));
     
     if (format === 'excel' || format === 'csv') {

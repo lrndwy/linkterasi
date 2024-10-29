@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from apps.models.sptModel import permintaanSPT as permintaanSPT_model
 from apps.models.mainModel import sales as sales_model, master as master_model
+from core.settings import API_KEY
+
 @sales_required
 def index(request):
     try:
@@ -97,8 +99,10 @@ def sptpermintaan(request):
 @sales_required
 def pengumuman(request):
     try:
+        api_key = API_KEY
         context = {
-            'kategori_pengumuman': 'sales'
+            'kategori_pengumuman': 'sales',
+            'api_key': api_key
         }
         return render(request, 'sales/pengumuman.html', context)
     except Exception as e:

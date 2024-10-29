@@ -9,7 +9,7 @@ from apps.models.kspModel import komplain as komplain_model, permintaan as permi
 from apps.models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman as pengumuman_model 
 from django.contrib.auth.models import User
 from apps.models.kunjunganModel import JUDUL_TEKNISI_CHOICES, kunjungan_teknisi as kunjungan_teknisi_model
-
+from core.settings import API_KEY
 LIST_JUDUL_TEKNISI = [item[0] for item in JUDUL_TEKNISI_CHOICES]
 
 @teknisi_required
@@ -193,10 +193,11 @@ def sptpermintaan(request):
 def pengumuman(request):
     try:
         daftar_pengumuman = pengumuman_model.objects.filter(kategori='teknisi').order_by('-waktu')
-        
+        api_key = API_KEY
         context = {
             'daftar_pengumuman': daftar_pengumuman,
-            'kategori_pengumuman': 'teknisi'
+            'kategori_pengumuman': 'teknisi',
+            'api_key': api_key
         }
         
         return render(request, 'teknisi/pengumuman.html', context)
@@ -233,6 +234,7 @@ def kunjungan(request):
                 kunjungan_id = request.POST.get('kunjungan_id')
                 kunjungan_teknisi_obj = kunjungan_teknisi_model.objects.get(id=kunjungan_id)
                 signature_data = request.POST.get('signature')
+                nama_kepsek_atau_guru = request.POST.get('nama_kepsek_atau_guru')
                 if signature_data:
                     import base64
                     from django.core.files.base import ContentFile
@@ -242,6 +244,7 @@ def kunjungan(request):
                     
                     kunjungan_teknisi_obj.ttd = data
                     kunjungan_teknisi_obj.status = 'selesai'
+                    kunjungan_teknisi_obj.nama_kepsek_atau_guru = nama_kepsek_atau_guru
                     kunjungan_teknisi_obj.save()
                     messages.success(request, 'Tanda tangan berhasil dikirim.')
                 else:
@@ -250,7 +253,8 @@ def kunjungan(request):
         
         kunjungan_tanpa_ttd = kunjungan_teknisi_model.objects.filter(
             teknisi=user.teknisi.first(),
-            status='menunggu'
+            status='menunggu',
+            sekolah__isnull=False
         ).order_by('-id').first()
         
         kunjunganTTD = kunjungan_tanpa_ttd is not None

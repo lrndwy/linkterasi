@@ -12,7 +12,7 @@
       <c-slot name="content">
         <c-headingCard judul="Edit Customer Ekstrakulikuler" deskripsi="Edit Customer Ekstrakulikuler" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
         <section>
-          <form method="POST" action="{% url 'customer_sptproduk_ekskul' %}?edit={{ master.id }}" class="p-4 bg-white rounded-lg">
+          <form method="POST" action="?edit={{ master.id }}" class="p-4 bg-white rounded-lg">
             {% csrf_token %}
             <input type="hidden" name="edit_id" value="{{ master.id }}">
             
@@ -59,14 +59,117 @@
                 <label for="tipe_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe Sekolah</label>
                 <select id="tipe_sekolah" name="tipe_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
                   <option value="">Pilih Tipe Sekolah</option>
-                  {% for tipe, label in tipe_sekolah_choices %}
-                    <option value="{{ tipe }}" {% if tipe == master.tipe_sekolah %}selected{% endif %}>{{ label }}</option>
+                  <option value="robotik" {% if master.tipe_sekolah == 'robotik' %}selected{% endif %}>Robotik</option>
+                  <option value="coding" {% if master.tipe_sekolah == 'coding' %}selected{% endif %}>Coding</option>
+                </select>
+              </div>
+              <div>
+                <label for="awal_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Awal Kerjasama</label>
+                <input type="date" id="awal_kerjasama" name="awal_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.awal_kerjasama|date:'Y-m-d' }}">
+              </div>
+              <div>
+                <label for="akhir_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Akhir Kerjasama</label>
+                <input type="date" id="akhir_kerjasama" name="akhir_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.akhir_kerjasama|date:'Y-m-d' }}">
+              </div>
+              <div>
+                <label for="jenis_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kerjasama</label>
+                <select id="jenis_kerjasama" name="jenis_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="">Pilih Jenis Kerjasama</option>
+                  {% for jk in JENIS_KERJASAMA_CHOICES %}
+                    <option value="{{ jk.0 }}" {% if jk.0 == master.jenis_kerjasama %}selected{% endif %}>{{ jk.1 }}</option>
                   {% endfor %}
                 </select>
+              </div>
+              <div>
+                <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
+                <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="">Pilih Jenis Produk</option>
+                  {% for jp in JENIS_PRODUK_CHOICES %}
+                    <option value="{{ jp.0 }}" {% if jp.0 == master.jenis_produk %}selected{% endif %}>{{ jp.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label for="pembayaran" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pembayaran</label>
+                <input type="text" id="pembayaran" name="pembayaran" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.pembayaran }}">
+              </div>
+              <div>
+                <label for="harga_buku" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Buku</label>
+                <input type="text" id="harga_buku" name="harga_buku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.harga_buku }}">
+              </div>
+              <div>
+                <label for="jumlah_komputer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Komputer</label>
+                <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_komputer }}">
+              </div>
+            </div>
+            <div class="mt-4">
+              <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jumlah Siswa per Kelas</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                  <label for="jumlah_siswa_kelas_1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 1</label>
+                  <input type="number" id="jumlah_siswa_kelas_1" name="jumlah_siswa_kelas_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_1 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 2</label>
+                  <input type="number" id="jumlah_siswa_kelas_2" name="jumlah_siswa_kelas_2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_2 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 3</label>
+                  <input type="number" id="jumlah_siswa_kelas_3" name="jumlah_siswa_kelas_3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_3 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 4</label>
+                  <input type="number" id="jumlah_siswa_kelas_4" name="jumlah_siswa_kelas_4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_4 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_5" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 5</label>
+                  <input type="number" id="jumlah_siswa_kelas_5" name="jumlah_siswa_kelas_5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_5 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_6" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 6</label>
+                  <input type="number" id="jumlah_siswa_kelas_6" name="jumlah_siswa_kelas_6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_6 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_7" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 7</label>
+                  <input type="number" id="jumlah_siswa_kelas_7" name="jumlah_siswa_kelas_7" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_7 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_8" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 8</label>
+                  <input type="number" id="jumlah_siswa_kelas_8" name="jumlah_siswa_kelas_8" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_8 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_9" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 9</label>
+                  <input type="number" id="jumlah_siswa_kelas_9" name="jumlah_siswa_kelas_9" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_9 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_10" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10</label>
+                  <input type="number" id="jumlah_siswa_kelas_10" name="jumlah_siswa_kelas_10" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_11" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11</label>
+                  <input type="number" id="jumlah_siswa_kelas_11" name="jumlah_siswa_kelas_11" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_12" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12</label>
+                  <input type="number" id="jumlah_siswa_kelas_12" name="jumlah_siswa_kelas_12" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12 }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_10_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10 SMK</label>
+                  <input type="number" id="jumlah_siswa_kelas_10_smk" name="jumlah_siswa_kelas_10_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10_smk }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_11_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11 SMK</label>
+                  <input type="number" id="jumlah_siswa_kelas_11_smk" name="jumlah_siswa_kelas_11_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11_smk }}">
+                </div>
+                <div>
+                  <label for="jumlah_siswa_kelas_12_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12 SMK</label>
+                  <input type="number" id="jumlah_siswa_kelas_12_smk" name="jumlah_siswa_kelas_12_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12_smk }}">
+                </div>
               </div>
             </div>
             <div class="mt-4">
               <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan</button>
+              <button type="button" onclick="window.history.back()" class="mt-6 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batal</button>
             </div>
           </form>
         </section>
@@ -79,8 +182,8 @@
             <div class="flex flex-wrap justify-between items-center w-full gap-2">
                 <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Pilih Customer</h2>
                 <div class="flex flex-wrap gap-2">
-                  <a href="{% url 'customer_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Biasa</a>
-                  <a href="{% url 'customer_ekskul_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-50 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Ekstrakulikuler</a>
+                  <a href="{% url 'customer_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Biasa</a>
+                  <a href="{% url 'customer_ekskul_sptproduk' %}" class="text-gray-800 border border-gray-300 bg-gray-100 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Ekstrakulikuler</a>
                 </div>
             </div>
         </section>
@@ -94,14 +197,31 @@
                         <input type="text" id="masterSearch" placeholder="Cari data customer..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div class="mb-4 w-full sm:w-auto flex gap-2">
-                        <a href="{% url 'customer_ekskul_sptsales' %}?add=1" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                            Tambah Data
-                        </a>
-                        <button onclick="exportToExcel('masterTable', 'Data Customer Ekstrakulikuler')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                            Export Excel
+                        <button data-modal-target="tambah-data-customer-ekskul-modal" data-modal-toggle="tambah-data-customer-ekskul-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Tambah
                         </button>
-                        <button onclick="exportToPDF('masterTable', 'Data Customer Ekstrakulikuler')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                            Export PDF
+                        <div class="relative">
+                            <button id="dropdownMasterButton" data-dropdown-toggle="dropdownMaster" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                                Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                </svg>
+                            </button>
+                            <div id="dropdownMaster" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMasterButton">
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'excel', 'data_master')">Excel</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'csv', 'data_master')">CSV</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('masterTable', 'pdf', 'data_master')">PDF</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button data-modal-target="import-data-customer-modal" data-modal-toggle="import-data-customer-modal" id="importButton" class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800" type="button">
+                            Impor
                         </button>
                     </div>
                 </div>
@@ -109,77 +229,78 @@
                     <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3">No MOU</th>
-                                <th scope="col" class="px-6 py-3">Nama Yayasan</th>
-                                <th scope="col" class="px-6 py-3">Kepala Yayasan</th>
-                                <th scope="col" class="px-6 py-3">Nama Sekolah</th>
-                                <th scope="col" class="px-6 py-3">Nama Kepsek</th>
-                                <th scope="col" class="px-6 py-3">Provinsi</th>
-                                <th scope="col" class="px-6 py-3">Jenjang</th>
-                                <th scope="col" class="px-6 py-3">Awal Kerjasama</th>
-                                <th scope="col" class="px-6 py-3">Akhir Kerjasama</th>
-                                <th scope="col" class="px-6 py-3">Status</th>
-                                <th scope="col" class="px-6 py-3">Jenis Kerjasama</th>
-                                <th scope="col" class="px-6 py-3">Jenis Produk</th>
-                                <th scope="col" class="px-6 py-3">Pembayaran</th>
-                                <th scope="col" class="px-6 py-3">Harga Buku</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 1</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 2</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 3</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 4</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 5</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 6</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 7</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 8</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 9</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 10</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 11</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 12</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 10 SMK</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 11 SMK</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Siswa Kelas 12 SMK</th>
-                                <th scope="col" class="px-6 py-3">Jumlah Komputer</th>
-                                <th scope="col" class="px-6 py-3">Tipe Sekolah</th>
-                                <th scope="col" class="px-6 py-3">Aksi</th>
+                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Kepala Yayasan</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepsek</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Awal Kerjasama</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembayaran</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Harga Buku</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 1</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 2</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 3</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 4</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 5</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 6</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 7</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 8</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 9</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10 SMK</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11 SMK</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12 SMK</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Komputer</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
                             </tr>
                         </thead>
                         <tbody id="masterTableBody">
                             {% for data in master_data %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">{{ data.no_mou }}</td>
-                                <td class="px-6 py-4">{{ data.nama_yayasan }}</td>
-                                <td class="px-6 py-4">{{ data.kepala_yayasan }}</td>
-                                <td class="px-6 py-4">{{ data.nama_sekolah }}</td>
-                                <td class="px-6 py-4">{{ data.nama_kepsek }}</td>
-                                <td class="px-6 py-4">{{ data.provinsi.nama }}</td>
-                                <td class="px-6 py-4">{{ data.jenjang }}</td>
-                                <td class="px-6 py-4">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
-                                <td class="px-6 py-4">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
-                                <td class="px-6 py-4">{{ data.status }}</td>
-                                <td class="px-6 py-4">{{ data.jenis_kerjasama }}</td>
-                                <td class="px-6 py-4">{{ data.jenis_produk }}</td>
-                                <td class="px-6 py-4">{{ data.pembayaran }}</td>
-                                <td class="px-6 py-4">{{ data.harga_buku }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_1 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_2 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_3 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_4 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_5 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_6 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_7 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_8 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_9 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_10 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_11 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_12 }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_10_smk }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_11_smk }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_siswa_kelas_12_smk }}</td>
-                                <td class="px-6 py-4">{{ data.jumlah_komputer }}</td>
-                                <td class="px-6 py-4">{{ data.tipe_sekolah }}</td>
-                                <td class="px-6 py-4">
-                                    <a href="{% url 'customer_ekskul_sptsales' %}?edit={{ data.id }}" class="text-blue-600 hover:underline dark:text-blue-500">Edit</a>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                  <a href="{% url 'customer_ekskul_sptproduk' %}?edit={{ data.id }}" class="text-blue-600 hover:underline dark:text-blue-500">Edit</a>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.status }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jenis_kerjasama }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jenis_produk }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_3|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_4|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_5|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_6|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_7|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_8|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_9|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10_smk|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11_smk|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.tipe_sekolah }}</td>
+                                
                             </tr>
                             {% empty %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -188,7 +309,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
+                </div> 
             </div>
         </section>
       </c-slot>
@@ -196,4 +317,105 @@
 </c-layouts.dashboard>
 
 <!-- Script untuk ekspor dan pencarian sama seperti customer.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+    function exportTable(tableId, format, filename) {
+        var table = document.getElementById(tableId);
+        var tbody = document.getElementById(tableId + 'Body');
+        var visibleRows = Array.from(tbody.querySelectorAll('tr')).filter(row => row.style.display !== 'none');
+        var headerRow = table.querySelector('thead tr');
+        
+        // Mengambil header (tanpa kolom aksi)
+        var headers = Array.from(headerRow.querySelectorAll('th')).slice(1).map(cell => cell.textContent.trim());
+        
+        // Mengambil data dari baris yang visible saja (tanpa kolom aksi)
+        var data = visibleRows.map(row => {
+            var cells = Array.from(row.querySelectorAll('td'));
+            return cells.slice(1).map(cell => cell.textContent.trim());
+        });
+        
+        // Menggabungkan header dengan data
+        var fullData = [headers, ...data];
+        
+        if (format === 'csv') {
+            var csvContent = fullData.map(row => row.join(',')).join('\n');
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var link = document.createElement("a");
+            if (link.download !== undefined) {
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename + ".csv");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } else if (format === 'excel') {
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(fullData);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, filename + ".xlsx");
+        } else if (format === 'pdf') {
+            var doc = new jspdf.jsPDF('l', 'pt', 'a4');
+            var pageWidth = doc.internal.pageSize.getWidth();
+            var tableWidth = pageWidth - 40;
+            var columnCount = fullData[0].length;
+            var columnWidth = tableWidth / columnCount;
+
+            doc.autoTable({
+                head: [fullData[0]], // Header
+                body: fullData.slice(1), // Data
+                startY: 20,
+                styles: { 
+                    fontSize: 6,
+                    cellPadding: 1,
+                    overflow: 'linebreak',
+                    halign: 'center'
+                },
+                columnStyles: {},
+                didParseCell: function(data) {
+                    data.cell.styles.cellWidth = columnWidth;
+                },
+                willDrawCell: function(data) {
+                    if (data.row.section === 'body') {
+                        data.cell.styles.cellWidth = 'wrap';
+                    }
+                },
+                margin: { top: 20, right: 20, bottom: 20, left: 20 }
+            });
+
+            doc.save(filename + ".pdf");
+        }
+    }
+
+    function setupSearch(inputId, tableBodyId) {
+        document.getElementById(inputId).addEventListener('keyup', function() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById(inputId);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableBodyId);
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupSearch('masterSearch', 'masterTableBody');
+    });
+</script>
 {% endblock %}

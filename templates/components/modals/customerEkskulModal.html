@@ -1,4 +1,4 @@
-{% comment %} Modal Tambah Data customer Ekskul {% endcomment %}
+
 <div id="tambah-data-customer-ekskul-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" style="z-index: 100;">
   <div class="relative p-4 w-full max-w-2xl max-h-[calc(100vh-190px)]">
     <!-- Modal content -->
@@ -6,7 +6,7 @@
       <!-- Modal header -->
       <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-          Tambah Data Customer Ekstrakulikuler
+          Tambah Data Customer
         </h3>
         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="tambah-data-customer-ekskul-modal">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -17,7 +17,7 @@
       </div>
       <!-- Modal body -->
       <div class="p-4 overflow-y-auto max-h-[calc(100vh-200px)]">
-        <form method="POST">
+        <form method="POST" action="">
           {% csrf_token %}
           <input type="hidden" name="aksi" value="tambah">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,18 +72,21 @@
               <label for="jenis_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kerjasama</label>
               <select id="jenis_kerjasama" name="jenis_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Pilih Jenis Kerjasama</option>
-                {% for jk in JENIS_KERJASAMA_CHOICES %}
-                  <option value="{{ jk.0 }}">{{ jk.1 }}</option>
-                {% endfor %}
+                <option value="sewa pinjam">Sewa Pinjam</option>
+                <option value="sewa beli">Sewa Beli</option>
+                <option value="lisensi">Lisensi</option>
+                <option value="kontrak pengajaran">Kontrak Pengajaran</option>
+                <option value="ekstrakulikuler">Ekstrakulikuler</option>
               </select>
             </div>
             <div>
               <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
               <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Pilih Jenis Produk</option>
-                {% for jp in JENIS_PRODUK_CHOICES %}
-                  <option value="{{ jp.0 }}">{{ jp.1 }}</option>
-                {% endfor %}
+                <option value="informatika">Informatika</option>
+                <option value="smart tk">Smart TK</option>
+                <option value="robotik">Robotik</option>
+                <option value="coding">Coding</option>
               </select>
             </div>
             <div>
@@ -102,16 +105,115 @@
               <label for="tipe_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipe Sekolah</label>
               <select id="tipe_sekolah" name="tipe_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="">Pilih Tipe Sekolah</option>
-                {% for ts in TIPE_SEKOLAH %}
-                  <option value="{{ ts.0 }}">{{ ts.1 }}</option>
-                {% endfor %}
+                <option value="robotik">Robotik</option>
+                <option value="coding">Coding</option>
               </select>
             </div>
           </div>
           
-          <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data</button>
+          <div class="mt-4">
+            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jumlah Siswa per Kelas</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label for="jumlah_siswa_kelas_1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 1</label>
+                <input type="number" id="jumlah_siswa_kelas_1" name="jumlah_siswa_kelas_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 2</label>
+                <input type="number" id="jumlah_siswa_kelas_2" name="jumlah_siswa_kelas_2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 3</label>
+                <input type="number" id="jumlah_siswa_kelas_3" name="jumlah_siswa_kelas_3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 4</label>
+                <input type="number" id="jumlah_siswa_kelas_4" name="jumlah_siswa_kelas_4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_5" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 5</label>
+                <input type="number" id="jumlah_siswa_kelas_5" name="jumlah_siswa_kelas_5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_6" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 6</label>
+                <input type="number" id="jumlah_siswa_kelas_6" name="jumlah_siswa_kelas_6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_7" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 7</label>
+                <input type="number" id="jumlah_siswa_kelas_7" name="jumlah_siswa_kelas_7" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_8" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 8</label>
+                <input type="number" id="jumlah_siswa_kelas_8" name="jumlah_siswa_kelas_8" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_9" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 9</label>
+                <input type="number" id="jumlah_siswa_kelas_9" name="jumlah_siswa_kelas_9" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_10" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10</label>
+                <input type="number" id="jumlah_siswa_kelas_10" name="jumlah_siswa_kelas_10" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_11" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11</label>
+                <input type="number" id="jumlah_siswa_kelas_11" name="jumlah_siswa_kelas_11" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_12" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12</label>
+                <input type="number" id="jumlah_siswa_kelas_12" name="jumlah_siswa_kelas_12" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_10_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10 SMK</label>
+                <input type="number" id="jumlah_siswa_kelas_10_smk" name="jumlah_siswa_kelas_10_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_11_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11 SMK</label>
+                <input type="number" id="jumlah_siswa_kelas_11_smk" name="jumlah_siswa_kelas_11_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div>
+                <label for="jumlah_siswa_kelas_12_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12 SMK</label>
+                <input type="number" id="jumlah_siswa_kelas_12_smk" name="jumlah_siswa_kelas_12_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+            </div>
+          </div>
+          
+          <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Master</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<div id="import-data-customer-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" style="z-index: 100;">
+  <div class="relative p-4 w-full max-w-2xl max-h-[calc(100vh-190px)]">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          Impor Data Customer
+        </h3>
+        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="import-data-customer-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+          <span class="sr-only">Tutup modal</span>
+        </button>
+      </div>
+      <div class="p-4 overflow-y-auto max-h-[calc(100vh-200px)]">
+        <form method="POST" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="aksi" value="impor">
+          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload file</label>
+          <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" name="file" type="file" accept=".csv, .xlsx">
+          <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Import Data</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Tambahkan script JavaScript di sini jika diperlukan
+  });
+</script>
+

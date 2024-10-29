@@ -40,8 +40,6 @@ class penggajian(models.Model):
     no_bpjs_kesehatan = models.CharField(max_length=255, null=True, blank=True)
     no_bpjs_naker = models.CharField(max_length=255, null=True, blank=True)
     gaji_pokok = models.IntegerField(null=True, blank=True)
-    tunjangan = models.IntegerField(null=True, blank=True)
-    THR = models.IntegerField(null=True, blank=True)
     uang_admin = models.IntegerField(null=True, blank=True)
     januari = models.IntegerField(null=True, blank=True)
     februari = models.IntegerField(null=True, blank=True)
@@ -55,6 +53,7 @@ class penggajian(models.Model):
     oktober = models.IntegerField(null=True, blank=True)
     november = models.IntegerField(null=True, blank=True)
     desember = models.IntegerField(null=True, blank=True)
+    tahun = models.IntegerField(null=True, blank=True)
 
     @property
     def total_pengeluaran_gaji(self):

@@ -32,14 +32,6 @@
                       <label for="no_bpjs_naker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No BPJS Naker</label>
                       <input type="text" id="no_bpjs_naker" name="no_bpjs_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_naker }}">
                     </div>
-                    <div>
-                      <label for="tunjangan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan</label>
-                      <input type="number" id="tunjangan" name="tunjangan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.tunjangan }}">
-                    </div>
-                    <div>
-                      <label for="THR" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">THR</label>
-                      <input type="number" id="THR" name="THR" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.THR }}">
-                    </div>
                   </div>
                   
                   <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -90,6 +82,10 @@
                     <div>
                       <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Desember</label>
                       <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.desember }}">
+                    </div>
+                    <div>
+                      <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Tahun</label>
+                      <input type="number" id="tahun" name="tahun" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.tahun }}">
                     </div>
                   </div>
                   <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Penggajian</button>
@@ -162,13 +158,12 @@
                         <table id="penggajianTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap no-export">Aksi</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Karyawan</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Bank</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">No BPJS Kesehatan</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">No BPJS Naker</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Gaji Pokok</th>
-                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tunjangan</th>
-                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">THR</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Uang Admin</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Januari</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Februari</th>
@@ -183,19 +178,22 @@
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">November</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Desember</th>
                                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Total Pengeluaran Gaji</th>
-                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tahun</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="penggajianTableBody">
                                 {% for item in daftar_penggajian %}
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <td class="px-6 py-4 whitespace-nowrap no-export">
+                                        <a href="{% url 'penggajian_sptproduk' %}?edit={{ item.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+                                        <a href="{% url 'penggajian_sptproduk' %}?hapus={{ item.id }}" class="text-red-600 hover:underline mr-2">Hapus</a>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.karyawan.nama }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.bank }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.no_bpjs_kesehatan }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.no_bpjs_naker }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.gaji_pokok }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tunjangan }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.THR }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.uang_admin }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.januari }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.februari }}</td>
@@ -210,10 +208,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.november }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.desember }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ item.total_pengeluaran_gaji }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{% url 'penggajian_sptproduk' %}?edit={{ item.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
-                                        <a href="{% url 'penggajian_sptproduk' %}?hapus={{ item.id }}" class="text-red-600 hover:underline mr-2">Hapus</a>
-                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tahun }}</td>
                                 </tr>
                                 {% empty %}
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -230,6 +225,10 @@
 </c-layouts.dashboard>
 
 <script src="{% static 'apexcharts/dist/apexcharts.min.js' %}"></script>
+
+<!-- Tambahkan ini setelah ApexCharts dan sebelum script lainnya -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 
@@ -294,7 +293,7 @@
   }
 
   // Menampilkan total pengeluaran
-  document.getElementById('total-pengeluaran').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format({{ total_pengeluaran }});
+  document.getElementById('total-pengeluaran').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(JSON.parse('{{ total_pengeluaran|safe }}'))
 
   document.getElementById('penggajianSearch').addEventListener('keyup', function() {
     var input, filter, table, tr, td, i, txtValue;
@@ -317,6 +316,42 @@
       }
     }
   });
+
+  function downloadPDF(table, filename, filteredRows) {
+    // Buat instance jsPDF
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF('l', 'pt');
+    
+    // Extract headers (first row) without 'no-export' columns
+    let headers = filteredRows[0].map(cell => cell.textContent.trim());
+    
+    // Extract data without 'no-export' columns
+    let data = filteredRows.slice(1).map(row => 
+        row.map(cell => cell.textContent.trim())
+    );
+    
+    // Tambahkan autoTable
+    doc.autoTable({
+        head: [headers],
+        body: data,
+        theme: 'grid',
+        styles: { 
+            fontSize: 8,
+            cellPadding: 2
+        },
+        columnStyles: {
+            0: {cellWidth: 'auto'},
+        },
+        margin: { top: 20 },
+        didDrawPage: function(data) {
+            // Tambahkan header
+            doc.setFontSize(14);
+            doc.text('Data Penggajian', 40, 15);
+        }
+    });
+    
+    doc.save(`${filename}.pdf`);
+  }
 </script>
 
 <script>
@@ -336,6 +371,83 @@
           }
       });
   }
+</script>
+
+<script>
+function exportTable(tableId, type, filename) {
+    let table = document.getElementById(tableId);
+    let thead = table.getElementsByTagName('thead')[0];
+    let tbody = table.getElementsByTagName('tbody')[0];
+    
+    // Ambil header tanpa kolom 'Aksi'
+    let headers = Array.from(thead.rows[0].cells)
+        .filter(cell => !cell.classList.contains('no-export'))
+        .map(cell => cell.textContent.trim());
+    
+    // Ambil data tanpa kolom 'Aksi'
+    let rows = Array.from(tbody.rows).map(row => {
+        return Array.from(row.cells)
+            .filter(cell => !cell.classList.contains('no-export'))
+            .map(cell => cell.textContent.trim());
+    });
+    
+    if (type === 'pdf') {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'pt'
+        });
+        
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            styles: {
+                fontSize: 8,
+                cellPadding: 2,
+            },
+            columnStyles: {
+                0: {cellWidth: 'auto'},
+                1: {cellWidth: 'auto'},
+                // ... sesuaikan dengan jumlah kolom
+            },
+            didDrawPage: function (data) {
+                doc.setFontSize(18);
+                doc.setTextColor(40);
+                doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+            },
+            margin: { top: 30 },
+        });
+        doc.save(`${filename}.pdf`);
+    } else if (type === 'csv') {
+        downloadCSV([headers, ...rows].map(row => row.join(',')).join('\n'), filename);
+    } else if (type === 'excel') {
+        downloadExcel([headers, ...rows].map(row => row.join(',')).join('\n'), filename);
+    }
+}
+
+function downloadCSV(csvContent, filename) {
+    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    let link = document.createElement("a");
+    let url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${filename}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function downloadExcel(csvContent, filename) {
+    let blob = new Blob(['\ufeff' + csvContent], { type: 'application/vnd.ms-excel' });
+    let link = document.createElement("a");
+    let url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${filename}.xls`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 </script>
 
 {% endblock %}

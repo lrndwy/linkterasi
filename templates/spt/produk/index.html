@@ -333,9 +333,10 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                   <tr>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Ekstrakulikuler</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembina</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Yayasan</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Kepala Sekolah</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Kerjasama</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
@@ -343,15 +344,17 @@
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Akhir Kerjasama</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Provinsi</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
                   </tr>
                 </thead>
                 <tbody id="ekskulTableBody">
                   {% for ekskul in daftar_ekskul %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.no_mou }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_ekskul }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_yayasan }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_sekolah }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.pembina }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.kepala_yayasan }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_kepsek }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenjang }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_kerjasama }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_produk }}</td>
@@ -359,10 +362,11 @@
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.akhir_kerjasama }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.status }}</td>
                       <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.provinsi.nama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.tipe_sekolah }}</td>
                     </tr>
                   {% empty %}
                     <tr>
-                      <td colspan="11" class="px-6 py-4 text-center">Tidak ada data ekstrakulikuler</td>
+                      <td colspan="12" class="px-6 py-4 text-center">Tidak ada data ekstrakulikuler</td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -443,7 +447,7 @@
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Tanggal</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Produk</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
-                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Ekstrakulikuler</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
                   </tr>
                 </thead>
                 <tbody id="riwayatKunjunganEkskulTableBody">
@@ -454,7 +458,7 @@
                       <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
                       <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama }}</td>
                       <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.ekskul }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah_ekskul }}</td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -644,6 +648,13 @@
           3: {cellWidth: 'auto'},
           4: {cellWidth: 'auto'},
           5: {cellWidth: 'auto'},
+          6: {cellWidth: 'auto'},
+          7: {cellWidth: 'auto'},
+          8: {cellWidth: 'auto'},
+          9: {cellWidth: 'auto'},
+          10: {cellWidth: 'auto'},
+          11: {cellWidth: 'auto'},
+          12: {cellWidth: 'auto'},
         },
         didDrawPage: function (data) {
           // Header
@@ -695,26 +706,55 @@
 <script>
   // Map initialization
   document.addEventListener('DOMContentLoaded', function() {
+    // Map untuk sekolah biasa
     var map = L.map('map').setView([-2.548926, 118.0148634], 5);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    // Map untuk ekstrakulikuler (terpisah)
+    var mapEkskul = L.map('map-ekskul').setView([-2.548926, 118.0148634], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mapEkskul);
+
+    // Parse data dari Django
     var dataProvinsi = JSON.parse("{{ provinsi_sekolah|escapejs }}");
+    var dataProvinsiEkskul = JSON.parse("{{ provinsi_ekskul|escapejs }}");
 
+    // Marker untuk sekolah biasa di map sekolah
     dataProvinsi.forEach(function(provinsi) {
-      var marker = L.marker(provinsi.koordinat).addTo(map);
-      var sekolahList = "<ul class='list-disc pl-5'>";
-      provinsi.sekolah.forEach(function(sekolah) {
-        sekolahList += "<li class='text-sm'>" + sekolah + "</li>";
-      });
-      sekolahList += "</ul>";
-
-      var popupContent = "<div class='popup-content'><strong class='text-lg'>" + provinsi.nama + "</strong>" + sekolahList + "</div>";
-
-      marker.bindPopup(popupContent);
+        if (provinsi.sekolah && provinsi.sekolah.length > 0) {
+            var marker = L.marker(provinsi.koordinat).addTo(map);
+            var sekolahList = "<ul class='list-disc pl-5'>";
+            provinsi.sekolah.forEach(function(sekolah) {
+                sekolahList += "<li class='text-sm'>" + sekolah + "</li>";
+            });
+            sekolahList += "</ul>";
+            var popupContent = "<div class='popup-content'><strong class='text-lg'>" + provinsi.nama + "</strong><br>Jumlah Sekolah: " + provinsi.sekolah.length + sekolahList + "</div>";
+            marker.bindPopup(popupContent);
+        }
     });
+
+    // Marker untuk ekstrakulikuler di map ekskul
+    dataProvinsiEkskul.forEach(function(provinsi) {
+        if (provinsi.ekskul && provinsi.ekskul.length > 0) {
+            var markerEkskul = L.marker(provinsi.koordinat).addTo(mapEkskul);
+            var ekskulList = "<ul class='list-disc pl-5'>";
+            provinsi.ekskul.forEach(function(ekskul) {
+                ekskulList += "<li class='text-sm'>" + ekskul + "</li>";
+            });
+            ekskulList += "</ul>";
+            var popupContentEkskul = "<div class='popup-content'><strong class='text-lg'>" + provinsi.nama + "</strong><br>Jumlah Ekskul: " + provinsi.ekskul.length + ekskulList + "</div>";
+            markerEkskul.bindPopup(popupContentEkskul);
+        }
+    });
+
+    // Invalidate size untuk memastikan kedua peta ter-render dengan benar
+    setTimeout(function() {
+        map.invalidateSize();
+        mapEkskul.invalidateSize();
+    }, 100);
   });
 
   // Table export and search functionality
@@ -817,7 +857,51 @@
         width: "100%",
         type: "pie",
       },
-      // ... konfigurasi lainnya sama seperti chart sekolah ...
+      stroke: {
+        colors: ["white"],
+        lineCap: "",
+      },
+      plotOptions: {
+        pie: {
+          labels: {
+            show: true,
+          },
+          size: "100%",
+          dataLabels: {
+            offset: -25
+          }
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+      legend: {
+        position: "bottom",
+        fontFamily: "Inter, sans-serif",
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Sekolah"
+          },
+        },
+      },
+      xaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Sekolah"
+          },
+        },
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+      },
     }
   }
 
@@ -831,7 +915,51 @@
         width: "100%",
         type: "pie",
       },
-      // ... konfigurasi lainnya sama seperti chart sekolah ...
+      stroke: {
+        colors: ["white"],
+        lineCap: "",
+      },
+      plotOptions: {
+        pie: {
+          labels: {
+            show: true,
+          },
+          size: "100%",
+          dataLabels: {
+            offset: -25
+          }
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontFamily: "Inter, sans-serif",
+        },
+      },
+      legend: {
+        position: "bottom",
+        fontFamily: "Inter, sans-serif",
+      },
+      yaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Siswa"
+          },
+        },
+      },
+      xaxis: {
+        labels: {
+          formatter: function (value) {
+            return value + " Siswa"
+          },
+        },
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+      },
     }
   }
 
