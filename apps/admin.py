@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group, User
 from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.widgets import UnfoldAdminCheckboxSelectMultiple
 
 from .models import *
 from .models.mainModel import *
@@ -131,16 +132,25 @@ class guruAdmin(ModelAdmin):
 @admin.register(produk)
 class produkAdmin(ModelAdmin):
     list_display = ("nama", "user", "telp")
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': UnfoldAdminCheckboxSelectMultiple},
+    }
 
 
 @admin.register(teknisi)
 class teknisiAdmin(ModelAdmin):
     list_display = ("nama", "user", "telp")
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': UnfoldAdminCheckboxSelectMultiple},
+    }
 
 
 @admin.register(sales)
 class salesAdmin(ModelAdmin):
     list_display = ("nama", "user", "telp")
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': UnfoldAdminCheckboxSelectMultiple},
+    }
 
 
 @admin.register(sptproduk)
