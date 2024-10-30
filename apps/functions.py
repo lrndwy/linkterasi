@@ -103,6 +103,7 @@ def impor_data_customer(file):
                     pembayaran=row.get('pembayaran'),
                     harga_buku=row.get('harga_buku'),
                     jumlah_komputer=row.get('jumlah_komputer'),
+                    jumlah_siswa_tk=row.get('jumlah_siswa_tk'),
                 )
                 
                 for i in range(1, 13):
@@ -143,7 +144,7 @@ def impor_data_customer_ekskul(file):
             'no_mou', 'nama_yayasan', 'kepala_yayasan', 'nama_sekolah', 
             'nama_kepsek', 'provinsi_id', 'jenjang', 'awal_kerjasama', 
             'akhir_kerjasama', 'jenis_kerjasama', 'jenis_produk', 'pembayaran',
-            'harga_buku', 'jumlah_komputer', 'tipe_sekolah'
+            'harga_buku', 'jumlah_komputer', 'tipe_sekolah', 'jumlah_siswa_tk'
         ]
         
         # Tambahkan kolom jumlah siswa
@@ -175,7 +176,8 @@ def impor_data_customer_ekskul(file):
                     pembayaran=str(row.get('pembayaran', '')),
                     harga_buku=str(row.get('harga_buku', '')),
                     jumlah_komputer=row.get('jumlah_komputer'),
-                    tipe_sekolah=str(row.get('tipe_sekolah', ''))
+                    tipe_sekolah=str(row.get('tipe_sekolah', '')),
+                    jumlah_siswa_tk=row.get('jumlah_siswa_tk'),
                 )
                 
                 # Set jumlah siswa untuk setiap kelas
