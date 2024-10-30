@@ -1,6 +1,7 @@
 from django.db import models
 
 JENJANG_CHOICES = [
+    ('TK', 'TK'),
     ('SD', 'SD'),
     ('SMP', 'SMP'),
     ('SMA', 'SMA'),

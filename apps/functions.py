@@ -9,6 +9,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+
 def total_siswa_sd(queryset):
     return sum(item.jumlah_siswa_kelas_1 or 0 + item.jumlah_siswa_kelas_2 or 0 + item.jumlah_siswa_kelas_3 or 0 + 
                item.jumlah_siswa_kelas_4 or 0 + item.jumlah_siswa_kelas_5 or 0 + item.jumlah_siswa_kelas_6 or 0 
@@ -26,13 +28,20 @@ def total_siswa_smk(queryset):
     return sum(item.jumlah_siswa_kelas_10_smk or 0 + item.jumlah_siswa_kelas_11_smk or 0 + item.jumlah_siswa_kelas_12_smk or 0 
                for item in queryset.filter(jenjang='SMK'))
 
+def total_siswa_tk(queryset):
+    return sum(item.jumlah_siswa_tk or 0 
+              for item in queryset.filter(jenjang='TK'))
+
 def func_total_siswa_per_jenjang(daftar_sekolah):
     total_siswa_per_jenjang = {jenjang: 0 for jenjang, _ in JENJANG_CHOICES}
     for sekolah in daftar_sekolah:
         jenjang = sekolah.jenjang
         if jenjang in total_siswa_per_jenjang:
-            total_siswa = sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}', 0) or 0 for i in range(1, 13))
-            total_siswa += sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}_smk', 0) or 0 for i in range(10, 13))
+            if jenjang == 'TK':
+                total_siswa = sekolah.jumlah_siswa_tk or 0
+            else:
+                total_siswa = sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}', 0) or 0 for i in range(1, 13))
+                total_siswa += sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}_smk', 0) or 0 for i in range(10, 13))
             total_siswa_per_jenjang[jenjang] += total_siswa
     return total_siswa_per_jenjang
 
