@@ -78,47 +78,68 @@ def impor_data_customer(file):
     try:
         # Cek ekstensi file
         if file.name.endswith('.csv'):
-            data = pd.read_csv(file, quoting=csv.QUOTE_ALL, escapechar='\\')
+            # Tambahkan parameter encoding='utf-8-sig' untuk menangani BOM
+            data = pd.read_csv(file, 
+                             encoding='utf-8-sig',
+                             quoting=csv.QUOTE_ALL, 
+                             escapechar='\\',
+                             na_values=['', '-', 'nan'],  # Menangani nilai kosong
+                             keep_default_na=True)
         elif file.name.endswith('.xlsx'):
-            data = pd.read_excel(file)
+            data = pd.read_excel(file, na_values=['', '-'])
         else:
             raise ValidationError("Format file tidak didukung. Harap unggah file CSV atau Excel.")
 
-        data.columns = data.columns.str.strip()
-
+        # Bersihkan nama kolom
+        data.columns = data.columns.str.strip().str.lower()
+        
         for index, row in data.iterrows():
             try:
+                # Skip baris yang tidak memiliki nama sekolah
+                if pd.isna(row.get('nama_sekolah')):
+                    continue
+                    
                 master_instance = master_model(
-                    no_mou=row.get('no_mou'),
-                    nama_yayasan=row.get('nama_yayasan'),
-                    kepala_yayasan=row.get('kepala_yayasan'),
+                    no_mou=row.get('no_mou') if pd.notna(row.get('no_mou')) else None,
+                    nama_yayasan=row.get('nama_yayasan') if pd.notna(row.get('nama_yayasan')) else None,
+                    kepala_yayasan=row.get('kepala_yayasan') if pd.notna(row.get('kepala_yayasan')) else None,
                     nama_sekolah=row.get('nama_sekolah'),
-                    nama_kepsek=row.get('nama_kepsek'),
-                    provinsi_id=row.get('provinsi_id'),
+                    nama_kepsek=row.get('nama_kepsek') if pd.notna(row.get('nama_kepsek')) else None,
+                    provinsi_id=row.get('provinsi_id') if pd.notna(row.get('provinsi_id')) else None,
                     jenjang=row.get('jenjang'),
                     awal_kerjasama=pd.to_datetime(row.get('awal_kerjasama')).date() if pd.notna(row.get('awal_kerjasama')) else None,
                     akhir_kerjasama=pd.to_datetime(row.get('akhir_kerjasama')).date() if pd.notna(row.get('akhir_kerjasama')) else None,
-                    jenis_kerjasama=row.get('jenis_kerjasama'),
-                    jenis_produk=row.get('jenis_produk'),
-                    pembayaran=row.get('pembayaran'),
-                    harga_buku=row.get('harga_buku'),
-                    jumlah_komputer=row.get('jumlah_komputer'),
-                    jumlah_siswa_tk=row.get('jumlah_siswa_tk'),
+                    jenis_kerjasama=row.get('jenis_kerjasama') if pd.notna(row.get('jenis_kerjasama')) else None,
+                    jenis_produk=row.get('jenis_produk') if pd.notna(row.get('jenis_produk')) else None,
+                    pembayaran=row.get('pembayaran') if pd.notna(row.get('pembayaran')) else None,
+                    harga_buku=row.get('harga_buku') if pd.notna(row.get('harga_buku')) else None,
+                    jumlah_komputer=row.get('jumlah_komputer') if pd.notna(row.get('jumlah_komputer')) else None,
+                    jumlah_siswa_tk=row.get('jumlah_siswa_tk') if pd.notna(row.get('jumlah_siswa_tk')) else None,
                 )
                 
+                # Set jumlah siswa untuk setiap kelas
                 for i in range(1, 13):
-                    setattr(master_instance, f'jumlah_siswa_kelas_{i}', row.get(f'jumlah_siswa_kelas_{i}'))
+                    value = row.get(f'jumlah_siswa_kelas_{i}')
+                    setattr(master_instance, f'jumlah_siswa_kelas_{i}', 
+                           int(value) if pd.notna(value) else None)
+                
+                # Set jumlah siswa SMK
                 for i in range(10, 13):
-                    setattr(master_instance, f'jumlah_siswa_kelas_{i}_smk', row.get(f'jumlah_siswa_kelas_{i}_smk'))
+                    value = row.get(f'jumlah_siswa_kelas_{i}_smk')
+                    setattr(master_instance, f'jumlah_siswa_kelas_{i}_smk', 
+                           int(value) if pd.notna(value) else None)
                 
                 master_instance.save()
             except Exception as e:
+                logger.error(f"Error pada baris {index + 2}: {str(e)}")
                 raise ValidationError(f"Error pada baris {index + 2}: {str(e)}")
 
         return True, "Data customer berhasil diimpor"
     except pd.errors.ParserError as e:
+        logger.error(f"Gagal mengimpor data: Kesalahan format CSV. {str(e)}")
         return False, f"Gagal mengimpor data: Kesalahan format CSV. {str(e)}"
     except Exception as e:
+        logger.error(f"Gagal mengimpor data: {str(e)}")
         return False, f"Gagal mengimpor data: {str(e)}"
 
 def impor_data_customer_ekskul(file):
