@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django_htmx",
     'django_filters',
     'rest_framework_api_key',
+    "import_export",
 ]
 
 MIDDLEWARE = [

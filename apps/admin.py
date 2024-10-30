@@ -5,11 +5,13 @@ from unfold.admin import ModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.widgets import UnfoldAdminCheckboxSelectMultiple
 
+
 from .models import *
 from .models.mainModel import *
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
+
 
 
 # authModel ------------------------------------------------------------
@@ -130,7 +132,7 @@ class guruAdmin(ModelAdmin):
 
 
 @admin.register(produk)
-class produkAdmin(ModelAdmin):
+class ProdukAdmin(ModelAdmin):
     list_display = ("nama", "user", "telp")
     formfield_overrides = {
         models.ManyToManyField: {'widget': UnfoldAdminCheckboxSelectMultiple},
@@ -308,3 +310,5 @@ class permintaanSPTAdmin(ModelAdmin):
 @admin.register(pengumuman)
 class pengumumanAdmin(ModelAdmin):
     list_display = ("id_chat", "pesan", "waktu", "kategori", "user")
+
+
