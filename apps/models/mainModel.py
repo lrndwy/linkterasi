@@ -414,9 +414,9 @@ class guru(models.Model):
 class produk(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="produk")
-    list_sekolah = models.ManyToManyField("master", related_name="produk")
+    list_sekolah = models.ManyToManyField("master", related_name="produk", blank=True)
     list_sekolah_ekstrakulikuler = models.ManyToManyField(
-        "master_ekstrakulikuler", related_name="produk"
+        "master_ekstrakulikuler", related_name="produk", blank=True
     )
     telp = models.CharField(max_length=255)
 
@@ -431,7 +431,7 @@ class teknisi(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teknisi")
     list_sekolah = models.ManyToManyField(
-        "master", related_name="teknisi", limit_choices_to={"tipe_sekolah": "tik"}
+        "master", related_name="teknisi", blank=True
     )
     telp = models.CharField(max_length=255)
 
@@ -446,7 +446,7 @@ class sales(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales")
     list_sekolah = models.ManyToManyField(
-        "master", related_name="sales", limit_choices_to={"tipe_sekolah": "tik"}
+        "master", related_name="sales", blank=True
     )
     telp = models.CharField(max_length=255)
 
