@@ -18,23 +18,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label for="no_mou" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nomor MOU</label>
-                <input type="text" id="no_mou" name="no_mou" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.no_mou }}">
+                <input type="text" id="no_mou" name="no_mou" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.no_mou|default_if_none:'' }}">
               </div>
               <div>
                 <label for="nama_yayasan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Yayasan</label>
-                <input type="text" id="nama_yayasan" name="nama_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_yayasan }}">
+                <input type="text" id="nama_yayasan" name="nama_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_yayasan|default_if_none:'' }}">
               </div>
               <div>
                 <label for="kepala_yayasan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kepala Yayasan</label>
-                <input type="text" id="kepala_yayasan" name="kepala_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.kepala_yayasan }}">
+                <input type="text" id="kepala_yayasan" name="kepala_yayasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.kepala_yayasan|default_if_none:'' }}">
               </div>
               <div>
                 <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
-                <input type="text" id="nama_sekolah" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_sekolah }}">
+                <input type="text" id="nama_sekolah" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_sekolah|default_if_none:'' }}">
               </div>
               <div>
                 <label for="nama_kepsek" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Kepala Sekolah</label>
-                <input type="text" id="nama_kepsek" name="nama_kepsek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_kepsek }}">
+                <input type="text" id="nama_kepsek" name="nama_kepsek" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.nama_kepsek|default_if_none:'' }}">
               </div>
               <div>
                 <label for="provinsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Provinsi</label>
@@ -84,15 +84,15 @@
               </div>
               <div>
                 <label for="pembayaran" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pembayaran</label>
-                <input type="text" id="pembayaran" name="pembayaran" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.pembayaran }}">
+                <input type="text" id="pembayaran" name="pembayaran" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.pembayaran|default_if_none:'' }}">
               </div>
               <div>
                 <label for="harga_buku" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Harga Buku</label>
-                <input type="text" id="harga_buku" name="harga_buku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.harga_buku }}">
+                <input type="text" id="harga_buku" name="harga_buku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.harga_buku|default_if_none:'' }}">
               </div>
               <div>
                 <label for="jumlah_komputer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Komputer</label>
-                <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_komputer }}">
+                <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_komputer|default_if_none:'' }}">
               </div>
 
             </div>
@@ -102,67 +102,67 @@
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <label for="jumlah_siswa_tk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Siswa TK</label>
-                  <input type="number" id="jumlah_siswa_tk" name="jumlah_siswa_tk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_tk }}">
+                  <input type="number" id="jumlah_siswa_tk" name="jumlah_siswa_tk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_tk|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 1</label>
-                  <input type="number" id="jumlah_siswa_kelas_1" name="jumlah_siswa_kelas_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_1 }}">
+                  <input type="number" id="jumlah_siswa_kelas_1" name="jumlah_siswa_kelas_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_1|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 2</label>
-                  <input type="number" id="jumlah_siswa_kelas_2" name="jumlah_siswa_kelas_2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_2 }}">
+                  <input type="number" id="jumlah_siswa_kelas_2" name="jumlah_siswa_kelas_2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_2|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 3</label>
-                  <input type="number" id="jumlah_siswa_kelas_3" name="jumlah_siswa_kelas_3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_3 }}">
+                  <input type="number" id="jumlah_siswa_kelas_3" name="jumlah_siswa_kelas_3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_3|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 4</label>
-                  <input type="number" id="jumlah_siswa_kelas_4" name="jumlah_siswa_kelas_4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_4 }}">
+                  <input type="number" id="jumlah_siswa_kelas_4" name="jumlah_siswa_kelas_4" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_4|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_5" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 5</label>
-                  <input type="number" id="jumlah_siswa_kelas_5" name="jumlah_siswa_kelas_5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_5 }}">
+                  <input type="number" id="jumlah_siswa_kelas_5" name="jumlah_siswa_kelas_5" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_5|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_6" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 6</label>
-                  <input type="number" id="jumlah_siswa_kelas_6" name="jumlah_siswa_kelas_6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_6 }}">
+                  <input type="number" id="jumlah_siswa_kelas_6" name="jumlah_siswa_kelas_6" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_6|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_7" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 7</label>
-                  <input type="number" id="jumlah_siswa_kelas_7" name="jumlah_siswa_kelas_7" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_7 }}">
+                  <input type="number" id="jumlah_siswa_kelas_7" name="jumlah_siswa_kelas_7" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_7|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_8" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 8</label>
-                  <input type="number" id="jumlah_siswa_kelas_8" name="jumlah_siswa_kelas_8" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_8 }}">
+                  <input type="number" id="jumlah_siswa_kelas_8" name="jumlah_siswa_kelas_8" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_8|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_9" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 9</label>
-                  <input type="number" id="jumlah_siswa_kelas_9" name="jumlah_siswa_kelas_9" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_9 }}">
+                  <input type="number" id="jumlah_siswa_kelas_9" name="jumlah_siswa_kelas_9" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_9|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_10" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10</label>
-                  <input type="number" id="jumlah_siswa_kelas_10" name="jumlah_siswa_kelas_10" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10 }}">
+                  <input type="number" id="jumlah_siswa_kelas_10" name="jumlah_siswa_kelas_10" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_11" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11</label>
-                  <input type="number" id="jumlah_siswa_kelas_11" name="jumlah_siswa_kelas_11" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11 }}">
+                  <input type="number" id="jumlah_siswa_kelas_11" name="jumlah_siswa_kelas_11" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_12" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12</label>
-                  <input type="number" id="jumlah_siswa_kelas_12" name="jumlah_siswa_kelas_12" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12 }}">
+                  <input type="number" id="jumlah_siswa_kelas_12" name="jumlah_siswa_kelas_12" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_10_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 10 SMK</label>
-                  <input type="number" id="jumlah_siswa_kelas_10_smk" name="jumlah_siswa_kelas_10_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10_smk }}">
+                  <input type="number" id="jumlah_siswa_kelas_10_smk" name="jumlah_siswa_kelas_10_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_10_smk|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_11_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 11 SMK</label>
-                  <input type="number" id="jumlah_siswa_kelas_11_smk" name="jumlah_siswa_kelas_11_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11_smk }}">
+                  <input type="number" id="jumlah_siswa_kelas_11_smk" name="jumlah_siswa_kelas_11_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_11_smk|default_if_none:'' }}">
                 </div>
                 <div>
                   <label for="jumlah_siswa_kelas_12_smk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 12 SMK</label>
-                  <input type="number" id="jumlah_siswa_kelas_12_smk" name="jumlah_siswa_kelas_12_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12_smk }}">
+                  <input type="number" id="jumlah_siswa_kelas_12_smk" name="jumlah_siswa_kelas_12_smk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_12_smk|default_if_none:'' }}">
                 </div>
               </div>
             </div>
@@ -190,6 +190,10 @@
           <section class="mt-4">
               <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
                   <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Data Customer</h2>
+                  
+                  <!-- Tambahkan total data customer dengan id untuk update dinamis -->
+                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Total Data Customer: <span id="totalCustomer">{{ master_data|length }}</span></p>
+                  
                   <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4">
                       <div class="mb-4 w-full">
                           <input type="text" id="masterSearch" placeholder="Cari data customer..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -269,20 +273,20 @@
                                   <td class="px-6 py-4 whitespace-nowrap">
                                       <a href="{% url 'customer_sptproduk' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
                                   </td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y" }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y" }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_status_display }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_kerjasama_display }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_status_display|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_kerjasama_display|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_tk|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>
@@ -299,8 +303,8 @@
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10_smk|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11_smk|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer|default_if_none:"-" }}</td>
                               </tr>
                               {% empty %}
                               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -395,20 +399,30 @@
             filter = input.value.toUpperCase();
             table = document.getElementById(tableBodyId);
             tr = table.getElementsByTagName("tr");
+            var visibleCount = 0;
+            
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td");
+                var found = false;
                 for (j = 0; j < td.length; j++) {
                     if (td[j]) {
                         txtValue = td[j].textContent || td[j].innerText;
                         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
+                            found = true;
                             break;
-                        } else {
-                            tr[i].style.display = "none";
                         }
                     }
                 }
+                if (found) {
+                    tr[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    tr[i].style.display = "none";
+                }
             }
+            
+            // Update total customer yang ditampilkan
+            document.getElementById('totalCustomer').textContent = visibleCount;
         });
     }
 

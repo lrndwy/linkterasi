@@ -69,10 +69,10 @@
                     <tbody id="adendumTableBody">
                         {% for data in daftar_adendum %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ data.tanggal_adendum|date:"d/m/Y" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang|default_if_none:"-" }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ data.tanggal_adendum|date:"d/m/Y"|default_if_none:"-" }}</td>
                             
                         </tr>
                         {% empty %}

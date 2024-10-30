@@ -16,15 +16,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label for="NIK" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIK</label>
-                    <input type="text" id="NIK" name="NIK" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.NIK }}">
+                    <input type="text" id="NIK" name="NIK" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.NIK|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
-                    <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.nama }}">
+                    <input type="text" id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.nama|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Alamat</label>
-                    <input type="text" id="alamat" name="alamat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.alamat }}">
+                    <input type="text" id="alamat" name="alamat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.alamat|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="jenis" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis</label>
@@ -39,7 +39,7 @@
                   </div>
                   <div>
                     <label for="sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sekolah</label>
-                    <input type="text" id="sekolah" name="sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.sekolah }}">
+                    <input type="text" id="sekolah" name="sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.sekolah|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
@@ -54,36 +54,37 @@
                   </div>
                   <div>
                     <label for="gaji_pokok" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gaji Pokok</label>
-                    <input type="number" id="gaji_pokok" name="gaji_pokok" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.gaji_pokok }}">
+                    <input type="number" id="gaji_pokok" name="gaji_pokok" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.gaji_pokok|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="tunjangan_nakes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan Nakes</label>
-                    <input type="number" id="tunjangan_nakes" name="tunjangan_nakes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_nakes }}">
+                    <input type="number" id="tunjangan_nakes" name="tunjangan_nakes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_nakes|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="tunjangan_naker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tunjangan Naker</label>
-                    <input type="number" id="tunjangan_naker" name="tunjangan_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_naker }}">
+                    <input type="number" id="tunjangan_naker" name="tunjangan_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.tunjangan_naker|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="uang_admin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uang Admin</label>
-                    <input type="number" id="uang_admin" name="uang_admin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_admin }}">
+                    <input type="number" id="uang_admin" name="uang_admin" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_admin|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="uang_bonus_hari_raya" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Uang Bonus Hari Raya</label>
-                    <input type="number" id="uang_bonus_hari_raya" name="uang_bonus_hari_raya" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_bonus_hari_raya }}">
+                    <input type="number" id="uang_bonus_hari_raya" name="uang_bonus_hari_raya" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.uang_bonus_hari_raya|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="bank" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank</label>
-                    <input type="text" id="bank" name="bank" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.bank }}">
+                    <input type="text" id="bank" name="bank" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.bank|default_if_none:'' }}">
                   </div>
                   <div>
                     <label for="no_rekening" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Rekening</label>
-                    <input type="text" id="no_rekening" name="no_rekening" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.no_rekening }}">
+                    <input type="text" id="no_rekening" name="no_rekening" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ karyawan.no_rekening|default_if_none:'' }}">
                   </div>
                 </div>
                 
                 
                 <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Karyawan</button>
+                <button type="button" onclick="window.history.back()" class="mt-6 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batal</button>
               </form>
             </div>
         </c-slot>    
@@ -153,19 +154,19 @@
                                         <a href="{% url 'karyawan_sptproduk' %}?edit={{ karyawan.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
                                         <a href="{% url 'karyawan_sptproduk' %}?hapus={{ karyawan.id }}" class="text-red-600 hover:underline">Hapus</a>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.NIK }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.nama }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.alamat }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenis }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.sekolah }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenjang }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.gaji_pokok }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_nakes }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_naker }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_admin }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_bonus_hari_raya }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.bank }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.no_rekening }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.NIK|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.nama|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.alamat|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenis|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.sekolah|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.jenjang|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.gaji_pokok|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_nakes|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.tunjangan_naker|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_admin|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.uang_bonus_hari_raya|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.bank|default_if_none:'-' }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ karyawan.no_rekening|default_if_none:'-' }}</td>
                                     
                                 </tr>
                                 {% empty %}

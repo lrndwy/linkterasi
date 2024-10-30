@@ -34,23 +34,23 @@
         <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Maintenance Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Maintenance</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ maintenance }}</p>
-          <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
+          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ maintenance|default_if_none:"0" }}</p>
+          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
         <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Trouble Shooting Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Trouble Shooting</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ trouble_shooting }}</p>
-          <p class="text-sm text-red-600 dark:text-red-400">Bulan ini</p>
+          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ trouble_shooting|default_if_none:"0" }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
         <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi|default_if_none:"0" }}</p>
           <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
         </div>
       </div>
@@ -58,14 +58,14 @@
         <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Sekolah</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah|default_if_none:"0" }}</p>
         </div>
       </div>
       <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center">
         <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Komputer Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Komputer</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_komputer }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_komputer|default_if_none:"0" }}</p>
         </div>
       </div>
     </div>
@@ -115,12 +115,12 @@
           {% for kunjungan in daftar_kunjungan %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              {{ kunjungan.judul }}
+              {{ kunjungan.judul|default_if_none:"-" }}
             </td>
-            <td class="px-6 py-4">{{ kunjungan.deskripsi }}</td>
-            <td class="px-6 py-4">{{ kunjungan.status }}</td>
-            <td class="px-6 py-4">{{ kunjungan.tanggal }}</td>
-            <td class="px-6 py-4">{{ kunjungan.sekolah }}</td>
+            <td class="px-6 py-4">{{ kunjungan.deskripsi|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ kunjungan.status|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ kunjungan.tanggal|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ kunjungan.sekolah|default_if_none:"-" }}</td>
             <td class="px-6 py-4">
               {% if kunjungan.ttd %}
                 <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
@@ -183,11 +183,11 @@
         <tbody id="sekolahTableBody">
           {% for sekolah in tabel_sekolah %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td class="px-6 py-4">{{ sekolah.nama_yayasan }}</td>
-            <td class="px-6 py-4">{{ sekolah.jenjang }}</td>
-            <td class="px-6 py-4">{{ sekolah.nama_sekolah }}</td>
-            <td class="px-6 py-4">{{ sekolah.total_komputer }}</td>
-            <td class="px-6 py-4">{{ sekolah.status }}</td>
+            <td class="px-6 py-4">{{ sekolah.nama_yayasan|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ sekolah.jenjang|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ sekolah.nama_sekolah|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ sekolah.total_komputer|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ sekolah.status|default_if_none:"-" }}</td>
           </tr>
           {% empty %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -241,11 +241,11 @@
           {% for permintaan in daftar_permintaan_spt %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              {{ permintaan.judul }}
+              {{ permintaan.judul|default_if_none:"-" }}
             </td>
-            <td class="px-6 py-4">{{ permintaan.ket }}</td>
-            <td class="px-6 py-4">{{ permintaan.status }}</td>
-            <td class="px-6 py-4">{{ permintaan.kategori }}</td>
+            <td class="px-6 py-4">{{ permintaan.ket|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ permintaan.status|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ permintaan.kategori|default_if_none:"-" }}</td>
             <td class="px-6 py-4">
               {% if permintaan.file %}
                 <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>

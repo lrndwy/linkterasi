@@ -58,11 +58,11 @@
                 <tbody id="sekolahTableBody">
                   {% for sekolah in daftar_sekolah %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_seluruh_siswa }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_komputer }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan|default_if_none:"-" }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang|default_if_none:"-" }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah|default_if_none:"-" }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_seluruh_siswa|default_if_none:"-" }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jumlah_komputer|default_if_none:"-" }}</td>
                     </tr>
                   {% empty %}
                     <tr>
@@ -99,11 +99,11 @@
                   {% for permintaan in daftar_permintaan %}
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      {{ permintaan.judul }}
+                      {{ permintaan.judul|default_if_none:"-" }}
                     </td>
-                    <td class="px-6 py-4">{{ permintaan.ket }}</td>
-                    <td class="px-6 py-4">{{ permintaan.status }}</td>
-                    <td class="px-6 py-4">{{ permintaan.kategori }}</td>
+                    <td class="px-6 py-4">{{ permintaan.ket|default_if_none:"-" }}</td>
+                    <td class="px-6 py-4">{{ permintaan.status|default_if_none:"-" }}</td>
+                    <td class="px-6 py-4">{{ permintaan.kategori|default_if_none:"-" }}</td>
                     <td class="px-6 py-4">
                       {% if permintaan.file %}
                         <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>

@@ -53,18 +53,18 @@
           <!-- Table body akan diisi oleh JavaScript -->
           {% for sekolah in daftar_sekolah %}
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status|default_if_none:"-" }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama|default_if_none:"-" }}</td>
             </tr>
           {% empty %}
             <tr>

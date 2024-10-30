@@ -48,7 +48,7 @@
         </section>
 
         <!-- Sekolah Biasa -->
-        <c-headingCard judul="Sekolah Biasa" deskripsi="Daftar Sekolah Biasa"></c-headingCard>
+        <c-headingCard judul="Sekolah TIK" deskripsi="Daftar Sekolah TIK"></c-headingCard>
 
         <!-- Grafik Sekolah -->
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -82,7 +82,7 @@
         <!-- Map Sekolah -->
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Sekolah di Indonesia</h2>
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Sekolah TIK di Indonesia</h2>
             <div id="map" class="h-[600px] w-full rounded-lg"></div>
           </div>
         </section>
@@ -90,7 +90,7 @@
         <!-- List Sekolah -->
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah</h2>
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah TIK</h2>
 
             <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
               <div class="w-full sm:w-1/2">
@@ -142,18 +142,18 @@
                 <tbody id="sekolahTableBody">
                   {% for sekolah in daftar_sekolah %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.no_mou|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_yayasan|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_sekolah|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.kepala_yayasan|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.nama_kepsek|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenjang|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.jenis_produk|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.awal_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.akhir_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.status|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ sekolah.provinsi.nama|default_if_none:'-' }}</td>
                     </tr>
                   {% empty %}
                     <tr>
@@ -173,24 +173,24 @@
               <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan</h3>
-                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan }}</p>
-                <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
+                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan|default_if_none:"0" }}</p>
+                <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
             <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
               <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak</h3>
-                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak }}</p>
-                <p class="text-sm text-blue-600 dark:text-blue-400">Bulan ini</p>
+                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak|default_if_none:"0" }}</p>
+                <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
             <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
               <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
-                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi }}</p>
-                <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
+                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi|default_if_none:"0" }}</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
           </div>
@@ -239,17 +239,27 @@
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Produk</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Lokasi</th>
                   </tr>
                 </thead>
                 <tbody id="riwayatKunjunganTableBody">
                   {% for item in riwayat_kunjungan %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah_ekskul|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">
+                        {% if item.geolocation %}
+                            <a href="https://www.google.com/maps?q={{ item.geolocation }}" target="_blank" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600">
+                                Lihat Lokasi
+                            </a>
+                        {% else %}
+                            -
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -259,7 +269,7 @@
         </section>
 
         <!-- Ekstrakulikuler -->
-        <c-headingCard judul="Ekstrakulikuler" deskripsi="Daftar Ekstrakulikuler"></c-headingCard>
+        <c-headingCard judul="Ekstrakurikuler" deskripsi="Daftar Ekstrakurikuler"></c-headingCard>
 
         <!-- Grafik Ekstrakulikuler -->
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -289,7 +299,7 @@
         <!-- Map Ekstrakulikuler -->
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Ekstrakulikuler di Indonesia</h2>
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Peta Sekolah Ekstrakurikuler di Indonesia</h2>
             <div id="map-ekskul" class="h-[600px] w-full rounded-lg"></div>
           </div>
         </section>
@@ -297,7 +307,7 @@
         <!-- List Ekstrakulikuler -->
         <section>
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Ekstrakulikuler</h2>
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah Ekstrakurikuler</h2>
 
             <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
               <div class="w-full sm:w-1/2">
@@ -350,19 +360,19 @@
                 <tbody id="ekskulTableBody">
                   {% for ekskul in daftar_ekskul %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.no_mou }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_yayasan }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_sekolah }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.kepala_yayasan }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_kepsek }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenjang }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_produk }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.awal_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.akhir_kerjasama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.status }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.provinsi.nama }}</td>
-                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.tipe_sekolah }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.no_mou|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_yayasan|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_sekolah|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.kepala_yayasan|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.nama_kepsek|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenjang|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.jenis_produk|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.awal_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.akhir_kerjasama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.status|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.provinsi.nama|default_if_none:'-' }}</td>
+                      <td class="px-6 py-4 whitespace-nowrap">{{ ekskul.tipe_sekolah|default_if_none:'-' }}</td>
                     </tr>
                   {% empty %}
                     <tr>
@@ -382,24 +392,24 @@
               <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan Ekskul</h3>
-                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan_ekskul }}</p>
-                <p class="text-sm text-green-600 dark:text-green-400">Bulan ini</p>
+                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan_ekskul|default_if_none:"0" }}</p>
+                <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
             <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
               <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak Ekskul</h3>
-                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak_ekskul }}</p>
-                <p class="text-sm text-blue-600 dark:text-blue-400">Bulan ini</p>
+                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ kontak_ekskul|default_if_none:"0" }}</p>
+                <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
             <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
               <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
-                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi_ekskul }}</p>
-                <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
+                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ belum_dikunjungi_ekskul|default_if_none:"0" }}</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
           </div>
@@ -448,17 +458,27 @@
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Produk</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Status</th>
                     <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Sekolah</th>
+                    <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3">Lokasi</th>
                   </tr>
                 </thead>
                 <tbody id="riwayatKunjunganEkskulTableBody">
                   {% for item in riwayat_kunjungan_ekskul %}
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status }}</td>
-                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah_ekskul }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.judul|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.deskripsi|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.tanggal|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.produk.nama|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.status|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">{{ item.sekolah_ekskul|default_if_none:"-" }}</td>
+                      <td class="px-3 sm:px-6 py-2 sm:py-4">
+                        {% if item.geolocation %}
+                            <a href="https://www.google.com/maps?q={{ item.geolocation }}" target="_blank" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600">
+                                Lihat Lokasi
+                            </a>
+                        {% else %}
+                            -
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>

@@ -26,69 +26,70 @@
                     </div>
                     <div>
                       <label for="no_bpjs_kesehatan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No BPJS Kesehatan</label>
-                      <input type="text" id="no_bpjs_kesehatan" name="no_bpjs_kesehatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_kesehatan }}">
+                      <input type="text" id="no_bpjs_kesehatan" name="no_bpjs_kesehatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_kesehatan|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="no_bpjs_naker" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No BPJS Naker</label>
-                      <input type="text" id="no_bpjs_naker" name="no_bpjs_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_naker }}">
+                      <input type="text" id="no_bpjs_naker" name="no_bpjs_naker" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.no_bpjs_naker|default_if_none:'' }}">
                     </div>
                   </div>
                   
                   <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Januari</label>
-                      <input type="number" id="januari" name="januari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.januari }}">
+                      <input type="number" id="januari" name="januari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.januari|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Februari</label>
-                      <input type="number" id="februari" name="februari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.februari }}">
+                      <input type="number" id="februari" name="februari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.februari|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Maret</label>
-                      <input type="number" id="maret" name="maret" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.maret }}">
+                      <input type="number" id="maret" name="maret" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.maret|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">April</label>
-                      <input type="number" id="april" name="april" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.april }}">
+                      <input type="number" id="april" name="april" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.april|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Mei</label>
-                      <input type="number" id="mei" name="mei" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.mei }}">
+                      <input type="number" id="mei" name="mei" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.mei|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juni</label>
-                      <input type="number" id="juni" name="juni" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juni }}">
+                      <input type="number" id="juni" name="juni" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juni|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juli</label>
-                      <input type="number" id="juli" name="juli" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juli }}">
+                      <input type="number" id="juli" name="juli" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.juli|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Agustus</label>
-                      <input type="number" id="agustus" name="agustus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.agustus }}">
+                      <input type="number" id="agustus" name="agustus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.agustus|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">September</label>
-                      <input type="number" id="september" name="september" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.september }}">
+                      <input type="number" id="september" name="september" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.september|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Oktober</label>
-                      <input type="number" id="oktober" name="oktober" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.oktober }}">
+                      <input type="number" id="oktober" name="oktober" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.oktober|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">November</label>
-                      <input type="number" id="november" name="november" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.november }}">
+                      <input type="number" id="november" name="november" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.november|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Desember</label>
-                      <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.desember }}">
+                      <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.desember|default_if_none:'' }}">
                     </div>
                     <div>
                       <label for="tahun" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Tahun</label>
-                      <input type="number" id="tahun" name="tahun" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.tahun }}">
+                      <input type="number" id="tahun" name="tahun" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ penggajian.tahun|default_if_none:'' }}">
                     </div>
                   </div>
                   <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan Data Penggajian</button>
+                  <button type="button" onclick="window.history.back()" class="mt-6 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batal</button>
                 </form>
               </div>
             </section>

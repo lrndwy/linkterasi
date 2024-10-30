@@ -21,7 +21,7 @@
             <div class="grid grid-cols-1 gap-4">
               <div>
                 <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
-                <input type="text" id="nama_sekolah_input_edit" name="nama_sekolah_baru" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ pembayaran.nama_sekolah }}" readonly>
+                <input type="text" id="nama_sekolah_input_edit" name="nama_sekolah_baru" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ pembayaran.nama_sekolah|default_if_none:'' }}" readonly>
               </div>
               <div>
                 <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
@@ -52,51 +52,51 @@
               </div>
               <div>
                 <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Januari</label>
-                <input type="number" id="januari" name="januari" value="{{ pembayaran.januari }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="januari" name="januari" value="{{ pembayaran.januari|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Februari</label>
-                <input type="number" id="februari" name="februari" value="{{ pembayaran.februari }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="februari" name="februari" value="{{ pembayaran.februari|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Maret</label>
-                <input type="number" id="maret" name="maret" value="{{ pembayaran.maret }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="maret" name="maret" value="{{ pembayaran.maret|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">April</label>
-                <input type="number" id="april" name="april" value="{{ pembayaran.april }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="april" name="april" value="{{ pembayaran.april|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mei</label>
-                <input type="number" id="mei" name="mei" value="{{ pembayaran.mei }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="mei" name="mei" value="{{ pembayaran.mei|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juni</label>
-                <input type="number" id="juni" name="juni" value="{{ pembayaran.juni }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="juni" name="juni" value="{{ pembayaran.juni|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Juli</label>
-                <input type="number" id="juli" name="juli" value="{{ pembayaran.juli }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="juli" name="juli" value="{{ pembayaran.juli|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Agustus</label>
-                <input type="number" id="agustus" name="agustus" value="{{ pembayaran.agustus }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="agustus" name="agustus" value="{{ pembayaran.agustus|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">September</label>
-                <input type="number" id="september" name="september" value="{{ pembayaran.september }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="september" name="september" value="{{ pembayaran.september|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Oktober</label>
-                <input type="number" id="oktober" name="oktober" value="{{ pembayaran.oktober }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="oktober" name="oktober" value="{{ pembayaran.oktober|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">November</label>
-                <input type="number" id="november" name="november" value="{{ pembayaran.november }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="november" name="november" value="{{ pembayaran.november|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
               <div>
                 <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Desember</label>
-                <input type="number" id="desember" name="desember" value="{{ pembayaran.desember }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <input type="number" id="desember" name="desember" value="{{ pembayaran.desember|default_if_none:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               </div>
             </div>
             <input type="hidden" name="tipe_pembayaran" value="{{ pembayaran.tipe_pembayaran }}">
@@ -254,10 +254,10 @@
                       <tbody id="omsetTableBody">
                           {% for pembayaran in pembayaran_omset %}
                           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.januari|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.februari|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.maret|default_if_none:"-" }}</td>
@@ -270,7 +270,7 @@
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.oktober|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.november|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.desember|default_if_none:"-" }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">
                                   <a href="?edit={{ pembayaran.id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                   <a href="?delete={{ pembayaran.id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</a>
@@ -345,10 +345,10 @@
                       <tbody id="pemasukanTableBody">
                           {% for pembayaran in pembayaran_pemasukan %}
                           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.nama_sekolah|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.jenjang|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_jenis_produk_display|default_if_none:"-" }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.get_status_display|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.januari|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.februari|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.maret|default_if_none:"-" }}</td>
@@ -361,7 +361,7 @@
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.oktober|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.november|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.desember|default_if_none:"-" }}</td>
-                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran }}</td>
+                              <td class="px-6 py-4 whitespace-nowrap">{{ pembayaran.total_pembayaran|default_if_none:"-" }}</td>
                               <td class="px-6 py-4 whitespace-nowrap">
                                   <a href="?edit={{ pembayaran.id }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                   <a href="?delete={{ pembayaran.id }}" class="font-medium text-red-600 dark:text-red-500 hover:underline">Hapus</a>
