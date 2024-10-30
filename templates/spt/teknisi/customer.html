@@ -105,6 +105,10 @@
               <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jumlah Siswa per Kelas</h4>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
+                  <label for="jumlah_siswa_tk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Siswa TK</label>
+                  <input type="number" id="jumlah_siswa_tk" name="jumlah_siswa_tk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_tk }}">
+                </div>
+                <div>
                   <label for="jumlah_siswa_kelas_1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas 1</label>
                   <input type="number" id="jumlah_siswa_kelas_1" name="jumlah_siswa_kelas_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_siswa_kelas_1 }}">
                 </div>
@@ -241,6 +245,7 @@
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembayaran</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Harga Buku</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa TK</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 1</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 2</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 3</th>
@@ -281,6 +286,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_tk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_3|default_if_none:"-" }}</td>

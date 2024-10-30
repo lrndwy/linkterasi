@@ -511,6 +511,7 @@ def customer(request):
                     pembayaran = request.POST.get('pembayaran')
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
+                    jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -534,7 +535,7 @@ def customer(request):
                     master.pembayaran = pembayaran
                     master.harga_buku = harga_buku
                     master.jumlah_komputer = jumlah_komputer
-                    
+                    master.jumlah_siswa_tk = jumlah_siswa_tk
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
                         jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
@@ -584,7 +585,7 @@ def customer(request):
                         pembayaran = request.POST.get('pembayaran')
                         harga_buku = request.POST.get('harga_buku')
                         jumlah_komputer = request.POST.get('jumlah_komputer')
-                        
+                        jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
                         # Konversi string tanggal ke objek datetime
                         awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                         akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
@@ -605,6 +606,7 @@ def customer(request):
                             pembayaran=pembayaran,
                             harga_buku=harga_buku,
                             jumlah_komputer=jumlah_komputer,
+                            jumlah_siswa_tk=jumlah_siswa_tk
                         )
                         
                         # Simpan jumlah siswa per kelas
@@ -680,6 +682,7 @@ def customer_ekskul(request):
                     pembayaran = request.POST.get('pembayaran')
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
+                    jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
                     tipe_sekolah = request.POST.get('tipe_sekolah')
                     
                     # Konversi string tanggal ke objek datetime
@@ -704,6 +707,7 @@ def customer_ekskul(request):
                     master.pembayaran = pembayaran
                     master.harga_buku = harga_buku
                     master.jumlah_komputer = jumlah_komputer
+                    master.jumlah_siswa_tk = jumlah_siswa_tk
                     master.tipe_sekolah = tipe_sekolah
                     
                     # Perbarui jumlah siswa per kelas
@@ -758,6 +762,7 @@ def customer_ekskul(request):
                         pembayaran = request.POST.get('pembayaran')
                         harga_buku = request.POST.get('harga_buku')
                         jumlah_komputer = request.POST.get('jumlah_komputer')
+                        jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
                         tipe_sekolah = request.POST.get('tipe_sekolah')
                         
                         # Konversi string tanggal ke objek datetime
@@ -780,6 +785,7 @@ def customer_ekskul(request):
                             pembayaran=pembayaran,
                             harga_buku=harga_buku,
                             jumlah_komputer=jumlah_komputer,
+                            jumlah_siswa_tk=jumlah_siswa_tk,
                             tipe_sekolah=tipe_sekolah
                         )
                         
