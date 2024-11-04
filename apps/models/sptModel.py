@@ -20,6 +20,7 @@ class permintaanSPT(models.Model):
     kategori = models.CharField(max_length=255, choices=KATEGORI_CHOICES)
     file = models.FileField(upload_to='spt/permintaan', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    alasan = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.judul
 

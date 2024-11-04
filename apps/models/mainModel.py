@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
-from apps.models.baseModel import JENJANG_CHOICES, provinsi
+from apps.models.baseModel import JENJANG_CHOICES, PROVINSI_CHOICES
 
 STATUS_CHOICES = [
     ("retention", "Retention"),
@@ -37,9 +36,7 @@ class master(models.Model):
     kepala_yayasan = models.CharField(max_length=255, null=True, blank=True)
     nama_sekolah = models.CharField(max_length=255, null=True, blank=True)
     nama_kepsek = models.CharField(max_length=255, null=True, blank=True)
-    provinsi = models.ForeignKey(
-        provinsi, on_delete=models.CASCADE, null=True, blank=True
-    )
+    provinsi = models.CharField(max_length=255, choices=PROVINSI_CHOICES, null=True, blank=True)
     jenjang = models.CharField(
         max_length=255, choices=JENJANG_CHOICES, null=True, blank=True
     )
@@ -73,6 +70,11 @@ class master(models.Model):
     jumlah_siswa_kelas_11_smk = models.IntegerField(null=True, blank=True)
     jumlah_siswa_kelas_12_smk = models.IntegerField(null=True, blank=True)
     jumlah_komputer = models.IntegerField(null=True, blank=True)
+    # PERUBAHAN
+    user_produk = models.ForeignKey('produk', on_delete=models.CASCADE, related_name="master", null=True, blank=True)
+    user_teknisi = models.ForeignKey('teknisi', on_delete=models.CASCADE, related_name="master", null=True, blank=True)
+    user_sales = models.ForeignKey('sales', on_delete=models.CASCADE, related_name="master", null=True, blank=True)
+    file = models.FileField(upload_to='file_master/', null=True, blank=True)
 
 
     @property
@@ -138,9 +140,7 @@ class master_ekstrakulikuler(models.Model):
     kepala_yayasan = models.CharField(max_length=255, null=True, blank=True)
     nama_sekolah = models.CharField(max_length=255, null=True, blank=True)
     nama_kepsek = models.CharField(max_length=255, null=True, blank=True)
-    provinsi = models.ForeignKey(
-        provinsi, on_delete=models.CASCADE, null=True, blank=True
-    )
+    provinsi = models.CharField(max_length=255, choices=PROVINSI_CHOICES, null=True, blank=True)
     jenjang = models.CharField(
         max_length=255, choices=JENJANG_CHOICES, null=True, blank=True
     )
@@ -177,6 +177,9 @@ class master_ekstrakulikuler(models.Model):
     tipe_sekolah = models.CharField(
         max_length=255, choices=TIPE_SEKOLAH, null=True, blank=True
     )
+    # PERUBAHAN
+    user_produk = models.ForeignKey('produk', on_delete=models.CASCADE, related_name="master_ekstrakulikuler", null=True, blank=True)
+    file = models.FileField(upload_to='file_master_ekstrakulikuler/', null=True, blank=True)
 
     @property
     def jumlah_seluruh_siswa(self):
@@ -245,9 +248,7 @@ class history_adendum(models.Model):
     kepala_yayasan = models.CharField(max_length=255, null=True, blank=True)
     nama_sekolah = models.CharField(max_length=255, null=True, blank=True)
     nama_kepsek = models.CharField(max_length=255, null=True, blank=True)
-    provinsi = models.ForeignKey(
-        provinsi, on_delete=models.CASCADE, null=True, blank=True
-    )
+    provinsi = models.CharField(max_length=255, choices=PROVINSI_CHOICES, null=True, blank=True)
     jenjang = models.CharField(
         max_length=255, choices=JENJANG_CHOICES, null=True, blank=True
     )
@@ -281,8 +282,8 @@ class history_adendum(models.Model):
     jumlah_siswa_kelas_11_smk = models.IntegerField(null=True, blank=True)
     jumlah_siswa_kelas_12_smk = models.IntegerField(null=True, blank=True)
     jumlah_komputer = models.IntegerField(null=True, blank=True)
-
     tanggal_adendum = models.DateField(null=True, blank=True)
+    file = models.FileField(upload_to='file_history_adendum/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -313,9 +314,7 @@ class history_adendum_ekskul(models.Model):
     kepala_yayasan = models.CharField(max_length=255, null=True, blank=True)
     nama_sekolah = models.CharField(max_length=255, null=True, blank=True)
     nama_kepsek = models.CharField(max_length=255, null=True, blank=True)
-    provinsi = models.ForeignKey(
-        provinsi, on_delete=models.CASCADE, null=True, blank=True
-    )
+    provinsi = models.CharField(max_length=255, choices=PROVINSI_CHOICES, null=True, blank=True)
     jenjang = models.CharField(
         max_length=255, choices=JENJANG_CHOICES, null=True, blank=True
     )
@@ -353,6 +352,7 @@ class history_adendum_ekskul(models.Model):
         max_length=255, choices=TIPE_SEKOLAH, null=True, blank=True
     )
     tanggal_adendum = models.DateField(null=True, blank=True)
+    file = models.FileField(upload_to='file_history_adendum_ekskul/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -414,11 +414,12 @@ class guru(models.Model):
 class produk(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="produk")
-    list_sekolah = models.ManyToManyField("master", related_name="produk", blank=True)
-    list_sekolah_ekstrakulikuler = models.ManyToManyField(
-        "master_ekstrakulikuler", related_name="produk", blank=True
-    )
-    telp = models.CharField(max_length=255)
+    # PERUBAHAN
+    # list_sekolah = models.ManyToManyField("master", related_name="produk", blank=True)
+    # list_sekolah_ekstrakulikuler = models.ManyToManyField(
+    #     "master_ekstrakulikuler", related_name="produk", blank=True
+    # )
+    telp = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.nama
@@ -430,10 +431,11 @@ class produk(models.Model):
 class teknisi(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teknisi")
-    list_sekolah = models.ManyToManyField(
-        "master", related_name="teknisi", blank=True
-    )
-    telp = models.CharField(max_length=255)
+    # PERUBAHAN
+    # list_sekolah = models.ManyToManyField(
+    #     "master", related_name="teknisi", blank=True
+    # )
+    telp = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.nama
@@ -445,10 +447,11 @@ class teknisi(models.Model):
 class sales(models.Model):
     nama = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales")
-    list_sekolah = models.ManyToManyField(
-        "master", related_name="sales", blank=True
-    )
-    telp = models.CharField(max_length=255)
+    # PERUBAHAN
+    # list_sekolah = models.ManyToManyField(
+    #     "master", related_name="sales", blank=True
+    # )
+    telp = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.nama

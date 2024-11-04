@@ -8,16 +8,89 @@ JENJANG_CHOICES = [
     ('SMK', 'SMK'),
 ]
 
-class provinsi(models.Model):
-    nama = models.CharField(max_length=255)
-    koordinat = models.CharField(max_length=255)
+PROVINSI_CHOICES = [
+    ('Papua Barat Daya', 'Papua Barat Daya'),
+    ('Papua Selatan', 'Papua Selatan'),
+    ('Papua Pegunungan', 'Papua Pegunungan'),
+    ('Papua Tengah', 'Papua Tengah'),
+    ('Papua', 'Papua'),
+    ('Papua Barat', 'Papua Barat'),
+    ('Maluku Utara', 'Maluku Utara'),
+    ('Maluku', 'Maluku'),
+    ('Sulawesi Barat', 'Sulawesi Barat'),
+    ('Gorontalo', 'Gorontalo'),
+    ('Sulawesi Tenggara', 'Sulawesi Tenggara'), 
+    ('Sulawesi Selatan', 'Sulawesi Selatan'),
+    ('Sulawesi Tengah', 'Sulawesi Tengah'),
+    ('Sulawesi Utara', 'Sulawesi Utara'),
+    ('Kalimantan Utara', 'Kalimantan Utara'),
+    ('Kalimantan Timur', 'Kalimantan Timur'),
+    ('Kalimantan Selatan', 'Kalimantan Selatan'),
+    ('Kalimantan Tengah', 'Kalimantan Tengah'),
+    ('Kalimantan Barat', 'Kalimantan Barat'),
+    ('Nusa Tenggara Timur', 'Nusa Tenggara Timur'),
+    ('Nusa Tenggara Barat', 'Nusa Tenggara Barat'),
+    ('Bali', 'Bali'),
+    ('Banten', 'Banten'),
+    ('Jawa Timur', 'Jawa Timur'),
+    ('DI Yogyakarta', 'DI Yogyakarta'),
+    ('Jawa Tengah', 'Jawa Tengah'),
+    ('Jawa Barat', 'Jawa Barat'),
+    ('DKI Jakarta', 'DKI Jakarta'),
+    ('Kepulauan Riau', 'Kepulauan Riau'),
+    ('Kepulauan Bangka Belitung', 'Kepulauan Bangka Belitung'),
+    ('Lampung', 'Lampung'),
+    ('Bengkulu', 'Bengkulu'),
+    ('Sumatera Selatan', 'Sumatera Selatan'),
+    ('Jambi', 'Jambi'),
+    ('Riau', 'Riau'),
+    ('Sumatera Barat', 'Sumatera Barat'),
+    ('Sumatera Utara', 'Sumatera Utara'),
+    ('Nanggroe Aceh Darussalam', 'Nanggroe Aceh Darussalam'),
+]
 
-    def __str__(self):
-        return self.nama
+# Dictionary untuk menyimpan koordinat provinsi
+PROVINSI_KOORDINAT = {
+    'Papua Barat Daya': [-1.8711, 132.2784],
+    'Papua Selatan': [-7.6145, 139.5370],
+    'Papua Pegunungan': [-4.0699, 138.7879],
+    'Papua Tengah': [-3.3977, 135.4951],
+    'Papua': [-4.269928, 138.080353],
+    'Papua Barat': [-1.336115, 133.174716],
+    'Maluku Utara': [1.570999, 127.808769],
+    'Maluku': [-3.238462, 130.145273],
+    'Sulawesi Barat': [-2.844137, 119.232078],
+    'Gorontalo': [0.556174, 123.058548],
+    'Sulawesi Tenggara': [-4.144910, 122.174605],
+    'Sulawesi Selatan': [-3.668790, 119.974052],
+    'Sulawesi Tengah': [-1.430025, 121.445618],
+    'Sulawesi Utara': [0.624693, 123.974998],
+    'Kalimantan Utara': [3.073153, 116.041210],
+    'Kalimantan Timur': [0.538659, 116.419389],
+    'Kalimantan Selatan': [-3.092642, 115.283760],
+    'Kalimantan Tengah': [-1.681488, 113.382355],
+    'Kalimantan Barat': [-0.278781, 111.475285],
+    'Nusa Tenggara Timur': [-8.657382, 121.079370],
+    'Nusa Tenggara Barat': [-8.652933, 117.361649],
+    'Bali': [-8.409518, 115.188916],
+    'Banten': [-6.446008, 106.137571],
+    'Jawa Timur': [-7.536064, 112.238402],
+    'DI Yogyakarta': [-7.795580, 110.369490],
+    'Jawa Tengah': [-7.150975, 110.140259],
+    'Jawa Barat': [-6.914744, 107.609810],
+    'DKI Jakarta': [-6.200000, 106.816666],
+    'Kepulauan Riau': [3.945651, 108.142951],
+    'Kepulauan Bangka Belitung': [-2.741480, 106.440727],
+    'Lampung': [-4.558700, 105.406807],
+    'Bengkulu': [-3.792845, 102.260764],
+    'Sumatera Selatan': [-3.319437, 103.914399],
+    'Jambi': [-1.485148, 102.438057],
+    'Riau': [0.293347, 101.706825],
+    'Sumatera Barat': [-0.739940, 100.800004],
+    'Sumatera Utara': [2.124970, 99.545032],
+    'Nanggroe Aceh Darussalam': [4.695135, 96.749397],
+}
 
-    class Meta:
-        verbose_name_plural = "Provinsi"
-
-    def get_latitude_longitude(self):
-        lat, lon = self.koordinat.split(',')
-        return float(lat.strip()), float(lon.strip())
+def get_koordinat_provinsi(nama_provinsi):
+    """Helper function untuk mendapatkan koordinat provinsi"""
+    return PROVINSI_KOORDINAT.get(nama_provinsi)

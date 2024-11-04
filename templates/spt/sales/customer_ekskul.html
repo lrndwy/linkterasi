@@ -12,7 +12,7 @@
       <c-slot name="content">
         <c-headingCard judul="Edit Customer Ekstrakulikuler" deskripsi="Edit Customer Ekstrakulikuler" heading_image_url="https://img.icons8.com/?size=100&id=B7zJPtQlKgWD&format=png&color=000000"></c-headingCard>
         <section>
-          <form method="POST" action="?edit={{ master.id }}" class="p-4 bg-white rounded-lg">
+          <form method="POST" action="?edit={{ master.id }}" class="p-4 bg-white rounded-lg" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="edit_id" value="{{ master.id }}">
             
@@ -42,7 +42,7 @@
                 <select id="provinsi" name="provinsi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                   <option value="">Pilih Provinsi</option>
                   {% for prov in provinsi_list %}
-                    <option value="{{ prov.id }}" {% if prov.id == master.provinsi_id %}selected{% endif %}>{{ prov.nama }}</option>
+                    <option value="{{ prov }}" {% if prov == master.provinsi %}selected{% endif %}>{{ prov }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -100,6 +100,22 @@
               <div>
                 <label for="jumlah_komputer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Komputer</label>
                 <input type="number" id="jumlah_komputer" name="jumlah_komputer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.jumlah_komputer|default_if_none:'' }}">
+              </div>
+              <div>
+                <label for="user_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">User Produk</label>
+                <select id="user_produk" name="user_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="">Pilih User Produk</option>
+                    {% for produk in daftar_produk %}
+                      <option value="{{ produk.id }}" {% if produk.id == master.user_produk.id %}selected{% endif %}>{{ produk.nama }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Unggah file</label>
+                {% if master.file %}
+                  <p class="mb-2">File saat ini: <a href="{{ master.file.url }}" class="text-blue-600 hover:underline" target="_blank">{{ master.file.name }}</a></p>
+                {% endif %}
+                <input name="file" id="file" type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" value="{{ master.file|default_if_none:'' }}">
               </div>
             </div>
             <div class="mt-4">
@@ -239,6 +255,7 @@
                             <tr>
                               <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">File</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Kepala Yayasan</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
@@ -252,6 +269,7 @@
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenis Produk</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Pembayaran</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Harga Buku</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">User Produk</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa TK</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 1</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 2</th>
@@ -279,11 +297,12 @@
                                   <a href="?edit={{ data.id }}" class="text-blue-600 hover:underline dark:text-blue-500">Edit</a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{% if data.file %}<a href="/media/{{ data.file|default_if_none:'' }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>{% else %}-{% endif %}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_yayasan|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.kepala_yayasan|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_kepsek|default_if_none:"-" }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi.nama|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.provinsi|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
@@ -292,6 +311,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jenis_produk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.harga_buku|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.user_produk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_tk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_1|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_2|default_if_none:"-" }}</td>

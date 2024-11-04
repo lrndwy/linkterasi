@@ -35,7 +35,7 @@ def index(request):
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
         # Sekolah Biasa
-        daftar_sekolah = produk_instance.list_sekolah.all()
+        daftar_sekolah = master_model.objects.filter(user_produk=produk_instance)
         if filter_tipe_sekolah != 'semua':
             daftar_sekolah = daftar_sekolah.filter(tipe_sekolah=filter_tipe_sekolah)
         
@@ -85,7 +85,7 @@ def index(request):
             })
 
         # Sekolah Ekstrakulikuler
-        daftar_sekolah_ekskul = produk_instance.list_sekolah_ekstrakulikuler.all()
+        daftar_sekolah_ekskul = master_ekstrakulikuler_model.objects.filter(user_produk=produk_instance)
         total_sekolah_ekskul = daftar_sekolah_ekskul.count()
         
         kunjungan_ekskul_filter = kunjungan_produk_model.objects.filter(
@@ -335,7 +335,7 @@ def kunjungan_tik(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': produk.list_sekolah.all(),
+            'sekolah_list': master_model.objects.filter(user_produk=user.produk.first()),
             'judul_list': LIST_JUDUL_PRODUK,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,
@@ -412,7 +412,7 @@ def kunjungan_ekskul(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': user.produk.first().list_sekolah_ekstrakulikuler.all(),
+            'sekolah_list': master_ekstrakulikuler_model.objects.filter(user_produk=user.produk.first()),
             'judul_list': LIST_JUDUL_PRODUK,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,

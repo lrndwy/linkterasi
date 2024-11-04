@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..authentication import *
 from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
-from apps.models.mainModel import teknisi as teknisi_model
+from apps.models.mainModel import teknisi as teknisi_model, produk as produk_model, sales as sales_model
 from apps.models.kunjunganModel import kunjungan_teknisi
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
-from apps.models.baseModel import provinsi as provinsi_model
 from apps.models.baseModel import JENJANG_CHOICES
 from apps.functions import func_total_siswa_per_jenjang, func_total_komputer_per_jenjang
 import json
@@ -20,11 +19,13 @@ from django.utils import timezone
 from apps.models.sptModel import pengumuman as pengumuman_model
 from apps.functions import impor_data_customer, impor_data_customer_ekskul
 from core.settings import API_KEY
+from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
 import logging
 
 logger = logging.getLogger(__name__)
 
 DAFTAR_JENJANG = [item[0] for item in JENJANG_CHOICES]
+PROVINSI_LIST = [provinsi[0] for provinsi in PROVINSI_CHOICES]
 
 TIPE_SEKOLAH_MASTER_CHOICES = [
   ('coding', 'Coding'),
@@ -60,18 +61,18 @@ def index(request):
             try:
                 teknisi_user = User.objects.get(username=filter_teknisi)
                 teknisi_instance = teknisi_model.objects.get(user=teknisi_user)
-                daftar_sekolah = daftar_sekolah.filter(teknisi=teknisi_instance)
+                daftar_sekolah = daftar_sekolah.filter(user_teknisi=teknisi_instance)
             except (User.DoesNotExist, teknisi_model.DoesNotExist):
                 messages.error(request, 'Teknisi tidak ditemukan')
         
         # Mengambil data total sekolah per jenjang
         total_per_jenjang = master_model.total_sekolah_per_jenjang(daftar_sekolah)
 
-        # Ganti total_siswa_per_jenjang menjadi total_komputer_per_jenjang
+        # Mengambil data total komputer per jenjang
         total_komputer_per_jenjang = func_total_komputer_per_jenjang(daftar_sekolah)
 
         # Mengambil daftar jenjang
-        daftar_jenjang = DAFTAR_JENJANG
+        daftar_jenjang = [jenjang for jenjang, _ in JENJANG_CHOICES]
 
         # Menghitung jumlah kunjungan teknisi bulan ini atau bulan yang dipilih
         if filter_bulan == 'semua':
@@ -93,32 +94,31 @@ def index(request):
 
         maintenance = kunjungan_filter.filter(judul='maintenance').count()
         trouble_shooting = kunjungan_filter.filter(judul='trouble shooting').count()
+        remote = kunjungan_filter.filter(judul='remote').count()
 
         # Menghitung jumlah sekolah yang belum dikunjungi
         if teknisi_instance:
-            sekolah_dikunjungi = kunjungan_filter.filter(
-                teknisi=teknisi_instance
-            ).values('sekolah').distinct()
+            sekolah_dikunjungi = kunjungan_filter.values_list('sekolah', flat=True).distinct()
         else:
-            sekolah_dikunjungi = kunjungan_filter.values('sekolah').distinct()
+            sekolah_dikunjungi = kunjungan_filter.values_list('sekolah', flat=True).distinct()
 
         belum_dikunjungi = daftar_sekolah.exclude(id__in=sekolah_dikunjungi).count()
 
         # Mengambil riwayat kunjungan teknisi
-        riwayat_kunjungan = kunjungan_filter.select_related('teknisi', 'sekolah').order_by('-tanggal')[:10]
+        riwayat_kunjungan = kunjungan_filter.select_related('teknisi').prefetch_related('sekolah').order_by('-tanggal')[:10]
 
-        # Ambil data provinsi dan sekolah
-        provinsi_data = provinsi_model.objects.all()
+        # Ambil data provinsi dan sekolah menggunakan PROVINSI_CHOICES dan PROVINSI_KOORDINAT
         provinsi_sekolah = []
-        for prov in provinsi_data:
-            sekolah_list = daftar_sekolah.filter(provinsi=prov)
+        for prov_code, prov_name in PROVINSI_CHOICES:
+            sekolah_list = daftar_sekolah.filter(provinsi=prov_code)
             if sekolah_list.exists():
-                lat, lon = prov.get_latitude_longitude()
-                provinsi_sekolah.append({
-                    'nama': prov.nama,
-                    'koordinat': [lat, lon],
-                    'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
-                })
+                koordinat = PROVINSI_KOORDINAT.get(prov_code)
+                if koordinat:
+                    provinsi_sekolah.append({
+                        'nama': prov_name,
+                        'koordinat': koordinat,
+                        'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
+                    })
 
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
@@ -126,6 +126,7 @@ def index(request):
             'daftar_jenjang': json.dumps(daftar_jenjang),
             'maintenance': maintenance,
             'trouble_shooting': trouble_shooting,
+            'remote': remote,
             'daftar_sekolah': daftar_sekolah,
             'riwayat_kunjungan': riwayat_kunjungan,
             'provinsi_sekolah': json.dumps(provinsi_sekolah),
@@ -138,7 +139,7 @@ def index(request):
         return render(request, 'spt/teknisi/index.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
-        return redirect('index_sptteknisi')
+        return redirect('sptteknisi')
 
 @sptteknisi_required
 def komplain(request):
@@ -180,28 +181,47 @@ def saran(request):
 @sptteknisi_required
 def sptpermintaan(request):
     try:
+        # Ambil filter teknisi dari query parameter
         filter_pengguna_teknisi = request.GET.get('teknisi')
-        daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="teknisi")
-        if filter_pengguna_teknisi != None and filter_pengguna_teknisi != 'semua':
-            daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="teknisi", user=filter_pengguna_teknisi)
-        else:
-            daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="teknisi")
+        
+        # Base queryset
+        daftar_permintaan = permintaanSPT_model.objects.filter(kategori="teknisi")
+        
+        # Terapkan filter jika ada
+        if filter_pengguna_teknisi and filter_pengguna_teknisi != 'semua':
+            daftar_permintaan = daftar_permintaan.filter(user_id=filter_pengguna_teknisi)
+
+        # Handle POST request untuk update status
         if request.method == 'POST':
+            id_permintaan = request.POST.get('id')
+            status = request.POST.get('status')
+            alasan = request.POST.get('alasan')
+            
             try:
-                id = request.POST.get('id')
-                status = request.POST.get('status')
-                permintaan = permintaanSPT_model.objects.get(id=id)
+                permintaan = permintaanSPT_model.objects.get(id=id_permintaan)
                 permintaan.status = status
+                
+                # Jika status ditolak, simpan alasan penolakan
+                if status == 'ditolak' and alasan:
+                    permintaan.alasan = alasan
+                
                 permintaan.save()
-                messages.success(request, 'Permintaan berhasil ' + status)
-                return redirect('sptpermintaan_sptteknisi')
+                messages.success(request, f'Permintaan berhasil {status}')
+                
+            except permintaanSPT_model.DoesNotExist:
+                messages.error(request, 'Permintaan tidak ditemukan')
             except Exception as e:
-                messages.error(request, 'Gagal memperbarui permintaan: ' + str(e))
-                return redirect('sptpermintaan_sptteknisi')
+                messages.error(request, f'Gagal memperbarui permintaan: {str(e)}')
+                
+            return redirect('sptpermintaan_sptteknisi')
+
+        # Ambil daftar pengguna teknisi untuk dropdown filter
         daftar_pengguna_teknisi = User.objects.filter(teknisi__isnull=False)
+
         context = {
             'daftar_permintaan': daftar_permintaan,
-            'daftar_pengguna_teknisi': daftar_pengguna_teknisi
+            'daftar_pengguna_teknisi': daftar_pengguna_teknisi,
+            'filter_teknisi': filter_pengguna_teknisi
         }
         return render(request, 'spt/teknisi/sptpermintaan.html', context)
     except Exception as e:
@@ -246,7 +266,7 @@ def customer(request):
                     kepala_yayasan = request.POST.get('kepala_yayasan')
                     nama_sekolah = request.POST.get('nama_sekolah')
                     nama_kepsek = request.POST.get('nama_kepsek')
-                    provinsi_id = request.POST.get('provinsi')
+                    provinsi = request.POST.get('provinsi')
                     jenjang = request.POST.get('jenjang')
                     awal_kerjasama = request.POST.get('awal_kerjasama')
                     akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -256,6 +276,10 @@ def customer(request):
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
                     
+                    user_produk = request.POST.get('user_produk')
+                    user_teknisi = request.POST.get('user_teknisi')
+                    user_sales = request.POST.get('user_sales')
+                    file = request.FILES.get('file')
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -264,13 +288,33 @@ def customer(request):
                     # Ambil objek master yang sudah ada
                     master = get_object_or_404(master_model, id=edit_id)
                     
+                    if user_produk:
+                        master.user_produk = produk_model.objects.get(id=user_produk)
+                    else:
+                        master.user_produk = None
+                        
+                    if user_teknisi:
+                        master.user_teknisi = teknisi_model.objects.get(id=user_teknisi)
+                    else:
+                        master.user_teknisi = None
+                    
+                    if user_sales:
+                        master.user_sales = sales_model.objects.get(id=user_sales)
+                    else:
+                        master.user_sales = None
+                        
+                    if file:
+                        master.file = file
+                    
+                    
+                    
                     # Perbarui atribut-atribut master
                     master.no_mou = no_mou
                     master.nama_yayasan = nama_yayasan
                     master.kepala_yayasan = kepala_yayasan
                     master.nama_sekolah = nama_sekolah
                     master.nama_kepsek = nama_kepsek
-                    master.provinsi_id = provinsi_id
+                    master.provinsi = provinsi
                     master.jenjang = jenjang
                     master.awal_kerjasama = awal_kerjasama
                     master.akhir_kerjasama = akhir_kerjasama
@@ -279,7 +323,6 @@ def customer(request):
                     master.pembayaran = pembayaran
                     master.harga_buku = harga_buku
                     master.jumlah_komputer = jumlah_komputer
-                    
                     
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
@@ -301,11 +344,13 @@ def customer(request):
                 context = {
                     'edit': True,
                     'master': master,
-                    'provinsi_list': provinsi_model.objects.all(),
+                    'provinsi_list': PROVINSI_LIST,
                     'jenjang_list': DAFTAR_JENJANG,
                     'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-                
+                    'daftar_teknisi': teknisi_model.objects.all(),
+                    'daftar_produk': produk_model.objects.all(),
+                    'daftar_sales': sales_model.objects.all(),
                 }
                 return render(request, 'spt/teknisi/customer.html', context)
             except master_model.DoesNotExist:
@@ -321,7 +366,7 @@ def customer(request):
                     kepala_yayasan = request.POST.get('kepala_yayasan')
                     nama_sekolah = request.POST.get('nama_sekolah')
                     nama_kepsek = request.POST.get('nama_kepsek')
-                    provinsi_id = request.POST.get('provinsi')
+                    provinsi = request.POST.get('provinsi')
                     jenjang = request.POST.get('jenjang')
                     awal_kerjasama = request.POST.get('awal_kerjasama')
                     akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -331,7 +376,10 @@ def customer(request):
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
                     
-                    
+                    user_produk = request.POST.get('user_produk')
+                    user_teknisi = request.POST.get('user_teknisi')
+                    user_sales = request.POST.get('user_sales')
+                    file = request.FILES.get('file')
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                     akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
@@ -343,7 +391,7 @@ def customer(request):
                         kepala_yayasan=kepala_yayasan,
                         nama_sekolah=nama_sekolah,
                         nama_kepsek=nama_kepsek,
-                        provinsi_id=provinsi_id,
+                        provinsi=provinsi,
                         jenjang=jenjang,
                         awal_kerjasama=awal_kerjasama,
                         akhir_kerjasama=akhir_kerjasama,
@@ -352,9 +400,27 @@ def customer(request):
                         pembayaran=pembayaran,
                         harga_buku=harga_buku,
                         jumlah_komputer=jumlah_komputer,
-                        
                     )
                     
+                    if user_produk:
+                        master.user_produk = produk_model.objects.get(id=user_produk)
+                    else:
+                        master.user_produk = None
+                        
+                    if user_teknisi:
+                        master.user_teknisi = teknisi_model.objects.get(id=user_teknisi)
+                    else:
+                        master.user_teknisi = None
+                    
+                    if user_sales:
+                        master.user_sales = sales_model.objects.get(id=user_sales)
+                    else:
+                        master.user_sales = None
+                        
+                    if file:
+                        master.file = file
+                    
+                        
                     # Simpan jumlah siswa per kelas
                     for i in range(1, 13):
                         jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
@@ -389,11 +455,13 @@ def customer(request):
         
         context = {
             'master_data': master_model.objects.all(),
-            'provinsi_list': provinsi_model.objects.all(),
+            'provinsi_list': PROVINSI_LIST,
             'jenjang_list': DAFTAR_JENJANG,
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-            
+            'daftar_teknisi': teknisi_model.objects.all(),
+            'daftar_produk': produk_model.objects.all(),
+            'daftar_sales': sales_model.objects.all(),
         }
         return render(request, 'spt/teknisi/customer.html', context)
     except Exception as e:
@@ -414,7 +482,7 @@ def customer_ekskul(request):
                     kepala_yayasan = request.POST.get('kepala_yayasan')
                     nama_sekolah = request.POST.get('nama_sekolah')
                     nama_kepsek = request.POST.get('nama_kepsek')
-                    provinsi_id = request.POST.get('provinsi')
+                    provinsi = request.POST.get('provinsi')
                     jenjang = request.POST.get('jenjang')
                     awal_kerjasama = request.POST.get('awal_kerjasama')
                     akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -424,6 +492,9 @@ def customer_ekskul(request):
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
                     tipe_sekolah = request.POST.get('tipe_sekolah')
+                    user_produk = request.POST.get('user_produk')
+                    file = request.FILES.get('file')
+                    
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -438,7 +509,7 @@ def customer_ekskul(request):
                     master.kepala_yayasan = kepala_yayasan
                     master.nama_sekolah = nama_sekolah
                     master.nama_kepsek = nama_kepsek
-                    master.provinsi_id = provinsi_id
+                    master.provinsi = provinsi
                     master.jenjang = jenjang
                     master.awal_kerjasama = awal_kerjasama
                     master.akhir_kerjasama = akhir_kerjasama
@@ -449,6 +520,15 @@ def customer_ekskul(request):
                     master.jumlah_komputer = jumlah_komputer
                     master.tipe_sekolah = tipe_sekolah
                     
+                    if user_produk:
+                        master.user_produk = produk_model.objects.get(id=user_produk)
+                    else:
+                        master.user_produk = None
+                        
+                    if file:
+                        master.file = file
+                   
+                        
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
                         jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
@@ -469,11 +549,12 @@ def customer_ekskul(request):
                 context = {
                     'edit': True,
                     'master': master,
-                    'provinsi_list': provinsi_model.objects.all(),
+                    'provinsi_list': PROVINSI_LIST,
                     'jenjang_choices': JENJANG_CHOICES,
                     'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-                    'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+                    'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES,
+                    'daftar_produk': produk_model.objects.all(),
                 }
                 return render(request, 'spt/teknisi/customer_ekskul.html', context)
             except master_ekstrakulikuler_model.DoesNotExist:
@@ -492,7 +573,7 @@ def customer_ekskul(request):
                         kepala_yayasan = request.POST.get('kepala_yayasan')
                         nama_sekolah = request.POST.get('nama_sekolah')
                         nama_kepsek = request.POST.get('nama_kepsek')
-                        provinsi_id = request.POST.get('provinsi')
+                        provinsi = request.POST.get('provinsi')
                         jenjang = request.POST.get('jenjang')
                         awal_kerjasama = request.POST.get('awal_kerjasama')
                         akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -502,6 +583,8 @@ def customer_ekskul(request):
                         harga_buku = request.POST.get('harga_buku')
                         jumlah_komputer = request.POST.get('jumlah_komputer')
                         tipe_sekolah = request.POST.get('tipe_sekolah')
+                        user_produk = request.POST.get('user_produk')
+                        file = request.FILES.get('file')
                         
                         # Konversi string tanggal ke objek datetime
                         awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -514,7 +597,7 @@ def customer_ekskul(request):
                             kepala_yayasan=kepala_yayasan,
                             nama_sekolah=nama_sekolah,
                             nama_kepsek=nama_kepsek,
-                            provinsi_id=provinsi_id,
+                            provinsi=provinsi,
                             jenjang=jenjang,
                             awal_kerjasama=awal_kerjasama,
                             akhir_kerjasama=akhir_kerjasama,
@@ -523,8 +606,17 @@ def customer_ekskul(request):
                             pembayaran=pembayaran,
                             harga_buku=harga_buku,
                             jumlah_komputer=jumlah_komputer,
-                            tipe_sekolah=tipe_sekolah
+                            tipe_sekolah=tipe_sekolah,
                         )
+                        
+                        if user_produk:
+                            master.user_produk = produk_model.objects.get(id=user_produk)
+                        else:
+                            master.user_produk = None
+                            
+                        if file:
+                            master.file = file
+                        
                         
                         # Simpan jumlah siswa per kelas
                         for i in range(1, 13):
@@ -562,11 +654,12 @@ def customer_ekskul(request):
 
         context = {
             'master_data': master_ekstrakulikuler_model.objects.all(),
-            'provinsi_list': provinsi_model.objects.all(),
+            'provinsi_list': PROVINSI_LIST,
             'jenjang_choices': JENJANG_CHOICES,
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-            'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+            'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES,
+            'daftar_produk': produk_model.objects.all(),
         }
         return render(request, 'spt/teknisi/customer_ekskul.html', context)
     except Exception as e:

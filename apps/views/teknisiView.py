@@ -29,7 +29,7 @@ def index(request):
             bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
-        daftar_sekolah = teknisi_instance.list_sekolah.all()
+        daftar_sekolah = master_model.objects.filter(user_teknisi=teknisi_instance)
         
         total_sekolah = daftar_sekolah.count()
         total_komputer = sum(sekolah.jumlah_komputer or 0 for sekolah in daftar_sekolah)
@@ -47,11 +47,18 @@ def index(request):
         
         maintenance = kunjungan_filter.filter(judul='maintenance').count()
         trouble_shooting = kunjungan_filter.filter(judul='trouble shooting').count()
+        remote = kunjungan_filter.filter(judul='remote').count()
         
         sekolah_dikunjungi = kunjungan_filter.values('sekolah').distinct()
         belum_dikunjungi = total_sekolah - sekolah_dikunjungi.count()
         
-        daftar_kunjungan = kunjungan_filter.order_by('-tanggal')
+        daftar_kunjungan = kunjungan_filter.order_by('-tanggal').distinct()
+        
+        daftar_kunjungan_modified = []
+        for kunjungan in daftar_kunjungan:
+            sekolah_names = ", ".join([sekolah.nama_sekolah for sekolah in kunjungan.sekolah.all()])
+            kunjungan.sekolah_names = sekolah_names
+            daftar_kunjungan_modified.append(kunjungan)
         
         daftar_permintaan_spt = permintaanSPT_model.objects.filter(kategori='teknisi', user=user).order_by('-id')[:5]
         
@@ -75,9 +82,10 @@ def index(request):
             })
         
         context = {
-            'daftar_kunjungan': daftar_kunjungan,
+            'daftar_kunjungan': daftar_kunjungan_modified,
             'maintenance': maintenance,
             'trouble_shooting': trouble_shooting,
+            'remote': remote,
             'belum_dikunjungi': belum_dikunjungi,
             'total_sekolah': total_sekolah,
             'total_komputer': total_komputer,
@@ -212,22 +220,27 @@ def kunjungan(request):
         if request.method == 'POST':
             aksi = request.POST.get('aksi')
             if aksi == 'buat':
-                judul = request.POST.get('judul')
-                deskripsi = request.POST.get('deskripsi')
-                tanggal = request.POST.get('tanggal')
-                sekolah = master_model.objects.get(id=request.POST.get('sekolah'))
-                geolocation = request.POST.get('geolocation')
-              
-                kunjungan_teknisi_obj = kunjungan_teknisi_model(
-                    judul=judul,
-                    deskripsi=deskripsi,
-                    geolocation=geolocation,
-                    tanggal=tanggal,
-                    sekolah=sekolah,
+                # Ambil data sekolah yang dipilih
+                sekolah_ids = request.POST.getlist('sekolah_ids[]')
+                if not sekolah_ids:
+                    messages.error(request, 'Pilih minimal satu sekolah.')
+                    return redirect('kunjungan_teknisi')
+
+                # Buat satu objek kunjungan untuk semua sekolah yang dipilih
+                kunjungan_teknisi_obj = kunjungan_teknisi_model.objects.create(
+                    judul=request.POST.get('judul'),
+                    deskripsi=request.POST.get('deskripsi'),
+                    geolocation=request.POST.get('geolocation'),
+                    tanggal=request.POST.get('tanggal'),
                     teknisi=user.teknisi.first(),
-                    user=user
+                    user=user,
+                    status='menunggu'
                 )
-                kunjungan_teknisi_obj.save()
+                
+                # Tambahkan semua sekolah yang dipilih ke kunjungan yang sama
+                sekolah_objects = master_model.objects.filter(id__in=sekolah_ids)
+                kunjungan_teknisi_obj.sekolah.add(*sekolah_objects)
+                
                 messages.success(request, 'Kunjungan berhasil dibuat.')
                 return redirect('kunjungan_teknisi')
             elif aksi == 'ttd':
@@ -260,7 +273,7 @@ def kunjungan(request):
         kunjunganTTD = kunjungan_tanpa_ttd is not None
         
         context = {
-            'sekolah_list': user.teknisi.first().list_sekolah.all(),
+            'sekolah_list': master_model.objects.filter(user_teknisi=user.teknisi.first()),
             'judul_list': LIST_JUDUL_TEKNISI,
             'kunjunganTTD': kunjunganTTD,
             'kunjungan': kunjungan_tanpa_ttd,

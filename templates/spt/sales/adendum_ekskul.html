@@ -63,6 +63,7 @@
                             <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Sekolah</th>
                             <th scope="col" class="px-6 py-3 whitespace-nowrap">Jenjang</th>
                             <th scope="col" class="px-6 py-3 whitespace-nowrap">Tanggal Adendum</th>
+                            <th scope="col" class="px-6 py-3 whitespace-nowrap">File</th>
                             
                         </tr>
                     </thead>
@@ -73,7 +74,13 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ data.nama_sekolah|default_if_none:"-" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang|default_if_none:"-" }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ data.tanggal_adendum|date:"d/m/Y"|default_if_none:"-" }}</td>
-                            
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              {% if data.file %}
+                                <a href="{{ data.file.url }}" class="text-blue-600 hover:underline" target="_blank">{{ data.file.name }}</a>
+                              {% else %}
+                                -
+                              {% endif %}
+                            </td>
                         </tr>
                         {% empty %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

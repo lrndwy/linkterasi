@@ -105,6 +105,11 @@
                 <option value="coding">Coding</option>
               </select>
             </div>
+            <div class="mb-4">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Unggah file</label>
+              <p>File saat ini: <a href="" id="current_file_linkEkskul" class="text-blue-600 hover:underline" target="_blank"></a></p>
+              <input name="file" id="fileEkskul" type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+            </div>
         
           </div>
           
@@ -122,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const customerSelect = document.getElementById('customerEkskul');
   const cariButton = document.getElementById('cariCustomerEkskul');
   const form = document.getElementById('adendumEkskulForm');
+  const fileInput = document.getElementById('fileEkskul');
   const apiKey = '{{ api_key|escapejs }}';
   
   if (!customerSelect || !cariButton || !form) {
@@ -145,10 +151,25 @@ document.addEventListener('DOMContentLoaded', function() {
           return response.json();
         })
         .then(data => {
+          // Reset file input terlebih dahulu
+          if (fileInput) {
+            fileInput.value = '';
+          }
+          
+          // Menangani file yang ada
+          const fileLink = document.getElementById('current_file_linkEkskul');
+          if (fileLink && data.file) {
+            fileLink.href = data.file;
+            fileLink.textContent = data.file.split('/').pop(); // Menampilkan nama file saja
+          } else if (fileLink) {
+            fileLink.href = '';
+            fileLink.textContent = 'Tidak ada file';
+          }
+
           // Mengisi formulir dengan data yang diterima
           Object.keys(data).forEach(key => {
             const input = form.elements[key];
-            if (input) {
+            if (input && input.type !== 'file') { // Abaikan input file
               if (input.type === 'checkbox' || input.type === 'radio') {
                 input.checked = data[key];
               } else if (input.tagName === 'SELECT') {

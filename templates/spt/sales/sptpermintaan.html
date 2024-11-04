@@ -31,6 +31,7 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
+                                <th scope="col" class="px-6 py-3">Sales</th>
                                 <th scope="col" class="px-6 py-3">Judul</th>
                                 <th scope="col" class="px-6 py-3">Keterangan</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
@@ -42,13 +43,14 @@
                         <tbody>
                             {% for permintaan in daftar_permintaan %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.user.username }}</td>
                                 <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ permintaan.judul }}
                                 </td>
-                                <td class="px-6 py-4">{{ permintaan.ket }}</td>
-                                <td class="px-6 py-4">{{ permintaan.status }}</td>
-                                <td class="px-6 py-4">{{ permintaan.kategori }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.ket }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.status }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.kategori }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     {% if permintaan.file %}
                                         <a href="{{ permintaan.file.url }}" class="text-blue-600 hover:underline">Lihat File</a>
                                     {% else %}
@@ -64,14 +66,30 @@
                                         <input type="hidden" name="status" value="diterima">
                                         <button type="submit" class="font-medium text-green-600 dark:text-green-500 hover:underline mr-2">Terima</button>
                                       </form>
-                                      <form method="POST" action="{% url 'sptpermintaan_sptsales' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ permintaan.id }}">
-                                        <input type="hidden" name="status" value="ditolak">
-                                        <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline">Tolak</button>
-                                      </form>
+                                      
+                                      <!-- Tombol untuk memunculkan form tolak -->
+                                      <button onclick="showTolakForm('{{ permintaan.id }}')" class="font-medium text-red-600 dark:text-red-500 hover:underline">Tolak</button>
+                                      
+                                      <!-- Form tolak yang awalnya tersembunyi -->
+                                      <div id="tolakForm{{ permintaan.id }}" class="hidden fixed bg-opacity-50 flex justify-center items-center">
+                                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                                          <form method="POST" action="{% url 'sptpermintaan_sptsales' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="id" value="{{ permintaan.id }}">
+                                            <input type="hidden" name="status" value="ditolak">
+                                            <div class="mb-4">
+                                              <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Alasan Penolakan:</label>
+                                              <textarea name="alasan" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" rows="3"></textarea>
+                                            </div>
+                                            <div class="flex justify-end gap-2">
+                                              <button type="button" onclick="hideTolakForm('{{ permintaan.id }}')" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">Batal</button>
+                                              <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Kirim</button>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
                                   {% else %}
-                                    <p>Sudah di {{ permintaan.status }}</p>
+                                    <p>Sudah {{ permintaan.status }}</p>
                                   {% endif %}
                                     
                                   
@@ -85,4 +103,14 @@
         </section>
     </c-slot>
 </c-layouts.dashboard>
+
+<script>
+  function showTolakForm(id) {
+    document.getElementById('tolakForm' + id).classList.remove('hidden');
+  }
+
+  function hideTolakForm(id) {
+    document.getElementById('tolakForm' + id).classList.add('hidden');
+  }
+</script>
 {% endblock %}

@@ -15,7 +15,7 @@ def index(request):
         context = {
             'daftar_kegiatan': kegiatan_model.objects.filter(sales=sales_instance).order_by('-id'),
             'daftar_permintaan': permintaanSPT_model.objects.filter(kategori='sales').order_by('-id'),
-            'daftar_sekolah': sales_instance.list_sekolah.all().order_by('-id')
+            'daftar_sekolah': master_model.objects.filter(user_sales=sales_instance).order_by('-id')
         }
         return render(request, 'sales/index.html', context)
     except Exception as e:
@@ -48,7 +48,7 @@ def jadwal(request):
                 messages.error(request, f'Gagal menambahkan kegiatan: {str(e)}')
             return redirect('jadwal_sales')
         context = {
-            'daftar_sekolah': sales_instance.list_sekolah.all().order_by('-id'),
+            'daftar_sekolah': master_model.objects.filter(user_sales=sales_instance).order_by('-id'),
             'kategori_kegiatan': 'sales'
         }
         return render(request, 'sales/jadwal.html', context)

@@ -29,7 +29,7 @@
 <section>
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
       <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
         <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Maintenance Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
@@ -44,6 +44,14 @@
           <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Trouble Shooting</h3>
           <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ trouble_shooting|default_if_none:"0" }}</p>
           <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+        </div>
+      </div>
+      <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg flex items-center">
+        <img src="https://img.icons8.com/?size=100&id=ET86Rs1x7nfC&format=png&color=000000" alt="Remote Icon" class="w-8 h-8 mr-2">
+        <div class="ml-2">
+          <h3 class="text-base sm:text-xl font-semibold text-indigo-800 dark:text-white">Remote</h3>
+          <p class="text-2xl sm:text-3xl font-bold text-indigo-600 dark:text-indigo-300">{{ remote|default_if_none:"0" }}</p>
+          <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
@@ -107,6 +115,7 @@
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Tanggal</th>
             <th scope="col" class="px-6 py-3">Sekolah</th>
+            <th scope="col" class="px-6 py-3">Nama Kepsek/Guru</th>
             <th scope="col" class="px-6 py-3">TTD</th>
             <th scope="col" class="px-6 py-3">Cetak</th>
           </tr>
@@ -115,12 +124,15 @@
           {% for kunjungan in daftar_kunjungan %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              {{ kunjungan.judul|default_if_none:"-" }}
+              {{ kunjungan.get_judul_display|default_if_none:"-" }}
             </td>
             <td class="px-6 py-4">{{ kunjungan.deskripsi|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ kunjungan.status|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ kunjungan.tanggal|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ kunjungan.sekolah|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ kunjungan.get_status_display|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">{{ kunjungan.tanggal|date:"d/m/Y"|default_if_none:"-" }}</td>
+            <td class="px-6 py-4">
+              {{ kunjungan.sekolah_names|default_if_none:"-" }}
+            </td>
+            <td class="px-6 py-4">{{ kunjungan.nama_kepsek_atau_guru|default_if_none:"-" }}</td>
             <td class="px-6 py-4">
               {% if kunjungan.ttd %}
                 <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
@@ -129,12 +141,12 @@
               {% endif %}
             </td>
             <td class="px-6 py-4">
-                <a href="{% url 'cetak_teknisi' %}?id={{ kunjungan.id }}" target="_blank" class="text-blue-600 hover:underline">Cetak</a>
+              <a href="{% url 'cetak_teknisi' %}?id={{ kunjungan.id }}" class="text-blue-600 hover:underline">Cetak</a>
             </td>
           </tr>
           {% empty %}
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-            <td colspan="6" class="px-6 py-4 text-center">Tidak ada data kunjungan</td>
+            <td colspan="8" class="px-6 py-4 text-center">Tidak ada data kunjungan</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -235,6 +247,7 @@
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Kategori</th>
             <th scope="col" class="px-6 py-3">File</th>
+            <th scope="col" class="px-6 py-3">Alasan</th>
           </tr>
         </thead>
         <tbody>
@@ -243,15 +256,18 @@
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ permintaan.judul|default_if_none:"-" }}
             </td>
-            <td class="px-6 py-4">{{ permintaan.ket|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ permintaan.status|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ permintaan.kategori|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.ket|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.status|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.kategori|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
               {% if permintaan.file %}
                 <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>
               {% else %}
                 Tidak ada file
               {% endif %}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ permintaan.alasan|default_if_none:"-" }}
             </td>
           </tr>
           {% empty %}

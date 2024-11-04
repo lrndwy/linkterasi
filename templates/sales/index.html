@@ -93,6 +93,7 @@
                     <th scope="col" class="px-6 py-3">Status</th>
                     <th scope="col" class="px-6 py-3">Kategori</th>
                     <th scope="col" class="px-6 py-3">File</th>
+                    <th scope="col" class="px-6 py-3">Alasan</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -101,15 +102,18 @@
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {{ permintaan.judul|default_if_none:"-" }}
                     </td>
-                    <td class="px-6 py-4">{{ permintaan.ket|default_if_none:"-" }}</td>
-                    <td class="px-6 py-4">{{ permintaan.status|default_if_none:"-" }}</td>
-                    <td class="px-6 py-4">{{ permintaan.kategori|default_if_none:"-" }}</td>
-                    <td class="px-6 py-4">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.ket|default_if_none:"-" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.status|default_if_none:"-" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.kategori|default_if_none:"-" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                       {% if permintaan.file %}
                         <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>
                       {% else %}
                         Tidak ada file
                       {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      {{ permintaan.alasan|default_if_none:"-" }}
                     </td>
                   </tr>
                   {% empty %}

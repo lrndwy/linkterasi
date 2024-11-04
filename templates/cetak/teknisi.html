@@ -39,10 +39,16 @@
 
             <div class="space-y-4 mb-8">
                 <p><span class="font-semibold">Nama Teknisi:</span> {{ kunjungan.teknisi.nama }}</p>
-                <p><span class="font-semibold">Nama Sekolah:</span> {{ kunjungan.sekolah.nama_sekolah }}</p>
-                <p><span class="font-semibold">Jenjang:</span> {{ kunjungan.sekolah.jenjang }}</p>
+                <p><span class="font-semibold">Sekolah yang dikunjungi:</span></p>
+                <ul class="list-disc pl-8">
+                {% for sekolah in kunjungan.sekolah.all %}
+                    <li>
+                        <p>{{ sekolah.nama_sekolah }} ({{ sekolah.jenjang }})</p>
+                    </li>
+                {% endfor %}
+                </ul>
                 <p><span class="font-semibold">Tanggal:</span> {{ kunjungan.tanggal }}</p>
-                <p><span class="font-semibold">Jenis Kegiatan:</span> {{ kunjungan.judul }}</p>
+                <p><span class="font-semibold">Jenis Kegiatan:</span> {{ kunjungan.get_judul_display }}</p>
             </div>
 
             <hr class="my-8 border-1.5 border-black dark:border-white">
@@ -58,7 +64,7 @@
                         <img src="{{ kunjungan.ttd.url }}" alt="Tanda Tangan" class="mb-4 max-w-[200px]">
                         <hr class="w-full border-1 border-black dark:border-white mb-4">
                         <div class="flex flex-col items-center">
-                            <p class="font-semibold text-center">{{ kunjungan.sekolah.nama_kepsek }}</p>
+                            <p class="font-semibold text-center">{{ kunjungan.nama_kepsek_atau_guru }}</p>
                         </div>
                     </div>
                 {% else %}

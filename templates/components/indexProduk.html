@@ -1,34 +1,37 @@
 <!-- Filter -->
 <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
   <div class="flex flex-wrap justify-between items-center w-full gap-2">
-      <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
-      <div class="flex flex-wrap gap-2">
-        <form action="" method="get">
-          <select id="tipe_sekolah_filter" name="tipe_sekolah" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="semua">Semua Tipe Sekolah</option>
-              <option value="tik" {% if filter_tipe_sekolah == 'tik' %}selected{% endif %}>TIK</option>
-              <option value="robotik" {% if filter_tipe_sekolah == 'robotik' %}selected{% endif %}>Robotik</option>
-          </select>
-          <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="semua">Semua Bulan</option>
-              <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
-              <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
-              <option value="maret" {% if filter_bulan == 'maret' %}selected{% endif %}>Maret</option>
-              <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
-              <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
-              <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
-              <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
-              <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
-              <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
-              <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
-              <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
-              <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
-          </select>
-          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              Filter
-          </button>
-        </form>
-      </div>
+    <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+    <div class="flex flex-wrap gap-2">
+      <form action="" method="get">
+        <select id="tipe_sekolah_filter" name="tipe_sekolah"
+          class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option value="semua">Semua Tipe Sekolah</option>
+          <option value="tik" {% if filter_tipe_sekolah == 'tik' %}selected{% endif %}>TIK</option>
+          <option value="robotik" {% if filter_tipe_sekolah == 'robotik' %}selected{% endif %}>Robotik</option>
+        </select>
+        <select id="bulan_filter" name="bulan"
+          class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option value="semua">Semua Bulan</option>
+          <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
+          <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
+          <option value="maret" {% if filter_bulan  == 'maret' %}selected{% endif %}>Maret</option>
+          <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
+          <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
+          <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
+          <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
+          <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
+          <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
+          <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
+          <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
+          <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+        </select>
+        <button type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Filter
+        </button>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -38,33 +41,44 @@
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan Sekolah TIK</h2>
     <div class="grid grid-col sm:grid-cols-4 gap-4">
       <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Sekolah Dikunjungi Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000"
+          alt="Sekolah Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Sekolah Dikunjungi/Dikontak</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ total_sekolah_sudah_dikunjungi_dikontak|default_if_none:"0" }}</p>
-          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{
+            total_sekolah_sudah_dikunjungi_dikontak|default_if_none:"0" }}</p>
+          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title
+            }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Sekolah Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000"
+          alt="Sekolah Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
-          <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Sekolah Belum Dikunjungi/Dikontak</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ total_sekolah_belum_dikunjungi|default_if_none:"0" }}</p>
-          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Sekolah Belum Dikunjungi/Dikontak
+          </h3>
+          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{
+            total_sekolah_belum_dikunjungi|default_if_none:"0" }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{%
+            else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon"
+          class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Sekolah</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah_dipegang|default_if_none:"0" }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{
+            total_sekolah_dipegang|default_if_none:"0" }}</p>
         </div>
       </div>
       <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Siswa Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Siswa Icon"
+          class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Siswa</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_siswa_dipegang|default_if_none:"0" }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{
+            total_siswa_dipegang|default_if_none:"0" }}</p>
         </div>
       </div>
     </div>
@@ -75,24 +89,33 @@
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Daftar Sekolah TIK</h2>
-    
+
     <!-- Tambahkan div untuk search dan export -->
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
       <div class="w-full sm:w-1/2">
-        <input type="text" id="sekolahSearch" placeholder="Cari sekolah..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <input type="text" id="sekolahSearch" placeholder="Cari sekolah..."
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       </div>
       <div class="w-full sm:w-auto">
         <div class="relative">
-          <button id="dropdownSekolahButton" data-dropdown-toggle="dropdownSekolah" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+          <button id="dropdownSekolahButton" data-dropdown-toggle="dropdownSekolah"
+            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
             </svg>
           </button>
-          <div id="dropdownSekolah" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <div id="dropdownSekolah"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSekolahButton">
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahTable', 'excel', 'daftar_sekolah')">Excel</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahTable', 'csv', 'daftar_sekolah')">CSV</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahTable', 'pdf', 'daftar_sekolah')">PDF</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahTable', 'excel', 'daftar_sekolah')">Excel</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahTable', 'csv', 'daftar_sekolah')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahTable', 'pdf', 'daftar_sekolah')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -108,7 +131,7 @@
             <th scope="col" class="px-6 py-3">Nama Sekolah</th>
             <th scope="col" class="px-6 py-3">Status</th>
             <th scope="col" class="px-6 py-3">Jumlah Siswa</th>
-            
+
           </tr>
         </thead>
         <tbody id="sekolahTableBody">
@@ -138,23 +161,32 @@
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan TIK</h2>
-    
+
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
       <div class="w-full sm:w-1/2">
-        <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <input type="text" id="kunjunganSearch" placeholder="Cari riwayat kunjungan..."
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       </div>
       <div class="w-full sm:w-auto">
         <div class="relative">
-          <button id="dropdownKunjunganButton" data-dropdown-toggle="dropdownKunjungan" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+          <button id="dropdownKunjunganButton" data-dropdown-toggle="dropdownKunjungan"
+            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
             </svg>
           </button>
-          <div id="dropdownKunjungan" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <div id="dropdownKunjungan"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKunjunganButton">
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'excel', 'riwayat_kunjungan')">Excel</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'csv', 'riwayat_kunjungan')">CSV</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganTable', 'pdf', 'riwayat_kunjungan')">PDF</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganTable', 'excel', 'riwayat_kunjungan')">Excel</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganTable', 'csv', 'riwayat_kunjungan')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganTable', 'pdf', 'riwayat_kunjungan')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -186,9 +218,9 @@
             <td class="px-6 py-4">{{ kunjungan.sekolah|default_if_none:"-" }}</td>
             <td class="px-6 py-4">
               {% if kunjungan.ttd %}
-                <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
+              <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
               {% else %}
-                Tidak ada tanda tangan
+              Tidak ada tanda tangan
               {% endif %}
             </td>
             <td class="px-6 py-4">
@@ -212,33 +244,44 @@
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan Sekolah Ekstrakurikuler</h2>
     <div class="grid grid-col sm:grid-cols-4 gap-4">
       <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Sekolah Dikunjungi Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000"
+          alt="Sekolah Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Sekolah Ekskul Dikunjungi</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ total_sekolah_ekskul_dikunjungi|default_if_none:"0" }}</p>
-          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{
+            total_sekolah_ekskul_dikunjungi|default_if_none:"0" }}</p>
+          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title
+            }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Sekolah Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000"
+          alt="Sekolah Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
-          <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Sekolah Ekskul Belum Dikunjungi</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ total_sekolah_ekskul_belum|default_if_none:"0" }}</p>
-          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Sekolah Ekskul Belum Dikunjungi
+          </h3>
+          <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{
+            total_sekolah_ekskul_belum|default_if_none:"0" }}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{%
+            else %}Bulan ini{% endif %}</p>
         </div>
       </div>
       <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon"
+          class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Sekolah Ekskul</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah_ekskul|default_if_none:"0" }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{
+            total_sekolah_ekskul|default_if_none:"0" }}</p>
         </div>
       </div>
       <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center">
-        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Siswa Icon" class="w-8 h-8 mr-2">
+        <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Siswa Icon"
+          class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Siswa Ekskul</h3>
-          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{ total_siswa_ekskul|default_if_none:"0" }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">{{
+            total_siswa_ekskul|default_if_none:"0" }}</p>
         </div>
       </div>
     </div>
@@ -249,23 +292,32 @@
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Daftar Sekolah Ekstrakurikuler</h2>
-    
+
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
       <div class="w-full sm:w-1/2">
-        <input type="text" id="sekolahEkskulSearch" placeholder="Cari sekolah ekstrakulikuler..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <input type="text" id="sekolahEkskulSearch" placeholder="Cari sekolah ekstrakulikuler..."
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       </div>
       <div class="w-full sm:w-auto">
         <div class="relative">
-          <button id="dropdownSekolahEkskulButton" data-dropdown-toggle="dropdownSekolahEkskul" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+          <button id="dropdownSekolahEkskulButton" data-dropdown-toggle="dropdownSekolahEkskul"
+            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
             </svg>
           </button>
-          <div id="dropdownSekolahEkskul" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <div id="dropdownSekolahEkskul"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSekolahEkskulButton">
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahEkskulTable', 'excel', 'daftar_sekolah_ekskul')">Excel</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahEkskulTable', 'csv', 'daftar_sekolah_ekskul')">CSV</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('daftarSekolahEkskulTable', 'pdf', 'daftar_sekolah_ekskul')">PDF</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahEkskulTable', 'excel', 'daftar_sekolah_ekskul')">Excel</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahEkskulTable', 'csv', 'daftar_sekolah_ekskul')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('daftarSekolahEkskulTable', 'pdf', 'daftar_sekolah_ekskul')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -310,24 +362,35 @@
 <!-- Riwayat Kunjungan Ekstrakulikuler -->
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
-    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Sekolah Ekstrakurikuler</h2>
-    
+    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Kunjungan Sekolah
+      Ekstrakurikuler</h2>
+
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
       <div class="w-full sm:w-1/2">
-        <input type="text" id="kunjunganEkskulSearch" placeholder="Cari riwayat kunjungan ekstrakulikuler..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <input type="text" id="kunjunganEkskulSearch" placeholder="Cari riwayat kunjungan ekstrakulikuler..."
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       </div>
       <div class="w-full sm:w-auto">
         <div class="relative">
-          <button id="dropdownKunjunganEkskulButton" data-dropdown-toggle="dropdownKunjunganEkskul" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+          <button id="dropdownKunjunganEkskulButton" data-dropdown-toggle="dropdownKunjunganEkskul"
+            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
             </svg>
           </button>
-          <div id="dropdownKunjunganEkskul" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <div id="dropdownKunjunganEkskul"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKunjunganEkskulButton">
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'excel', 'riwayat_kunjungan_ekskul')">Excel</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'csv', 'riwayat_kunjungan_ekskul')">CSV</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('riwayatKunjunganEkskulTable', 'pdf', 'riwayat_kunjungan_ekskul')">PDF</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganEkskulTable', 'excel', 'riwayat_kunjungan_ekskul')">Excel</a>
+              </li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganEkskulTable', 'csv', 'riwayat_kunjungan_ekskul')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('riwayatKunjunganEkskulTable', 'pdf', 'riwayat_kunjungan_ekskul')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -359,9 +422,9 @@
             <td class="px-6 py-4">{{ kunjungan.sekolah_ekskul|default_if_none:"-" }}</td>
             <td class="px-6 py-4">
               {% if kunjungan.ttd %}
-                <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
+              <a href="{{ kunjungan.ttd.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat TTD</a>
               {% else %}
-                Tidak ada tanda tangan
+              Tidak ada tanda tangan
               {% endif %}
             </td>
             <td class="px-6 py-4">
@@ -383,23 +446,32 @@
 <section class="mt-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
-    
+
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
       <div class="w-full sm:w-1/2">
-        <input type="text" id="sptSearch" placeholder="Cari permintaan SPT..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <input type="text" id="sptSearch" placeholder="Cari permintaan SPT..."
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
       </div>
       <div class="w-full sm:w-auto">
         <div class="relative">
-          <button id="dropdownSPTButton" data-dropdown-toggle="dropdownSPT" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
-            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+          <button id="dropdownSPTButton" data-dropdown-toggle="dropdownSPT"
+            class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            type="button">
+            Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
             </svg>
           </button>
-          <div id="dropdownSPT" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+          <div id="dropdownSPT"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSPTButton">
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'excel', 'permintaan_spt')">Excel</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'csv', 'permintaan_spt')">CSV</a></li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('sptTable', 'pdf', 'permintaan_spt')">PDF</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('sptTable', 'excel', 'permintaan_spt')">Excel</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('sptTable', 'csv', 'permintaan_spt')">CSV</a></li>
+              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onclick="exportTable('sptTable', 'pdf', 'permintaan_spt')">PDF</a></li>
             </ul>
           </div>
         </div>
@@ -410,11 +482,12 @@
       <table id="sptTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">Judul</th>
-            <th scope="col" class="px-6 py-3">Keterangan</th>
-            <th scope="col" class="px-6 py-3">Status</th>
-            <th scope="col" class="px-6 py-3">Kategori</th>
-            <th scope="col" class="px-6 py-3">File</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Judul</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Keterangan</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Status</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Kategori</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">File</th>
+            <th scope="col" class="px-6 py-3 whitespace-nowrap">Alasan</th>
           </tr>
         </thead>
         <tbody>
@@ -423,15 +496,18 @@
             <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ permintaan.judul|default_if_none:"-" }}
             </td>
-            <td class="px-6 py-4">{{ permintaan.ket|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ permintaan.status|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">{{ permintaan.kategori|default_if_none:"-" }}</td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.ket|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.status|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.kategori|default_if_none:"-" }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
               {% if permintaan.file %}
-                <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>
+              <a href="{{ permintaan.file.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>
               {% else %}
-                Tidak ada file
+              Tidak ada file
               {% endif %}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {{ permintaan.alasan|default_if_none:"-" }}
             </td>
           </tr>
           {% empty %}
@@ -450,90 +526,90 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-function exportTable(tableId, format, filename) {
+  function exportTable(tableId, format, filename) {
     const table = document.getElementById(tableId);
     const visibleRows = Array.from(table.querySelectorAll('tr')).filter(row => row.style.display !== 'none');
-    
+
     // Ambil header dari baris pertama tabel (kecuali kolom aksi)
     const headers = Array.from(visibleRows[0].querySelectorAll('th'))
-        .map(header => header.textContent.trim())
-        .filter(header => header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file');
-    
+      .map(header => header.textContent.trim())
+      .filter(header => header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file');
+
     // Ambil data dari baris-baris yang terlihat (kecuali kolom aksi)
     const data = visibleRows.slice(1)
-        .map(row => Array.from(row.querySelectorAll('td'))
-            .filter((cell, index) => {
-                const header = headers[index];
-                return header && header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file';
-            })
-            .map(cell => cell.textContent.trim()));
-    
+      .map(row => Array.from(row.querySelectorAll('td'))
+        .filter((cell, index) => {
+          const header = headers[index];
+          return header && header.toLowerCase() !== 'ttd' && header.toLowerCase() !== 'file';
+        })
+        .map(cell => cell.textContent.trim()));
+
     if (format === 'excel' || format === 'csv') {
-        let csvContent = headers.join('\t') + '\n';
-        csvContent += data.map(row => row.join('\t')).join('\n');
-        
-        const blob = new Blob([csvContent], { type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
-        link.click();
+      let csvContent = headers.join('\t') + '\n';
+      csvContent += data.map(row => row.join('\t')).join('\n');
+
+      const blob = new Blob([csvContent], {type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
+      link.click();
     } else if (format === 'pdf') {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-            orientation: 'landscape',
-            unit: 'pt'
-        });
-        
-        doc.autoTable({
-            head: [headers],
-            body: data,
-            styles: { fontSize: 8, cellPadding: 2 },
-            margin: { top: 30 },
-            didDrawPage: function(data) {
-                doc.setFontSize(18);
-                doc.setTextColor(40);
-                doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
-            }
-        });
-        
-        doc.save(`${filename}.pdf`);
+      const {jsPDF} = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'pt'
+      });
+
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        styles: {fontSize: 8, cellPadding: 2},
+        margin: {top: 30},
+        didDrawPage: function (data) {
+          doc.setFontSize(18);
+          doc.setTextColor(40);
+          doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+        }
+      });
+
+      doc.save(`${filename}.pdf`);
     }
-}
+  }
 </script>
 
 <!-- Update script pencarian untuk semua tabel -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     // Fungsi umum untuk pencarian
     function setupSearch(searchId, tableId) {
-        const searchInput = document.getElementById(searchId);
-        const table = document.getElementById(tableId);
-        
-        searchInput.addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = table.getElementsByTagName('tr');
-            
-            for (let i = 1; i < rows.length; i++) {
-                let rowVisible = false;
-                const cells = rows[i].getElementsByTagName('td');
-                
-                for (let j = 0; j < cells.length; j++) {
-                    if (cells[j].textContent.toLowerCase().includes(searchTerm)) {
-                        rowVisible = true;
-                        break;
-                    }
-                }
-                
-                rows[i].style.display = rowVisible ? '' : 'none';
+      const searchInput = document.getElementById(searchId);
+      const table = document.getElementById(tableId);
+
+      searchInput.addEventListener('keyup', function () {
+        const searchTerm = this.value.toLowerCase();
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) {
+          let rowVisible = false;
+          const cells = rows[i].getElementsByTagName('td');
+
+          for (let j = 0; j < cells.length; j++) {
+            if (cells[j].textContent.toLowerCase().includes(searchTerm)) {
+              rowVisible = true;
+              break;
             }
-        });
+          }
+
+          rows[i].style.display = rowVisible ? '' : 'none';
+        }
+      });
     }
-    
+
     // Setup pencarian untuk setiap tabel
     setupSearch('sekolahSearch', 'daftarSekolahTable');
     setupSearch('kunjunganSearch', 'riwayatKunjunganTable');
     setupSearch('sptSearch', 'sptTable');
     setupSearch('sekolahEkskulSearch', 'daftarSekolahEkskulTable');
     setupSearch('kunjunganEkskulSearch', 'riwayatKunjunganEkskulTable');
-});
+  });
 </script>

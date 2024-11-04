@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from ..authentication import *
-from ..models.mainModel import master as master_model, sales as sales_model, provinsi as provinsi_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model
+from ..models.mainModel import master as master_model, sales as sales_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model, teknisi as teknisi_model, produk as produk_model
 from ..models.baseModel import JENJANG_CHOICES
 from ..models.pembayaranModel import pembayaran as pembayaran_model, JENIS_PRODUK_CHOICES, STATUS_CHOICES
 from ..models.kunjunganModel import kunjungan_produk, kunjungan_teknisi
@@ -11,17 +11,19 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.db.models import Count, Sum
 from datetime import datetime, timedelta
-from ..models.baseModel import provinsi as provinsi_model
 from ..models.kegiatanModel import kegiatan as kegiatan_model
 from ..models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman as pengumuman_model
 from core.settings import API_KEY
 from django.utils.timezone import localtime, timezone
+from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
 
 import logging
 
 logger = logging.getLogger(__name__)
 
 DAFTAR_JENJANG = [item[0] for item in JENJANG_CHOICES]
+PROVINSI_LIST = [prov[0] for prov in PROVINSI_CHOICES]
+
 TIPE_SEKOLAH_MASTER_CHOICES = [
   ('coding', 'Coding'),
   ('robotik', 'Robotik'),
@@ -111,18 +113,18 @@ def index(request):
         # Mengambil riwayat kegiatan
         riwayat_kegiatan = kegiatan_filter.select_related('sales').order_by('-tanggal')[:10]
 
-        # Ambil data provinsi dan sekolah
-        provinsi_data = provinsi_model.objects.all()
+        # Ambil data provinsi dan sekolah menggunakan PROVINSI_CHOICES dan PROVINSI_KOORDINAT
         provinsi_sekolah = []
-        for prov in provinsi_data:
-            sekolah_list = daftar_sekolah.filter(provinsi=prov)
+        for prov_code, prov_name in PROVINSI_CHOICES:
+            sekolah_list = daftar_sekolah.filter(provinsi=prov_code)
             if sekolah_list.exists():
-                lat, lon = prov.get_latitude_longitude()
-                provinsi_sekolah.append({
-                    'nama': prov.nama,
-                    'koordinat': [lat, lon],
-                    'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
-                })
+                koordinat = PROVINSI_KOORDINAT.get(prov_code)
+                if koordinat:
+                    provinsi_sekolah.append({
+                        'nama': prov_name,
+                        'koordinat': koordinat,
+                        'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
+                    })
 
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
@@ -148,28 +150,43 @@ def index(request):
 @sptsales_required
 def sptpermintaan(request):
     try:
+        # Ambil filter sales dari query parameter
         filter_pengguna_sales = request.GET.get('sales')
-        daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="sales")
-        if filter_pengguna_sales != None and filter_pengguna_sales != 'semua':
-            daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="sales", user=filter_pengguna_sales)
-        else:
-            daftar_permintaan = permintaanSPT_model.objects.all().filter(kategori="sales")
+        
+        # Base queryset
+        daftar_permintaan = permintaanSPT_model.objects.filter(kategori="sales")
+        
+        # Terapkan filter jika ada
+        if filter_pengguna_sales and filter_pengguna_sales != 'semua':
+            daftar_permintaan = daftar_permintaan.filter(user_id=filter_pengguna_sales)
+
+        # Handle POST request untuk update status
         if request.method == 'POST':
+            id_permintaan = request.POST.get('id')
+            status = request.POST.get('status')
+            alasan = request.POST.get('alasan')
+            
             try:
-                id = request.POST.get('id')
-                status = request.POST.get('status')
-                permintaan = permintaanSPT_model.objects.get(id=id)
+                permintaan = permintaanSPT_model.objects.get(id=id_permintaan)
                 permintaan.status = status
+                
+                # Jika status ditolak, simpan alasan penolakan
+                if status == 'ditolak' and alasan:
+                    permintaan.alasan = alasan
+                
                 permintaan.save()
-                messages.success(request, 'Permintaan berhasil ' + status)
-                return redirect('sptpermintaan_sptsales')
+                messages.success(request, f'Permintaan berhasil {status}')
+                
+            except permintaanSPT_model.DoesNotExist:
+                messages.error(request, 'Permintaan tidak ditemukan')
             except Exception as e:
-                messages.error(request, 'Gagal memperbarui permintaan: ' + str(e))
-                return redirect('sptpermintaan_sptsales')
-        daftar_pengguna_sales = User.objects.filter(sales__isnull=False)
+                messages.error(request, f'Gagal memperbarui permintaan: {str(e)}')
+                
+            return redirect('sptpermintaan_sptsales')
+
         context = {
             'daftar_permintaan': daftar_permintaan,
-            'daftar_pengguna_sales': daftar_pengguna_sales
+            'daftar_pengguna_sales': User.objects.filter(sales__isnull=False)
         }
         return render(request, 'spt/sales/sptpermintaan.html', context)
     except Exception as e:
@@ -218,7 +235,7 @@ def pembayaran(request):
             try:
                 sales_user = User.objects.get(username=sales_filter)
                 sales_instance = sales_model.objects.get(user=sales_user)
-                sekolah_list = sales_instance.list_sekolah.all()
+                sekolah_list = daftar_sekolah.filter(sales=sales_instance)
                 pembayaran_omset = pembayaran_omset.filter(nama_sekolah__in=[sekolah.nama_sekolah for sekolah in sekolah_list])
                 pembayaran_pemasukan = pembayaran_pemasukan.filter(nama_sekolah__in=[sekolah.nama_sekolah for sekolah in sekolah_list])
             except (User.DoesNotExist, sales_model.DoesNotExist):
@@ -396,7 +413,7 @@ def customer(request):
                     kepala_yayasan = request.POST.get('kepala_yayasan')
                     nama_sekolah = request.POST.get('nama_sekolah')
                     nama_kepsek = request.POST.get('nama_kepsek')
-                    provinsi_id = request.POST.get('provinsi')
+                    provinsi = request.POST.get('provinsi')
                     jenjang = request.POST.get('jenjang')
                     awal_kerjasama = request.POST.get('awal_kerjasama')
                     akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -406,6 +423,12 @@ def customer(request):
                     harga_buku = request.POST.get('harga_buku')
                     jumlah_komputer = request.POST.get('jumlah_komputer')
                     jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
+                    
+                    user_produk = request.POST.get('user_produk')
+                    user_sales = request.POST.get('user_sales')
+                    user_teknisi = request.POST.get('user_teknisi')
+                    
+                    file = request.FILES.get('file')
                     
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
@@ -420,7 +443,7 @@ def customer(request):
                     master.kepala_yayasan = kepala_yayasan
                     master.nama_sekolah = nama_sekolah
                     master.nama_kepsek = nama_kepsek
-                    master.provinsi_id = provinsi_id
+                    master.provinsi = provinsi
                     master.jenjang = jenjang
                     master.awal_kerjasama = awal_kerjasama
                     master.akhir_kerjasama = akhir_kerjasama
@@ -430,6 +453,23 @@ def customer(request):
                     master.harga_buku = harga_buku
                     master.jumlah_komputer = jumlah_komputer
                     master.jumlah_siswa_tk = jumlah_siswa_tk
+                    
+                    if user_produk:
+                        master.user_produk = produk_model.objects.get(id=user_produk)
+                    else:
+                        master.user_produk = None
+                    if user_sales:
+                        master.user_sales = sales_model.objects.get(id=user_sales)
+                    else:
+                        master.user_sales = None
+                    if user_teknisi:
+                        master.user_teknisi = teknisi_model.objects.get(id=user_teknisi)
+                    else:
+                        master.user_teknisi = None
+                    
+                    if file:
+                        master.file = file
+                    
                     
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
@@ -451,10 +491,13 @@ def customer(request):
                 context = {
                     'edit': True,
                     'master': master,
-                    'provinsi_list': provinsi_model.objects.all(),
+                    'provinsi_list': PROVINSI_LIST,
                     'jenjang_list': DAFTAR_JENJANG,
                     'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
+                    'daftar_produk': produk_model.objects.all(),
+                    'daftar_sales': sales_model.objects.all(),
+                    'daftar_teknisi': teknisi_model.objects.all(),
 
                 }
                 return render(request, 'spt/sales/customer.html', context)
@@ -472,7 +515,7 @@ def customer(request):
                         kepala_yayasan = request.POST.get('kepala_yayasan')
                         nama_sekolah = request.POST.get('nama_sekolah')
                         nama_kepsek = request.POST.get('nama_kepsek')
-                        provinsi_id = request.POST.get('provinsi')
+                        provinsi = request.POST.get('provinsi')
                         jenjang = request.POST.get('jenjang')
                         awal_kerjasama = request.POST.get('awal_kerjasama')
                         akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -482,11 +525,21 @@ def customer(request):
                         harga_buku = request.POST.get('harga_buku')
                         jumlah_komputer = request.POST.get('jumlah_komputer')
                         jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
+                        
+                        user_produk = request.POST.get('user_produk')
+                        user_sales = request.POST.get('user_sales')
+                        user_teknisi = request.POST.get('user_teknisi')
+                        
+                        file = request.FILES.get('file')
+                        
+                        
 
                         
                         # Konversi string tanggal ke objek datetime
                         awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                         akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
+                        
+                      
                         
                         # Buat objek master baru
                         master = master_model(
@@ -495,7 +548,7 @@ def customer(request):
                             kepala_yayasan=kepala_yayasan,
                             nama_sekolah=nama_sekolah,
                             nama_kepsek=nama_kepsek,
-                            provinsi_id=provinsi_id,
+                            provinsi=provinsi,
                             jenjang=jenjang,
                             awal_kerjasama=awal_kerjasama,
                             akhir_kerjasama=akhir_kerjasama,
@@ -505,7 +558,25 @@ def customer(request):
                             harga_buku=harga_buku,
                             jumlah_komputer=jumlah_komputer,
                             jumlah_siswa_tk=jumlah_siswa_tk,
+          
                         )
+                        
+                        if user_produk:
+                            master.user_produk = produk_model.objects.get(id=user_produk)
+                        else:
+                            master.user_produk = None
+                        if user_sales:
+                            master.user_sales = sales_model.objects.get(id=user_sales)
+                        else:
+                            master.user_sales = None
+                        if user_teknisi:
+                            master.user_teknisi = teknisi_model.objects.get(id=user_teknisi)
+                        else:
+                            master.user_teknisi = None  
+                            
+                        if file:
+                            master.file = file
+                        
                         
                         # Simpan jumlah siswa per kelas
                         for i in range(1, 13):
@@ -546,10 +617,13 @@ def customer(request):
         
         context = {
             'master_data': master_model.objects.all(),
-            'provinsi_list': provinsi_model.objects.all(),
+            'provinsi_list': PROVINSI_LIST,
             'jenjang_list': DAFTAR_JENJANG,
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
+            'daftar_produk': produk_model.objects.all(),
+            'daftar_sales': sales_model.objects.all(),
+            'daftar_teknisi': teknisi_model.objects.all(),
         }
         return render(request, 'spt/sales/customer.html', context)
     except Exception as e:
@@ -575,6 +649,7 @@ def adendum(request):
             pembayaran = request.POST.get('pembayaran')
             harga_buku = request.POST.get('harga_buku')
             jumlah_komputer = request.POST.get('jumlah_komputer')
+            file = request.FILES.get('file')
 
             
             try:
@@ -612,6 +687,11 @@ def adendum(request):
                 adendum.jumlah_siswa_kelas_11_smk = master.jumlah_siswa_kelas_11_smk
                 adendum.jumlah_siswa_kelas_12_smk = master.jumlah_siswa_kelas_12_smk
                 adendum.tanggal_adendum = datetime.now().date()
+                if file:
+                    adendum.file = file
+                else:
+                    adendum.file = master.file
+                
                 adendum.save()
                 messages.success(request, 'Data adendum berhasil ditambahkan')
                 return redirect('adendum_sptsales')
@@ -625,7 +705,7 @@ def adendum(request):
         api_key = API_KEY
         context = {
             'customers': master_model.objects.all(),
-            'provinsis': provinsi_model.objects.all(),
+            'provinsis': PROVINSI_CHOICES,
             'jenjangs': DAFTAR_JENJANG,
             'daftar_adendum': adendum_model.objects.all().order_by('-tanggal_adendum'),
             'api_key': api_key
@@ -655,6 +735,7 @@ def adendum_ekskul(request):
             harga_buku = request.POST.get('harga_buku')
             jumlah_komputer = request.POST.get('jumlah_komputer')
             tipe_sekolah = request.POST.get('tipe_sekolah')
+            file = request.FILES.get('file')
 
             
             try:
@@ -693,6 +774,11 @@ def adendum_ekskul(request):
                 adendum.jumlah_siswa_kelas_12_smk = master.jumlah_siswa_kelas_12_smk
                 adendum.tanggal_adendum = datetime.now().date()
                 adendum.tipe_sekolah = tipe_sekolah
+                if file:
+                    adendum.file = file
+                else:
+                    adendum.file = master.file
+                
                 adendum.save()
                 messages.success(request, 'Data adendum berhasil ditambahkan')
                 return redirect('adendum_ekskul_sptsales')
@@ -706,7 +792,7 @@ def adendum_ekskul(request):
         api_key = API_KEY
         context = {
             'customers': master_ekstrakulikuler_model.objects.all(),
-            'provinsis': provinsi_model.objects.all(),
+            'provinsis': PROVINSI_LIST,
             'jenjangs': DAFTAR_JENJANG,
             'daftar_adendum': adendum_ekskul_model.objects.all().order_by('-tanggal_adendum'),
             'api_key': api_key
@@ -743,6 +829,10 @@ def customer_ekskul(request):
                     jumlah_komputer = request.POST.get('jumlah_komputer')
                     tipe_sekolah = request.POST.get('tipe_sekolah')
                     jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
+                    user_produk = request.POST.get('user_produk')
+                    file = request.FILES.get('file')
+                    
+                    
                     # Konversi string tanggal ke objek datetime
                     awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                     akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
@@ -767,6 +857,15 @@ def customer_ekskul(request):
                     master.jumlah_komputer = jumlah_komputer
                     master.tipe_sekolah = tipe_sekolah
                     master.jumlah_siswa_tk = jumlah_siswa_tk
+                    if user_produk:
+                        master.user_produk = produk_model.objects.get(id=user_produk)
+                    else:
+                        master.user_produk = None
+                        
+                    if file:
+                        master.file = file
+                    
+                        
                     # Perbarui jumlah siswa per kelas
                     for i in range(1, 13):
                         jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
@@ -787,11 +886,12 @@ def customer_ekskul(request):
                 context = {
                     'edit': True,
                     'master': master,
-                    'provinsi_list': provinsi_model.objects.all(),
+                    'provinsi_list': PROVINSI_LIST,
                     'jenjang_choices': JENJANG_CHOICES,
                     'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-                    'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+                    'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES,
+                    'daftar_produk': produk_model.objects.all(),
                 }
                 return render(request, 'spt/sales/customer_ekskul.html', context)
             except master_ekstrakulikuler_model.DoesNotExist:
@@ -810,7 +910,7 @@ def customer_ekskul(request):
                         kepala_yayasan = request.POST.get('kepala_yayasan')
                         nama_sekolah = request.POST.get('nama_sekolah')
                         nama_kepsek = request.POST.get('nama_kepsek')
-                        provinsi_id = request.POST.get('provinsi')
+                        provinsi = request.POST.get('provinsi')
                         jenjang = request.POST.get('jenjang')
                         awal_kerjasama = request.POST.get('awal_kerjasama')
                         akhir_kerjasama = request.POST.get('akhir_kerjasama')
@@ -821,7 +921,8 @@ def customer_ekskul(request):
                         jumlah_komputer = request.POST.get('jumlah_komputer')
                         tipe_sekolah = request.POST.get('tipe_sekolah')
                         jumlah_siswa_tk = request.POST.get('jumlah_siswa_tk')
-                        
+                        user_produk = request.POST.get('user_produk')
+                        file = request.FILES.get('file')
                         # Konversi string tanggal ke objek datetime
                         awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                         akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
@@ -833,7 +934,7 @@ def customer_ekskul(request):
                             kepala_yayasan=kepala_yayasan,
                             nama_sekolah=nama_sekolah,
                             nama_kepsek=nama_kepsek,
-                            provinsi_id=provinsi_id,
+                            provinsi=provinsi,
                             jenjang=jenjang,
                             awal_kerjasama=awal_kerjasama,
                             akhir_kerjasama=akhir_kerjasama,
@@ -845,6 +946,15 @@ def customer_ekskul(request):
                             tipe_sekolah=tipe_sekolah,
                             jumlah_siswa_tk=jumlah_siswa_tk
                         )
+                        
+                        if user_produk:
+                            master.user_produk = produk_model.objects.get(id=user_produk)
+                        else:
+                            master.user_produk = None
+                        
+                        if file:
+                            master.file = file
+                        
                         
                         # Simpan jumlah siswa per kelas
                         for i in range(1, 13):
@@ -882,11 +992,12 @@ def customer_ekskul(request):
 
         context = {
             'master_data': master_ekstrakulikuler_model.objects.all(),
-            'provinsi_list': provinsi_model.objects.all(),
+            'provinsi_list': PROVINSI_LIST,
             'jenjang_choices': JENJANG_CHOICES,
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
-            'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES
+            'TIPE_SEKOLAH_CHOICES': TIPE_SEKOLAH_MASTER_CHOICES,
+            'daftar_produk': produk_model.objects.all(),
         }
         return render(request, 'spt/sales/customer_ekskul.html', context)
     except Exception as e:

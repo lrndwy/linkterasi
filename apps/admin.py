@@ -40,6 +40,7 @@ class masterAdmin(ModelAdmin):
         "jenis_produk",
         "pembayaran",
         "harga_buku",
+        "file",
     )
     compressed_fields = True
     warn_unsaved_form = True
@@ -67,6 +68,7 @@ class master_ekstrakulikulerAdmin(ModelAdmin):
         "jenis_produk",
         "pembayaran",
         "harga_buku",
+        "file",
     )
     compressed_fields = True
     warn_unsaved_form = True
@@ -95,6 +97,7 @@ class history_adendumAdmin(ModelAdmin):
         "pembayaran",
         "harga_buku",
         "tanggal_adendum",
+        "file",
     )
 
 @admin.register(history_adendum_ekskul)
@@ -117,6 +120,7 @@ class history_adendum_ekskulAdmin(ModelAdmin):
         "harga_buku",
         "tipe_sekolah",
         "tanggal_adendum",
+        "file",
     )
 
 
@@ -169,13 +173,6 @@ class sptteknisiAdmin(ModelAdmin):
 class sptsalesAdmin(ModelAdmin):
     list_display = ("nama", "user")
 
-
-# baseModel ------------------------------------------------------------
-
-
-@admin.register(provinsi)
-class provinsiAdmin(ModelAdmin):
-    list_display = ("nama", "koordinat")
 
 
 # kegiatanModel ------------------------------------------------------------
@@ -253,9 +250,9 @@ class kunjungan_teknisiAdmin(ModelAdmin):
         "geolocation",
         "status",
         "tanggal",
-        "sekolah",
         "teknisi",
         "user",
+        "nama_kepsek_atau_guru",
     )
 
 
