@@ -92,9 +92,9 @@ def impor_data_customer(file):
 
         # Daftar kolom yang diharapkan sesuai CSV
         expected_columns = [
-            'No MOU', 'File', 'Nama Yayasan', 'Kepala Yayasan', 'Nama Sekolah',
+            'No MOU', 'Nama Yayasan', 'Kepala Yayasan', 'Nama Sekolah',
             'Nama Kepsek', 'Provinsi', 'Jenjang', 'Awal Kerjasama', 'Akhir Kerjasama',
-            'Status', 'Jenis Kerjasama', 'Jenis Produk', 'Pembayaran', 'Harga Buku',
+            'Jenis Kerjasama', 'Jenis Produk', 'Pembayaran', 'Harga Buku',
             'User Produk', 'User Teknisi', 'User Sales', 'Jumlah Siswa TK'
         ]
         
@@ -139,7 +139,6 @@ def impor_data_customer(file):
 
                 master_instance = master_model(
                     no_mou=row.get('No MOU') if pd.notna(row.get('No MOU')) else None,
-                    file=row.get('File') if pd.notna(row.get('File')) else None,
                     nama_yayasan=row.get('Nama Yayasan') if pd.notna(row.get('Nama Yayasan')) else None,
                     kepala_yayasan=row.get('Kepala Yayasan') if pd.notna(row.get('Kepala Yayasan')) else None,
                     nama_sekolah=row.get('Nama Sekolah'),
@@ -148,7 +147,6 @@ def impor_data_customer(file):
                     jenjang=row.get('Jenjang'),
                     awal_kerjasama=parse_date(row.get('Awal Kerjasama')),
                     akhir_kerjasama=parse_date(row.get('Akhir Kerjasama')),
-                    status=row.get('Status') if pd.notna(row.get('Status')) else None,
                     jenis_kerjasama=row.get('Jenis Kerjasama').lower() if pd.notna(row.get('Jenis Kerjasama')) else None,
                     jenis_produk=row.get('Jenis Produk').lower() if pd.notna(row.get('Jenis Produk')) else None,
                     pembayaran=row.get('Pembayaran') if pd.notna(row.get('Pembayaran')) else None,
