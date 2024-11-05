@@ -10,6 +10,8 @@ from apps.models.kunjunganModel import kunjungan_produk as kunjungan_produk_mode
 from apps.authentication import *
 from apps.models.kunjunganModel import JUDUL_PRODUK_CHOICES, JUDUL_TEKNISI_CHOICES
 from core.settings import API_KEY
+from apps.models.kegiatanModel import kegiatan_produk as kegiatan_produk_model
+from collections import defaultdict
 
 LIST_JUDUL_PRODUK = [item[0] for item in JUDUL_PRODUK_CHOICES]
 LIST_JUDUL_TEKNISI = [item[0] for item in JUDUL_TEKNISI_CHOICES]
@@ -34,17 +36,14 @@ def index(request):
             bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
-        # Sekolah Biasa
+        # Sekolah TIK
         daftar_sekolah = master_model.objects.filter(user_produk=produk_instance)
-        if filter_tipe_sekolah != 'semua':
-            daftar_sekolah = daftar_sekolah.filter(tipe_sekolah=filter_tipe_sekolah)
-        
         total_sekolah_dipegang = daftar_sekolah.count()
         
         kunjungan_filter = kunjungan_produk_model.objects.filter(
             produk=produk_instance,
             sekolah__in=daftar_sekolah,
-            sekolah_ekskul__isnull=True # Memastikan ini bukan kunjungan ekskul
+            sekolah_ekskul__isnull=True
         )
         
         if filter_bulan != 'semua':
@@ -81,11 +80,14 @@ def index(request):
                 'nama_sekolah': sekolah.nama_sekolah,
                 'jenjang': sekolah.jenjang,
                 'status': status,
-                'jumlah_siswa': sekolah.jumlah_seluruh_siswa
+                'jumlah_siswa': sekolah.jumlah_seluruh_siswa,
             })
 
         # Sekolah Ekstrakulikuler
         daftar_sekolah_ekskul = master_ekstrakulikuler_model.objects.filter(user_produk=produk_instance)
+        if filter_tipe_sekolah != 'semua':
+            daftar_sekolah_ekskul = daftar_sekolah_ekskul.filter(tipe_sekolah=filter_tipe_sekolah)
+            
         total_sekolah_ekskul = daftar_sekolah_ekskul.count()
         
         kunjungan_ekskul_filter = kunjungan_produk_model.objects.filter(
@@ -130,6 +132,22 @@ def index(request):
         # Hitung total siswa ekskul
         total_siswa_ekskul = sum(sekolah.jumlah_seluruh_siswa for sekolah in daftar_sekolah_ekskul)
 
+        # Filter kegiatan
+        kegiatan_filter = kegiatan_produk_model.objects.filter(produk=produk_instance)
+        if filter_bulan != 'semua':
+            kegiatan_filter = kegiatan_filter.filter(
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan
+            )
+            
+        total_per_kegiatan = {
+            'Mengajar': kegiatan_filter.filter(judul='Mengajar').count(),
+            'Training': kegiatan_filter.filter(judul='Training').count(),
+            'Presentasi': kegiatan_filter.filter(judul='Presentasi').count(),
+            'Event': kegiatan_filter.filter(judul='Event').count(),
+            'Pembicara': kegiatan_filter.filter(judul='Pembicara').count()
+        }
+        
         context = {
             'daftar_kunjungan': kunjungan_filter.order_by('-tanggal'),
             'daftar_kunjungan_ekskul': kunjungan_ekskul_filter.order_by('-tanggal'),
@@ -145,7 +163,9 @@ def index(request):
             'filter_tipe_sekolah': filter_tipe_sekolah,
             'daftar_permintaan': permintaanspt_model.objects.filter(kategori='produk').order_by('-id')[:5],
             'tabel_sekolah': tabel_sekolah,
-            'tabel_sekolah_ekskul': tabel_sekolah_ekskul
+            'tabel_sekolah_ekskul': tabel_sekolah_ekskul,
+            'daftar_kegiatan': kegiatan_filter.order_by('-tanggal'),
+            'total_per_kegiatan': total_per_kegiatan,
         }
         return render(request, 'produk/index.html', context)
     except Exception as e:
@@ -422,6 +442,38 @@ def kunjungan_ekskul(request):
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return render(request, 'produk/kunjungan_ekskul.html', {})
 
+
+@produk_required
+def jadwal(request):
+    try:
+        user = request.user
+        if request.method == 'POST':
+            judul = request.POST.get('judul')
+            deskripsi = request.POST.get('deskripsi')
+            tanggal = request.POST.get('tanggal')
+            sekolah = master_model.objects.get(id=request.POST.get('sekolah'))
+            try:
+                jadwal_produk_obj = kegiatan_produk_model(
+                    judul=judul,
+                    deskripsi=deskripsi,
+                    tanggal=tanggal,
+                    sekolah=sekolah,
+                    produk=user.produk.first(),
+                )
+                jadwal_produk_obj.save()
+                messages.success(request, 'Jadwal berhasil dibuat.')
+                return redirect('jadwal_produk')
+            except Exception as e:
+                messages.error(request, f'Gagal membuat jadwal: {e}')
+                return redirect('jadwal_produk')
+              
+        context = {
+            'daftar_sekolah': master_model.objects.filter(user_produk=user.produk.first()),
+        }
+        return render(request, 'produk/jadwal.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return render(request, 'produk/jadwal.html', {})
 
 
 

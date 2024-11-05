@@ -32,6 +32,7 @@ urlpatterns = [
     path("produk/pengumuman/", produkViews.pengumuman, name="pengumuman_produk"),
     path("produk/kunjungan_tik/", produkViews.kunjungan_tik, name="kunjungan_produk_tik"),
     path("produk/kunjungan_ekskul/", produkViews.kunjungan_ekskul, name="kunjungan_produk_ekskul"),
+    path("produk/jadwal/", produkViews.jadwal, name="jadwal_produk"),
 
     # Teknisi
     path("teknisi/", teknisiViews.index, name="teknisi"),

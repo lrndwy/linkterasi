@@ -41,6 +41,9 @@ class masterAdmin(ModelAdmin):
         "pembayaran",
         "harga_buku",
         "file",
+        "user_sales",
+        "user_produk",
+        "user_teknisi",
     )
     compressed_fields = True
     warn_unsaved_form = True
@@ -69,6 +72,7 @@ class master_ekstrakulikulerAdmin(ModelAdmin):
         "pembayaran",
         "harga_buku",
         "file",
+        "user_produk",
     )
     compressed_fields = True
     warn_unsaved_form = True
@@ -181,6 +185,10 @@ class sptsalesAdmin(ModelAdmin):
 @admin.register(kegiatan)
 class kegiatanAdmin(ModelAdmin):
     list_display = ("judul", "deskripsi", "tanggal", "sales")
+    
+@admin.register(kegiatan_produk)
+class kegiatan_produkAdmin(ModelAdmin):
+    list_display = ("judul", "deskripsi", "tanggal", "produk")
 
 
 # kspModel ------------------------------------------------------------

@@ -29,8 +29,8 @@
 <section>
   <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
     <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-      <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
+    <div class="flex flex-wrap gap-4">
+      <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Maintenance Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Maintenance</h3>
@@ -38,7 +38,7 @@
           <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
-      <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center">
+      <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=2YPST59G2xJZ&format=png&color=000000" alt="Trouble Shooting Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Trouble Shooting</h3>
@@ -46,7 +46,7 @@
           <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
-      <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg flex items-center">
+      <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=ET86Rs1x7nfC&format=png&color=000000" alt="Remote Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-indigo-800 dark:text-white">Remote</h3>
@@ -54,7 +54,7 @@
           <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
         </div>
       </div>
-      <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+      <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi</h3>
@@ -62,14 +62,14 @@
           <p class="text-sm text-yellow-600 dark:text-yellow-400">Total</p>
         </div>
       </div>
-      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+      <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=XAg8ooTyo7Dl&format=png&color=000000" alt="Total Sekolah Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-blue-800 dark:text-white">Total Sekolah</h3>
           <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">{{ total_sekolah|default_if_none:"0" }}</p>
         </div>
       </div>
-      <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center">
+      <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
         <img src="https://img.icons8.com/?size=100&id=3hpGCFYCBrFJ&format=png&color=000000" alt="Total Komputer Icon" class="w-8 h-8 mr-2">
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-purple-800 dark:text-white">Total Komputer</h3>

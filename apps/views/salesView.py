@@ -12,11 +12,35 @@ def index(request):
     try:
         user = request.user
         sales_instance = user.sales.first()
+        
+        # Mendapatkan parameter filter bulan dari request
+        filter_bulan = request.GET.get('bulan', 'semua').lower()
+        
+        # Base queryset untuk kegiatan
+        kegiatan_qs = kegiatan_model.objects.filter(sales=sales_instance)
+        
+        # Filter berdasarkan bulan jika dipilih
+        if filter_bulan != 'semua':
+            bulan_map = {
+                'januari': 1, 'februari': 2, 'maret': 3, 'april': 4,
+                'mei': 5, 'juni': 6, 'juli': 7, 'agustus': 8,
+                'september': 9, 'oktober': 10, 'november': 11, 'desember': 12
+            }
+            if filter_bulan in bulan_map:
+                kegiatan_qs = kegiatan_qs.filter(tanggal__month=bulan_map[filter_bulan])
+        
+        # Hitung jumlah masing-masing jenis kegiatan
         context = {
-            'daftar_kegiatan': kegiatan_model.objects.filter(sales=sales_instance).order_by('-id'),
+            'kunjungan_sekolah_baru': kegiatan_qs.filter(judul='Kunjungan Sekolah Baru').count(),
+            'kunjungan_sekolah_existing': kegiatan_qs.filter(judul='Kunjungan Sekolah Existing').count(),
+            'kunjungan_sekolah_event': kegiatan_qs.filter(judul='Kunjungan Sekolah Event').count(),
+            'pertemuan_client': kegiatan_qs.filter(judul='Pertemuan Client').count(),
+            'filter_bulan': filter_bulan,
+            'daftar_kegiatan': kegiatan_qs.order_by('-id'),
             'daftar_permintaan': permintaanSPT_model.objects.filter(kategori='sales').order_by('-id'),
             'daftar_sekolah': master_model.objects.filter(user_sales=sales_instance).order_by('-id')
         }
+        
         return render(request, 'sales/index.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')

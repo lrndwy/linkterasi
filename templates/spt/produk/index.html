@@ -168,8 +168,8 @@
 
         <!-- Jumlah Kunjungan Produk -->
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
+          <div class="flex flex-wrap gap-4">
+            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
               <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan</h3>
@@ -177,7 +177,7 @@
                 <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
-            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
               <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak</h3>
@@ -185,7 +185,7 @@
                 <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
-            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
               <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
@@ -387,8 +387,8 @@
 
         <!-- Jumlah Kunjungan Ekstrakulikuler -->
         <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center">
+          <div class="flex flex-wrap gap-4">
+            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center flex-1 min-w-[300px]">
               <img src="https://img.icons8.com/?size=100&id=AefXIkx4A693&format=png&color=000000" alt="Kunjungan Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan Ekskul</h3>
@@ -396,7 +396,7 @@
                 <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
-            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center">
+            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[300px]">
               <img src="https://img.icons8.com/?size=100&id=letUS1DJO1ou&format=png&color=000000" alt="Kontak Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Kontak Ekskul</h3>
@@ -404,7 +404,7 @@
                 <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
               </div>
             </div>
-            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center">
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[300px]">
               <img src="https://img.icons8.com/?size=100&id=faXHmzlIKEVi&format=png&color=000000" alt="Belum Dikunjungi Icon" class="w-8 h-8 mr-2">
               <div class="ml-2">
                 <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Belum Dikunjungi/Dikontak</h3>
@@ -480,6 +480,141 @@
                         {% endif %}
                       </td>
                     </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Ringkasan Kegiatan -->
+        <section>
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-lg sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Ringkasan Kegiatan</h2>
+            <div class="flex flex-wrap gap-4">
+              <!-- Mengajar -->
+              <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+                <img src="https://img.icons8.com/?size=100&id=D5jqabDUzubh&format=png&color=000000"
+                  alt="Mengajar Icon" class="w-8 h-8 mr-2">
+                <div class="ml-2">
+                  <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Mengajar</h3>
+                  <p class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-300">
+                    {{ total_per_kegiatan.Mengajar|default_if_none:"0" }}</p>
+                  <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+                </div>
+              </div>
+
+              <!-- Training -->
+              <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+                <img src="https://img.icons8.com/?size=100&id=Y3AKnST0WRLJ&format=png&color=000000"
+                  alt="Training Icon" class="w-8 h-8 mr-2">
+                <div class="ml-2">
+                  <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Training</h3>
+                  <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">
+                    {{ total_per_kegiatan.Training|default_if_none:"0" }}</p>
+                  <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+                </div>
+              </div>
+
+              <!-- Presentasi -->
+              <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+                <img src="https://img.icons8.com/?size=100&id=dcpSluQunF5R&format=png&color=000000"
+                  alt="Presentasi Icon" class="w-8 h-8 mr-2">
+                <div class="ml-2">
+                  <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Presentasi</h3>
+                  <p class="text-2xl sm:text-3xl font-bold text-yellow-600 dark:text-yellow-300">
+                    {{ total_per_kegiatan.Presentasi|default_if_none:"0" }}</p>
+                  <p class="text-sm text-yellow-600 dark:text-yellow-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+                </div>
+              </div>
+
+              <!-- Event -->
+              <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+                <img src="https://img.icons8.com/?size=100&id=ACi0kAlgSTlE&format=png&color=000000"
+                  alt="Event Icon" class="w-8 h-8 mr-2">
+                <div class="ml-2">
+                  <h3 class="text-base sm:text-lg font-semibold text-purple-800 dark:text-white">Event</h3>
+                  <p class="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-300">
+                    {{ total_per_kegiatan.Event|default_if_none:"0" }}</p>
+                  <p class="text-sm text-purple-600 dark:text-purple-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+                </div>
+              </div>
+
+              <!-- Pembicara -->
+              <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+                <img src="https://img.icons8.com/?size=100&id=snmKiz9NvIqQ&format=png&color=000000"
+                  alt="Pembicara Icon" class="w-8 h-8 mr-2">
+                <div class="ml-2">
+                  <h3 class="text-base sm:text-lg font-semibold text-red-800 dark:text-white">Pembicara</h3>
+                  <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">
+                    {{ total_per_kegiatan.Pembicara|default_if_none:"0" }}</p>
+                  <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Daftar Kegiatan -->
+        <section class="mt-4">
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+            <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Daftar Kegiatan</h2>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+              <div class="w-full sm:w-1/2">
+                <input type="text" id="kegiatanSearch" placeholder="Cari kegiatan..."
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              </div>
+              <div class="w-full sm:w-auto">
+                <div class="relative">
+                  <button id="dropdownKegiatanButton" data-dropdown-toggle="dropdownKegiatan"
+                    class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                    type="button">
+                    Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+                  <div id="dropdownKegiatan"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownKegiatanButton">
+                      <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          onclick="exportTable('kegiatanTable', 'excel', 'daftar_kegiatan')">Excel</a></li>
+                      <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          onclick="exportTable('kegiatanTable', 'csv', 'daftar_kegiatan')">CSV</a></li>
+                      <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          onclick="exportTable('kegiatanTable', 'pdf', 'daftar_kegiatan')">PDF</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative overflow-x-auto sm:rounded-lg">
+              <table id="kegiatanTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" class="px-6 py-3">Judul</th>
+                    <th scope="col" class="px-6 py-3">Deskripsi</th>
+                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                    <th scope="col" class="px-6 py-3">Sekolah</th>
+                  </tr>
+                </thead>
+                <tbody id="kegiatanTableBody">
+                  {% for kegiatan in daftar_kegiatan %}
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      {{ kegiatan.judul }}
+                    </td>
+                    <td class="px-6 py-4">{{ kegiatan.deskripsi }}</td>
+                    <td class="px-6 py-4">{{ kegiatan.tanggal|date:"d/m/Y" }}</td>
+                    <td class="px-6 py-4">{{ kegiatan.sekolah }}</td>
+                  </tr>
+                  {% empty %}
+                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td colspan="4" class="px-6 py-4 text-center">Tidak ada data kegiatan</td>
+                  </tr>
                   {% endfor %}
                 </tbody>
               </table>

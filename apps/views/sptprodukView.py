@@ -24,6 +24,7 @@ from apps.models.mainModel import master_ekstrakulikuler
 from core.settings import API_KEY
 from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
 from apps.models.mainModel import teknisi as teknisi_model, sales as sales_model
+from apps.models.kegiatanModel import kegiatan_produk, JUDUL_PRODUK_CHOICES
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +174,24 @@ def index(request):
                         'ekskul': [ekskul.nama_sekolah for ekskul in ekskul_list]
                     })
 
+        # Filter kegiatan berdasarkan tanggal
+        kegiatan_filter = kegiatan_produk.objects.filter(
+            tanggal__gte=bulan_ini,
+            tanggal__lt=bulan_depan
+        )
+
+        # Filter berdasarkan produk jika ada
+        if produk_instance:
+            kegiatan_filter = kegiatan_filter.filter(produk=produk_instance)
+
+        # Hitung total per jenis kegiatan
+        total_per_kegiatan = {}
+        for judul, _ in JUDUL_PRODUK_CHOICES:
+            total_per_kegiatan[judul] = kegiatan_filter.filter(judul=judul).count()
+
+        # Ambil daftar kegiatan untuk tabel
+        daftar_kegiatan = kegiatan_filter.order_by('-tanggal')
+
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
             'total_siswa_per_jenjang': json.dumps(list(total_siswa_per_jenjang.values())),
@@ -194,6 +213,8 @@ def index(request):
             'filter_bulan': filter_bulan,
             'belum_dikunjungi': belum_dikunjungi,
             'belum_dikunjungi_ekskul': belum_dikunjungi_ekskul,
+            'total_per_kegiatan': total_per_kegiatan,
+            'daftar_kegiatan': daftar_kegiatan,
         }
 
         return render(request, 'spt/produk/index.html', context)

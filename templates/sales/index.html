@@ -7,10 +7,82 @@
     </c-slot>
 
     <c-slot name="content">
+        <!-- Heading Card -->
         <c-headingCard judul="Dashboard" deskripsi="Selamat datang di dashboard sales" heading_image_url="https://img.icons8.com/?size=100&id=6WmNGzM9j4eN&format=png&color=000000"></c-headingCard>
+
+        <!-- Filter -->
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div class="flex flex-wrap justify-between items-center w-full gap-2">
+            <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+            <div class="flex flex-wrap gap-2">
+              <form action="" method="get">
+                <select id="bulan_filter" name="bulan"
+                  class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value="semua">Semua Bulan</option>
+                  <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
+                  <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
+                  <option value="maret" {% if filter_bulan  == 'maret' %}selected{% endif %}>Maret</option>
+                  <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
+                  <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
+                  <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
+                  <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
+                  <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
+                  <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
+                  <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
+                  <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
+                  <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+                </select>
+                <button type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  Filter
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card -->
+        <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+          <div class="flex flex-wrap gap-4">
+            <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+              <img src="https://img.icons8.com/?size=100&id=EUFks8SepuwG&format=png&color=000000" alt="Kunjungan Sekolah Baru Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-purple-800 dark:text-white">Kunjungan Sekolah Baru</h3>
+                <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-300">{{ kunjungan_sekolah_baru|default_if_none:"0" }}</p>
+                <p class="text-sm text-purple-600 dark:text-purple-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              </div>
+            </div>
+            <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+              <img src="https://img.icons8.com/?size=100&id=s4MzQ849Sdas&format=png&color=000000" alt="Kunjungan Sekolah Existing Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Kunjungan Sekolah Existing</h3>
+                <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ kunjungan_sekolah_existing|default_if_none:"0" }}</p>
+                <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              </div>
+            </div>
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+              <img src="https://img.icons8.com/?size=100&id=ACi0kAlgSTlE&format=png&color=000000" alt="Kunjungan Sekolah Event Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-yellow-800 dark:text-white">Kunjungan Sekolah Event</h3>
+                <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-300">{{ kunjungan_sekolah_event|default_if_none:"0" }}</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              </div>
+            </div>
+            <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
+              <img src="https://img.icons8.com/?size=100&id=NDixIIZr9Mpc&format=png&color=000000" alt="Pertemuan Client Icon" class="w-8 h-8 mr-2">
+              <div class="ml-2">
+                <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Pertemuan Client (Non Sekolah)</h3>
+                <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ pertemuan_client|default_if_none:"0" }}</p>
+                <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Table Kegiatan -->
         <c-tableKegiatan></c-tableKegiatan>
         
-        <!-- Tambahkan section tabel sekolah di sini -->
+        <!-- Table Sekolah -->
         <section class="mt-4">
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
             <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Tabel Sekolah</h2>
@@ -75,6 +147,7 @@
           </div>
         </section>
         
+        <!-- Table Permintaan SPT -->
         <section class="mt-4">
           <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
             <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white mb-4">Riwayat Permintaan SPT</h2>
