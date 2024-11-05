@@ -21,7 +21,7 @@
                     <select id="produk_filter" name="produk" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="semua">Semua Produk</option>
                         {% for produk in daftar_produk %}
-                            <option value="{{ produk.user.username }}" {% if produk.user.username == filter_produk %}selected{% endif %}>{{ produk.user.username }}</option>
+                            <option value="{{ produk.user.username }}" {% if produk.user.username == filter_produk %}selected{% endif %}>{{ produk.nama }}</option>
                         {% endfor %}
                     </select>
                     <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

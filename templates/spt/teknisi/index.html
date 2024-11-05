@@ -21,7 +21,7 @@
                   <select id="teknisi_filter" name="teknisi" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option value="semua">Semua Teknisi</option>
                       {% for teknisi in daftar_teknisi %}
-                          <option value="{{ teknisi.user.username }}" {% if teknisi.user.username == filter_teknisi %}selected{% endif %}>{{ teknisi.user.username }}</option>
+                          <option value="{{ teknisi.user.username }}" {% if teknisi.user.username == filter_teknisi %}selected{% endif %}>{{ teknisi.nama }}</option>
                       {% endfor %}
                   </select>
                   <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
