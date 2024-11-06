@@ -186,7 +186,7 @@ def sptpermintaan(request):
 
         context = {
             'daftar_permintaan': daftar_permintaan,
-            'daftar_pengguna_sales': User.objects.filter(sales__isnull=False)
+            'daftar_pengguna_sales': sales_model.objects.all()
         }
         return render(request, 'spt/sales/sptpermintaan.html', context)
     except Exception as e:

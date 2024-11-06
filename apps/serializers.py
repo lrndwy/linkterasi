@@ -7,7 +7,7 @@ class PengumumanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = pengumuman_model
-        fields = ['id_chat', 'pesan', 'waktu', 'kategori', 'user']
+        fields = ['id_chat', 'pesan', 'waktu', 'kategori', 'user', 'nama']
         
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:

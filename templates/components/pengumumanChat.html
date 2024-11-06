@@ -19,12 +19,17 @@
         // Ubah format waktu menjadi HH.MM
         const waktuParts = pengumuman.waktu.split(':');
         const formattedWaktu = `${waktuParts[0]}.${waktuParts[1]}`;
+
+        // Gunakan nama dari model pengumuman yang sudah diubah di sptModel.py
+        const nama = pengumuman.nama || 'User';
         
         pengumumanElement.innerHTML = `
             <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/?size=100&id=492ILERveW8G&format=png&color=000000" alt="Avatar pengumuman">
             <div class="flex flex-col w-fit max-w-[80%] leading-1.5 p-2 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-600">
                 <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                    <span class="text-sm font-semibold text-gray-900 dark:text-white">${pengumuman.user}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                        ${nama}
+                    </span>
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">${formattedWaktu}</span>
                 </div>
                 <p class="text-sm font-normal py-1.5 text-gray-900 dark:text-white break-words whitespace-pre-wrap">${pengumuman.pesan}</p>

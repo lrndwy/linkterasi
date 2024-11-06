@@ -104,27 +104,27 @@ class PengumumanViewSet(generics.ListAPIView):
     serializer_class = PengumumanSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['kategori']
-    # permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey]
 
 class CustomerViewSet(generics.ListAPIView):
     queryset = master_model.objects.all()
     serializer_class = CustomerSerializer
-    # permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey]
 
 class CustomerDetailViewSet(generics.RetrieveAPIView):
     queryset = master_model.objects.all()
     serializer_class = CustomerDetailSerializer
-    # permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey]
     
 class MasterEkstrakulikulerViewSet(generics.ListAPIView):
     queryset = master_ekstrakulikuler_model.objects.all()
     serializer_class = MasterEkstrakulikulerSerializer
-    # permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey]
     
 class MasterEkstrakulikulerDetailViewSet(generics.RetrieveAPIView):
     queryset = master_ekstrakulikuler_model.objects.all()
     serializer_class = MasterEkstrakulikulerDetailSerializer
-    # permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey]
 
 def cetak_teknisi(request):
     try:

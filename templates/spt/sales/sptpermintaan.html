@@ -15,7 +15,7 @@
               <select name="sales" id="sales" class="w-full max-w-sm rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="semua">Semua</option>
                 {% for pengguna in daftar_pengguna_sales %}
-                  <option value="{{ pengguna.id }}">{{ pengguna.username }}</option>
+                  <option value="{{ pengguna.user.id }}">{{ pengguna }}</option>
                 {% endfor %}
               </select>
               <button type="submit" class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
@@ -43,8 +43,8 @@
                         <tbody>
                             {% for permintaan in daftar_permintaan %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.user.username }}</td>
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.user.sales.first }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     {{ permintaan.judul }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ permintaan.ket }}</td>

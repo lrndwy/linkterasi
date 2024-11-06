@@ -297,7 +297,7 @@ def sptpermintaan(request):
             return redirect('sptpermintaan_sptproduk')
 
         # Ambil daftar pengguna produk untuk dropdown filter
-        daftar_pengguna_produk = User.objects.filter(produk__isnull=False)
+        daftar_pengguna_produk = produk_model.objects.filter(user__isnull=False)
 
         context = {
             'daftar_permintaan': daftar_permintaan,
@@ -321,10 +321,11 @@ def pengumuman(request):
             waktu = localtime()
             kategori = 'produk'
             try:
-                pengumuman_model.objects.create(user=user, pesan=pesan, waktu=waktu, kategori=kategori)
+                pengumuman = pengumuman_model(user=user, pesan=pesan, waktu=waktu, kategori=kategori)
+                pengumuman.save()
                 messages.success(request, 'Pengumuman berhasil dikirim')
             except Exception as e:
-                messages.error(request, 'Gagal mengirim pengumuman' + str(e))
+                messages.error(request, 'Gagal mengirim pengumuman: ' + str(e))
             return redirect('pengumuman_sptproduk')
           
         context = {
@@ -335,7 +336,7 @@ def pengumuman(request):
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('pengumuman_sptproduk')
-  
+      
 @sptproduk_required
 def karyawan(request):
     try:

@@ -216,7 +216,7 @@ def sptpermintaan(request):
             return redirect('sptpermintaan_sptteknisi')
 
         # Ambil daftar pengguna teknisi untuk dropdown filter
-        daftar_pengguna_teknisi = User.objects.filter(teknisi__isnull=False)
+        daftar_pengguna_teknisi = teknisi_model.objects.all()
 
         context = {
             'daftar_permintaan': daftar_permintaan,
