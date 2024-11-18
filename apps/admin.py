@@ -272,19 +272,6 @@ class pembayaranAdmin(ModelAdmin):
         "jenjang",
         "jenis_produk",
         "status",
-        "januari",
-        "februari",
-        "maret",
-        "april",
-        "mei",
-        "juni",
-        "juli",
-        "agustus",
-        "september",
-        "oktober",
-        "november",
-        "desember",
-        "tipe_pembayaran",
     )
 
 

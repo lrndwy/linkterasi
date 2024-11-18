@@ -16,7 +16,7 @@ from ..models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman a
 from core.settings import API_KEY
 from django.utils.timezone import localtime, timezone
 from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
-
+from django.db import models
 import logging
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ JENIS_PRODUK_MASTER_CHOICES = [
 
 
 JENIS_PRODUK_CHOICES = [
-    ("tik", "Tik"),
+    ("tik", "TIK"),
     ("hardware & software", "Hardware & Software"),
     ("buku diginusa", "Buku Diginusa"),
     ("buku gen", "Buku Gen"),
@@ -74,7 +74,7 @@ def index(request):
             try:
                 sales_user = User.objects.get(username=filter_sales)
                 sales_instance = sales_model.objects.get(user=sales_user)
-                daftar_sekolah = daftar_sekolah.filter(sales=sales_instance)
+                daftar_sekolah = daftar_sekolah.filter(user_sales=sales_instance)
             except (User.DoesNotExist, sales_model.DoesNotExist):
                 messages.error(request, 'Sales tidak ditemukan')
         
@@ -226,27 +226,29 @@ def pembayaran(request):
         sales_filter = request.GET.get('sales', 'semua')
         bulan_filter = request.GET.get('bulan', 'semua')
         
-        # Filter data pembayaran
-        pembayaran_omset = pembayaran_model.objects.filter(tipe_pembayaran='omset')
-        pembayaran_pemasukan = pembayaran_model.objects.filter(tipe_pembayaran='pemasukan')
+        # Base queryset untuk pembayaran
+        pembayaran_list = pembayaran_model.objects.all()
         
         # Filter berdasarkan pengguna sales
         if sales_filter != 'semua':
             try:
                 sales_user = User.objects.get(username=sales_filter)
                 sales_instance = sales_model.objects.get(user=sales_user)
-                sekolah_list = daftar_sekolah.filter(sales=sales_instance)
-                pembayaran_omset = pembayaran_omset.filter(nama_sekolah__in=[sekolah.nama_sekolah for sekolah in sekolah_list])
-                pembayaran_pemasukan = pembayaran_pemasukan.filter(nama_sekolah__in=[sekolah.nama_sekolah for sekolah in sekolah_list])
+                sekolah_list = daftar_sekolah.filter(user_sales=sales_instance)
+                pembayaran_list = pembayaran_list.filter(nama_sekolah__in=[sekolah.nama_sekolah for sekolah in sekolah_list])
             except (User.DoesNotExist, sales_model.DoesNotExist):
                 messages.error(request, 'Sales tidak ditemukan')
                 return redirect('pembayaran_sptsales')
         
-        # Filter berdasarkan bulan
+        # Filter berdasarkan bulan jika diperlukan
         if bulan_filter != 'semua':
-            pembayaran_omset = pembayaran_omset.filter(**{bulan_filter + '__isnull': False})
-            pembayaran_pemasukan = pembayaran_pemasukan.filter(**{bulan_filter + '__isnull': False})
+            # Sesuaikan filter berdasarkan bulan yang dipilih
+            pembayaran_list = pembayaran_list.filter(
+                models.Q(**{f'{bulan_filter}_by_omset__isnull': False}) |
+                models.Q(**{f'{bulan_filter}_by_cash__isnull': False})
+            )
             
+        # Handle delete
         delete_id = request.GET.get('delete')
         if delete_id:
             try:
@@ -258,65 +260,86 @@ def pembayaran(request):
                 messages.error(request, 'Pembayaran tidak ditemukan')
                 return redirect('pembayaran_sptsales')
         
+        # Handle edit
         edit_id = request.GET.get('edit')
         if edit_id:
             if request.method == 'POST':
                 try:
-                    pembayaran_id = request.POST.get('pembayaran_id')
-                    pembayaran = pembayaran_model.objects.get(id=pembayaran_id)
-                    sekolah_baru = request.POST.get('nama_sekolah_baru')
-                    nama_sekolah = sekolah_baru if sekolah_baru else request.POST.get('nama_sekolah')
-                    jenjang_nama = request.POST.get('jenjang')
-                    jenis_produk = request.POST.get('jenis_produk')
-                    tipe_pembayaran = request.POST.get('tipe_pembayaran')
-                    status = request.POST.get('status')
-                    bulan_fields = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember']
+                    pembayaran = pembayaran_model.objects.get(id=edit_id)
+                    
+                    # Update data pembayaran
+                    pembayaran.nama_sekolah = request.POST.get('nama_sekolah_baru')
+                    pembayaran.jenjang = request.POST.get('jenjang')
+                    pembayaran.jenis_produk = request.POST.get('jenis_produk')
+                    pembayaran.status = request.POST.get('status')
+                    
+                    # Update nilai bulanan
+                    bulan_fields = ['januari', 'februari', 'maret', 'april', 'mei', 'juni',
+                                  'juli', 'agustus', 'september', 'oktober', 'november', 'desember']
+                    
                     for bulan in bulan_fields:
-                        nilai = request.POST.get(bulan)
-                        setattr(pembayaran, bulan, int(nilai) if nilai else None)
-                          
-                    pembayaran.nama_sekolah = nama_sekolah
-                    pembayaran.jenjang = jenjang_nama
-                    pembayaran.jenis_produk = jenis_produk
-                    pembayaran.tipe_pembayaran = tipe_pembayaran
-                    pembayaran.status = status
+                        omset_value = request.POST.get(f'{bulan}_by_omset')
+                        cash_value = request.POST.get(f'{bulan}_by_cash')
+                        
+                        # Konversi ke integer jika ada nilai, None jika kosong
+                        setattr(pembayaran, f'{bulan}_by_omset', 
+                               int(omset_value) if omset_value and omset_value.strip() != '' else None)
+                        setattr(pembayaran, f'{bulan}_by_cash',
+                               int(cash_value) if cash_value and cash_value.strip() != '' else None)
+                    
                     pembayaran.save()
-                    messages.success(request, 'Pembayaran berhasil disimpan')
+                    messages.success(request, 'Data pembayaran berhasil diperbarui')
+                    return redirect('pembayaran_sptsales')
+                    
                 except pembayaran_model.DoesNotExist:
-                    messages.error(request, 'Pembayaran tidak ditemukan')
+                    messages.error(request, 'Data pembayaran tidak ditemukan')
+                except ValueError as e:
+                    messages.error(request, f'Error nilai input: {str(e)}')
                 except Exception as e:
                     messages.error(request, f'Terjadi kesalahan: {str(e)}')
                 return redirect('pembayaran_sptsales')
             
+            # Tampilkan form edit
             try:
                 pembayaran_edit = get_object_or_404(pembayaran_model, id=edit_id)
+                
+                # Siapkan data bulanan untuk template
+                bulan_data = {}
+                for bulan in ['januari', 'februari', 'maret', 'april', 'mei', 'juni',
+                            'juli', 'agustus', 'september', 'oktober', 'november', 'desember']:
+                    bulan_data[bulan] = {
+                        'omset': getattr(pembayaran_edit, f'{bulan}_by_omset'),
+                        'cash': getattr(pembayaran_edit, f'{bulan}_by_cash')
+                    }
+                
                 context = {
                     'edit': True,
                     'pembayaran': pembayaran_edit,
+                    'bulan_data': bulan_data,  # Tambahkan data bulanan ke context
                     'daftar_sekolah': daftar_sekolah,
                     'daftar_jenjang': DAFTAR_JENJANG,
                     'JENIS_PRODUK_CHOICES': JENIS_PRODUK_CHOICES,
-                    'STATUS_CHOICES': STATUS_CHOICES,  # Tambahkan ini
+                    'STATUS_CHOICES': STATUS_CHOICES,
                 }
                 return render(request, 'spt/sales/pembayaran.html', context)
             except Exception as e:
                 messages.error(request, f'Terjadi kesalahan: {str(e)}')
                 return redirect('pembayaran_sptsales')
-        
+
+        # Handle tambah data baru
         if request.method == 'POST':
             try:
                 pembayaran = pembayaran_model()
                 sekolah_baru = request.POST.get('sekolah_baru')
                 jenjang_nama = request.POST.get('jenjang')
                 jenis_produk = request.POST.get('jenis_produk')
-                tipe_pembayaran = request.POST.get('tipe_pembayaran')
                 
                 if sekolah_baru == '1':
                     nama_sekolah = request.POST.get('nama_sekolah_baru')
-                    status = request.POST.get('status')
+                    status = request.POST.get('status', 'new')
                 else:
                     nama_sekolah = request.POST.get('nama_sekolah')
-                    status = get_status_pembayaran(nama_sekolah)
+                    status = get_status_pembayaran(nama_sekolah) or 'new'
                 
                 if not nama_sekolah:
                     raise ValueError('Nama sekolah tidak boleh kosong')
@@ -324,13 +347,17 @@ def pembayaran(request):
                 pembayaran.nama_sekolah = nama_sekolah
                 pembayaran.jenjang = jenjang_nama
                 pembayaran.jenis_produk = jenis_produk
-                pembayaran.tipe_pembayaran = tipe_pembayaran
                 pembayaran.status = status
                 
-                bulan_fields = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember']
+                # Set nilai bulanan
+                bulan_fields = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                              'juli', 'agustus', 'september', 'oktober', 'november', 'desember']
+                
                 for bulan in bulan_fields:
-                    nilai = request.POST.get(bulan)
-                    setattr(pembayaran, bulan, int(nilai) if nilai else None)
+                    omset_value = request.POST.get(f'{bulan}_by_omset')
+                    cash_value = request.POST.get(f'{bulan}_by_cash')
+                    setattr(pembayaran, f'{bulan}_by_omset', int(omset_value) if omset_value else None)
+                    setattr(pembayaran, f'{bulan}_by_cash', int(cash_value) if cash_value else None)
                 
                 pembayaran.save()
                 messages.success(request, 'Pembayaran berhasil disimpan')
@@ -340,60 +367,62 @@ def pembayaran(request):
                 messages.error(request, f"Terjadi kesalahan: {str(e)}")
             return redirect('pembayaran_sptsales')
         
-        total_pembayaran_per_jenis_dari_omset = {}
-        total_pembayaran_per_jenis_dari_pemasukan = {}
-        total_pembayaran_per_status_dari_omset = {}
-        total_pembayaran_per_status_dari_pemasukan = {}
+        # Hitung total untuk diagram
+        total_by_jenis_omset = {}
+        total_by_jenis_cash = {}
+        total_by_status_omset = {}
+        total_by_status_cash = {}
 
-        for pembayaran in pembayaran_omset:
+        for pembayaran in pembayaran_list:
             jenis = pembayaran.jenis_produk
             status = pembayaran.status
-            total = pembayaran.total_pembayaran if bulan_filter == 'semua' else getattr(pembayaran, bulan_filter) or 0
-            total_pembayaran_per_jenis_dari_omset[jenis] = total_pembayaran_per_jenis_dari_omset.get(jenis, 0) + total
-            total_pembayaran_per_status_dari_omset[status] = total_pembayaran_per_status_dari_omset.get(status, 0) + total
+            
+            # Hitung total omset
+            total_omset = pembayaran.total_pembayaran_by_omset
+            if bulan_filter != 'semua':
+                total_omset = getattr(pembayaran, f'{bulan_filter}_by_omset') or 0
+                
+            # Hitung total cash
+            total_cash = pembayaran.total_pembayaran_by_cash
+            if bulan_filter != 'semua':
+                total_cash = getattr(pembayaran, f'{bulan_filter}_by_cash') or 0
+            
+            # Update totals
+            total_by_jenis_omset[jenis] = total_by_jenis_omset.get(jenis, 0) + total_omset
+            total_by_jenis_cash[jenis] = total_by_jenis_cash.get(jenis, 0) + total_cash
+            total_by_status_omset[status] = total_by_status_omset.get(status, 0) + total_omset
+            total_by_status_cash[status] = total_by_status_cash.get(status, 0) + total_cash
 
-        for pembayaran in pembayaran_pemasukan:
-            jenis = pembayaran.jenis_produk
-            status = pembayaran.status
-            total = pembayaran.total_pembayaran if bulan_filter == 'semua' else getattr(pembayaran, bulan_filter) or 0
-            total_pembayaran_per_jenis_dari_pemasukan[jenis] = total_pembayaran_per_jenis_dari_pemasukan.get(jenis, 0) + total
-            total_pembayaran_per_status_dari_pemasukan[status] = total_pembayaran_per_status_dari_pemasukan.get(status, 0) + total
-
-        # Konversi data menjadi format yang sesuai untuk ApexCharts
+        # Format data untuk charts
         chart_data = {
             'jenis_produk_omset': {
-                'labels': [dict(JENIS_PRODUK_CHOICES)[jenis] for jenis in total_pembayaran_per_jenis_dari_omset.keys()],
-                'series': list(total_pembayaran_per_jenis_dari_omset.values())
+                'labels': [dict(JENIS_PRODUK_CHOICES)[jenis] for jenis in total_by_jenis_omset.keys()],
+                'series': list(total_by_jenis_omset.values())
             },
             'jenis_produk_pemasukan': {
-                'labels': [dict(JENIS_PRODUK_CHOICES)[jenis] for jenis in total_pembayaran_per_jenis_dari_pemasukan.keys()],
-                'series': list(total_pembayaran_per_jenis_dari_pemasukan.values())
+                'labels': [dict(JENIS_PRODUK_CHOICES)[jenis] for jenis in total_by_jenis_cash.keys()],
+                'series': list(total_by_jenis_cash.values())
             },
             'status_omset': {
-                'labels': [dict(STATUS_CHOICES)[status] for status in total_pembayaran_per_status_dari_omset.keys()],
-                'series': list(total_pembayaran_per_status_dari_omset.values())
+                'labels': [dict(STATUS_CHOICES)[status] for status in total_by_status_omset.keys()],
+                'series': list(total_by_status_omset.values())
             },
             'status_pemasukan': {
-                'labels': [dict(STATUS_CHOICES)[status] for status in total_pembayaran_per_status_dari_pemasukan.keys()],
-                'series': list(total_pembayaran_per_status_dari_pemasukan.values())
+                'labels': [dict(STATUS_CHOICES)[status] for status in total_by_status_cash.keys()],
+                'series': list(total_by_status_cash.values())
             }
         }
 
-        # Perbarui context
         context = {
             'daftar_sekolah': daftar_sekolah,
             'daftar_jenjang': DAFTAR_JENJANG,
-            'pembayaran_omset': pembayaran_omset,
-            'pembayaran_pemasukan': pembayaran_pemasukan,
+            'pembayaran_list': pembayaran_list,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_CHOICES,
-            'total_pembayaran_per_jenis_dari_omset': total_pembayaran_per_jenis_dari_omset,
-            'total_pembayaran_per_jenis_dari_pemasukan': total_pembayaran_per_jenis_dari_pemasukan,
-            'total_pembayaran_per_status_dari_omset': total_pembayaran_per_status_dari_omset,
-            'total_pembayaran_per_status_dari_pemasukan': total_pembayaran_per_status_dari_pemasukan,
             'chart_data': json.dumps(chart_data),
             'sales_filter': sales_filter,
             'bulan_filter': bulan_filter,
             'daftar_sales': sales_model.objects.all(),
+            'STATUS_CHOICES': STATUS_CHOICES,
         }
         return render(request, 'spt/sales/pembayaran.html', context)
     except Exception as e:
@@ -451,8 +480,8 @@ def customer(request):
                     master.jenis_produk = jenis_produk
                     master.pembayaran = pembayaran
                     master.harga_buku = harga_buku
-                    master.jumlah_komputer = jumlah_komputer
-                    master.jumlah_siswa_tk = jumlah_siswa_tk
+                    master.jumlah_komputer = int(jumlah_komputer) if jumlah_komputer else None
+                    master.jumlah_siswa_tk = int(jumlah_siswa_tk) if jumlah_siswa_tk else None
                     
                     if user_produk:
                         master.user_produk = produk_model.objects.get(id=user_produk)
@@ -1009,11 +1038,15 @@ def customer_ekskul(request):
 
 # Functions -------------------------------------------------------------------
 def get_status_pembayaran(nama_sekolah):
-    status = master_model.objects.get(nama_sekolah=nama_sekolah)
-    if status:
-      return status.status
-    else:
-      return None
+    try:
+        sekolah = master_model.objects.get(nama_sekolah=nama_sekolah)
+        return sekolah.status
+    except master_model.DoesNotExist:
+        # Return default status jika sekolah tidak ditemukan
+        return 'new'
+    except Exception as e:
+        logger.error(f"Error in get_status_pembayaran: {str(e)}")
+        return 'new'
     
   
 

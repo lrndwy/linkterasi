@@ -1,294 +1,243 @@
-{% comment %} Tambah Pembayaran Omset modal {% endcomment %}
-<div id="tambah-pembayaran-omset-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" style="z-index: 100;">
-  <div class="relative p-4 w-full max-w-md max-h-[calc(100vh-190px)]">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <!-- Modal header -->
-          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  Tambah Pembayaran Omset
-              </h3>
-              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="tambah-pembayaran-omset-modal">
-                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                  </svg>
-                  <span class="sr-only">Close modal</span>
-              </button>
-          </div>
-          <!-- Modal body -->
-          <div class="p-4 overflow-y-auto max-h-[calc(100vh-200px)]">
-            <form method="POST" action="{% url 'pembayaran_sptsales' %}">
-              {% csrf_token %}
-              <div class="grid grid-cols-1 gap-4">
-                <label class="inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="sekolah_baru" name="sekolah_baru" value="1" class="sr-only peer">
-                  <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Sekolah Baru</span>
-                </label>
-                <div>
-                  <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
-                  <input type="text" id="nama_sekolah_input" name="nama_sekolah" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <select id="nama_sekolah_select" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">Pilih Sekolah</option>
-                    {% for sekolah in daftar_sekolah %}
-                      <option value="{{ sekolah.nama_sekolah }}">{{ sekolah.nama_sekolah }}</option>
-                    {% endfor %}   
-                  </select>
-                </div>
-                <div>
-                  <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
-                  <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                    <option value="">Pilih Jenjang</option>
-                    <option value="TK">TK</option>
-                    <option value="SD">SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA">SMA</option>
-                    <option value="SMK">SMK</option>
-                  </select> 
-                </div>
-                <div>
-                  <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
-                  <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                    <option value="tik">Tik</option>
-                    <option value="hardware & software">Hardware & Software</option>
-                    <option value="buku diginusa">Buku Diginusa</option>
-                    <option value="buku gen">Buku Gen</option>
-                    <option value="robotik">Robotik</option>
-                    <option value="coding">Coding</option>
-                    <option value="lainnya">Lainnya</option>
-                  </select>
-                </div>
-                <div id="status_div" class="hidden">
-                  <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                  <select id="status" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="retention">Retention</option>
-                    <option value="existing">Existing</option>
-                    <option value="new">New</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">januari</label>
-                  <input type="number" id="januari" name="januari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">februari</label>
-                  <input type="number" id="februari" name="februari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">maret</label>
-                  <input type="number" id="maret" name="maret" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">april</label>
-                  <input type="number" id="april" name="april" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">mei</label>
-                  <input type="number" id="mei" name="mei" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">juni</label>
-                  <input type="number" id="juni" name="juni" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">juli</label>
-                  <input type="number" id="juli" name="juli" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">agustus</label>
-                  <input type="number" id="agustus" name="agustus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">september</label>
-                  <input type="number" id="september" name="september" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">oktober</label>
-                  <input type="number" id="oktober" name="oktober" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">november</label>
-                  <input type="number" id="november" name="november" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">desember</label>
-                  <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-              </div>
-              <input type="hidden" name="tipe_pembayaran" value="omset">
-              <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-            </form>
-          </div>
-      </div>
-  </div>
-</div> 
+{% comment %} Tambah Pembayaran modal {% endcomment %}
+<div id="tambah-pembayaran-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" style="z-index: 100;">
+    <div class="relative p-4 w-full max-w-md max-h-[calc(100vh-190px)]">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Tambah Pembayaran
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="tambah-pembayaran-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 overflow-y-auto max-h-[calc(100vh-200px)]">
+                <form method="POST" action="{% url 'pembayaran_sptsales' %}">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 gap-4">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="sekolah_baru" name="sekolah_baru" value="1" class="sr-only peer">
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Sekolah Baru</span>
+                        </label>
+                        <div>
+                            <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
+                            <input type="text" id="nama_sekolah_input" name="nama_sekolah" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select id="nama_sekolah_select" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="">Pilih Sekolah</option>
+                                {% for sekolah in daftar_sekolah %}
+                                    <option value="{{ sekolah.nama_sekolah }}">{{ sekolah.nama_sekolah }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
+                            <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <option value="">Pilih Jenjang</option>
+                                <option value="TK">TK</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="SMK">SMK</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
+                            <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                {% for value, label in JENIS_PRODUK_CHOICES %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div id="status_div" class="hidden">
+                            <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                            <select id="status" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                {% for value, label in STATUS_CHOICES %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="januari_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Januari (Omset)</label>
+                                <input type="number" id="januari_by_omset" name="januari_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="januari_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Januari (Cash)</label>
+                                <input type="number" id="januari_by_cash" name="januari_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
 
-{% comment %} Tambah Pembayaran Pemasukan modal {% endcomment %}
-<div id="tambah-pembayaran-pemasukan-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full" style="z-index: 100;">
-  <div class="relative p-4 w-full max-w-md max-h-[calc(100vh-190px)]">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-          <!-- Modal header -->
-          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                  Tambah Pembayaran Pemasukan
-              </h3>
-              <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="tambah-pembayaran-pemasukan-modal">
-                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                  </svg>
-                  <span class="sr-only">Close modal</span>
-              </button>
-          </div>
-          <!-- Modal body -->
-          <div class="p-4 overflow-y-auto max-h-[calc(100vh-200px)]">
-            <form method="POST" action="{% url 'pembayaran_sptsales' %}">
-              {% csrf_token %}
-              <div class="grid grid-cols-1 gap-4">
-                <label class="inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="sekolah_baru2" name="sekolah_baru" value="1" class="sr-only peer">
-                  <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Sekolah Baru</span>
-                </label>
-                <div>
-                  <label for="nama_sekolah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Sekolah</label>
-                  <input type="text" id="nama_sekolah_input2" name="nama_sekolah" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <select id="nama_sekolah_select2" name="nama_sekolah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">Pilih Sekolah</option>
-                    {% for sekolah in daftar_sekolah %}
-                      <option value="{{ sekolah.nama_sekolah }}">{{ sekolah.nama_sekolah }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div>
-                  <label for="jenjang" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenjang</label>
-                  <select id="jenjang" name="jenjang" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                    <option value="">Pilih Jenjang</option>
-                    <option value="TK">TK</option>
-                    <option value="SD" >SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA">SMA</option>
-                    <option value="SMK">SMK</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="jenis_produk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Produk</label>
-                  <select id="jenis_produk" name="jenis_produk" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-                    <option value="tik">Tik</option>
-                    <option value="hardware & software">Hardware & Software</option>
-                    <option value="buku diginusa">Buku Diginusa</option>
-                    <option value="buku gen">Buku Gen</option>
-                    <option value="robotik">Robotik</option>
-                    <option value="coding">Coding</option>
-                    <option value="lainnya">Lainnya</option>
-                  </select>
-                </div>
-                <div id="status_div2" class="hidden">
-                  <label for="status2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                  <select id="status2" name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="retention">Retention</option>
-                    <option value="existing">Existing</option>
-                    <option value="new">New</option>
-                  </select>
-                </div>
-                <!-- Bulan-bulan input fields -->
-                <div>
-                  <label for="januari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">januari</label>
-                  <input type="number" id="januari" name="januari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="februari" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">februari</label>
-                  <input type="number" id="februari" name="februari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="maret" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">maret</label>
-                  <input type="number" id="maret" name="maret" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="april" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">april</label>
-                  <input type="number" id="april" name="april" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="mei" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">mei</label>
-                  <input type="number" id="mei" name="mei" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="juni" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">juni</label>
-                  <input type="number" id="juni" name="juni" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="juli" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">juli</label>
-                  <input type="number" id="juli" name="juli" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="agustus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">agustus</label>
-                  <input type="number" id="agustus" name="agustus" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="september" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">september</label>
-                  <input type="number" id="september" name="september" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="oktober" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">oktober</label>
-                  <input type="number" id="oktober" name="oktober" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="november" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">november</label>
-                  <input type="number" id="november" name="november" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <div>
-                  <label for="desember" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">desember</label>
-                  <input type="number" id="desember" name="desember" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-              </div>
-              <input type="hidden" name="tipe_pembayaran" value="pemasukan">
-              <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-            </form>
-          </div>
-      </div>
-  </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="februari_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Februari (Omset)</label>
+                                <input type="number" id="februari_by_omset" name="februari_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="februari_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Februari (Cash)</label>
+                                <input type="number" id="februari_by_cash" name="februari_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="maret_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Maret (Omset)</label>
+                                <input type="number" id="maret_by_omset" name="maret_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="maret_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Maret (Cash)</label>
+                                <input type="number" id="maret_by_cash" name="maret_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="april_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">April (Omset)</label>
+                                <input type="number" id="april_by_omset" name="april_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="april_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">April (Cash)</label>
+                                <input type="number" id="april_by_cash" name="april_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="mei_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Mei (Omset)</label>
+                                <input type="number" id="mei_by_omset" name="mei_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="mei_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Mei (Cash)</label>
+                                <input type="number" id="mei_by_cash" name="mei_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="juni_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juni (Omset)</label>
+                                <input type="number" id="juni_by_omset" name="juni_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="juni_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juni (Cash)</label>
+                                <input type="number" id="juni_by_cash" name="juni_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="juli_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juli (Omset)</label>
+                                <input type="number" id="juli_by_omset" name="juli_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="juli_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Juli (Cash)</label>
+                                <input type="number" id="juli_by_cash" name="juli_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="agustus_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Agustus (Omset)</label>
+                                <input type="number" id="agustus_by_omset" name="agustus_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="agustus_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Agustus (Cash)</label>
+                                <input type="number" id="agustus_by_cash" name="agustus_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="september_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">September (Omset)</label>
+                                <input type="number" id="september_by_omset" name="september_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="september_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">September (Cash)</label>
+                                <input type="number" id="september_by_cash" name="september_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="oktober_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Oktober (Omset)</label>
+                                <input type="number" id="oktober_by_omset" name="oktober_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="oktober_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Oktober (Cash)</label>
+                                <input type="number" id="oktober_by_cash" name="oktober_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="november_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">November (Omset)</label>
+                                <input type="number" id="november_by_omset" name="november_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="november_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">November (Cash)</label>
+                                <input type="number" id="november_by_cash" name="november_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="desember_by_omset" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Desember (Omset)</label>
+                                <input type="number" id="desember_by_omset" name="desember_by_omset" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="desember_by_cash" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white capitalize">Desember (Cash)</label>
+                                <input type="number" id="desember_by_cash" name="desember_by_cash" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    function setupSekolahBaruToggle(checkboxId, inputId, selectId, statusId, statusDivId) {
-      const checkbox = document.getElementById(checkboxId);
-      const input = document.getElementById(inputId);
-      const select = document.getElementById(selectId);
-      const statusSelect = document.getElementById(statusId);
-      const statusDiv = document.getElementById(statusDivId);
+    document.addEventListener('DOMContentLoaded', function() {
+        function setupSekolahBaruToggle(checkboxId, inputId, selectId, statusId, statusDivId) {
+            const checkbox = document.getElementById(checkboxId);
+            const input = document.getElementById(inputId);
+            const select = document.getElementById(selectId);
+            const statusSelect = document.getElementById(statusId);
+            const statusDiv = document.getElementById(statusDivId);
 
-      function updateFields() {
-        if (checkbox.checked) {
-          input.classList.remove('hidden');
-          select.classList.add('hidden');
-          statusDiv.classList.remove('hidden');
-          input.required = true;
-          select.required = false;
-          statusSelect.required = true;
-          select.value = ''; // Reset nilai select
-          input.name = 'nama_sekolah_baru'; // Ubah nama input untuk sekolah baru
-          select.name = 'nama_sekolah_old'; // Ubah nama select agar tidak konflik
-        } else {
-          input.classList.add('hidden');
-          select.classList.remove('hidden');
-          statusDiv.classList.add('hidden');
-          input.required = false;
-          select.required = true;
-          statusSelect.required = false;
-          input.value = ''; // Reset nilai input
-          select.name = 'nama_sekolah'; // Kembalikan nama select ke semula
-          input.name = 'nama_sekolah_baru_unused'; // Ubah nama input agar tidak konflik
+            function updateFields() {
+                if (checkbox.checked) {
+                    input.classList.remove('hidden');
+                    select.classList.add('hidden');
+                    statusDiv.classList.remove('hidden');
+                    input.required = true;
+                    select.required = false;
+                    statusSelect.required = true;
+                    select.value = '';
+                    input.name = 'nama_sekolah_baru';
+                    select.name = 'nama_sekolah_old';
+                } else {
+                    input.classList.add('hidden');
+                    select.classList.remove('hidden');
+                    statusDiv.classList.add('hidden');
+                    input.required = false;
+                    select.required = true;
+                    statusSelect.required = false;
+                    input.value = '';
+                    select.name = 'nama_sekolah';
+                    input.name = 'nama_sekolah_baru_unused';
+                }
+            }
+
+            checkbox.addEventListener('change', updateFields);
+            updateFields();
         }
-      }
 
-      checkbox.addEventListener('change', updateFields);
-      
-      // Panggil updateFields saat halaman dimuat
-      updateFields();
-    }
-
-    setupSekolahBaruToggle('sekolah_baru', 'nama_sekolah_input', 'nama_sekolah_select', 'status', 'status_div');
-    setupSekolahBaruToggle('sekolah_baru2', 'nama_sekolah_input2', 'nama_sekolah_select2', 'status2', 'status_div2');
-  });
+        setupSekolahBaruToggle('sekolah_baru', 'nama_sekolah_input', 'nama_sekolah_select', 'status', 'status_div');
+    });
 </script>
