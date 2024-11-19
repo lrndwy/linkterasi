@@ -9,6 +9,7 @@ JENIS_PRODUK_CHOICES = [
     ("buku gen", "Buku Gen"),
     ("robotik", "Robotik"),
     ("coding", "Coding"),
+    ("kontrak jasa service", "Kontrak Jasa Service"),
     ("lainnya", "Lainnya")
     
 ]
