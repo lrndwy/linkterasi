@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..authentication import *
 from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
-from apps.models.mainModel import teknisi as teknisi_model, produk as produk_model, sales as sales_model
+from apps.models.mainModel import teknisi as teknisi_model, produk as produk_model, sales as sales_model, Pengeluaran as pengeluaran_model
 from apps.models.kunjunganModel import kunjungan_teknisi
 from django.utils import timezone
 from django.contrib import messages
@@ -21,6 +21,7 @@ from apps.functions import impor_data_customer, impor_data_customer_ekskul
 from core.settings import API_KEY
 from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
 import logging
+from django.db.models import Sum
 
 logger = logging.getLogger(__name__)
 
@@ -665,5 +666,59 @@ def customer_ekskul(request):
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('customer_ekskul_sptteknisi')
+      
+@sptteknisi_required
+def pengeluaran(request):
+    try:
+        # Ambil parameter filter
+        filter_teknisi = request.GET.get('teknisi', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')
+
+        # Base queryset
+        daftar_pengeluaran = pengeluaran_model.objects.filter(kategori='Teknisi')
+
+        # Filter berdasarkan teknisi
+        if filter_teknisi != 'semua':
+            try:
+                teknisi_user = User.objects.get(username=filter_teknisi)
+                teknisi_instance = teknisi_model.objects.get(user=teknisi_user)
+                daftar_pengeluaran = daftar_pengeluaran.filter(user=teknisi_instance.user)
+            except (User.DoesNotExist, teknisi_model.DoesNotExist):
+                messages.error(request, 'Teknisi tidak ditemukan')
+
+        # Filter berdasarkan bulan
+        if filter_bulan != 'semua':
+            tahun_sekarang = datetime.now().year
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 
+                          'desember'].index(filter_bulan.lower()) + 1
+            
+            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
+            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+            
+            daftar_pengeluaran = daftar_pengeluaran.filter(
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan,
+            )
+
+        # Urutkan berdasarkan tanggal terbaru
+        daftar_pengeluaran = daftar_pengeluaran.order_by('-tanggal')
+        
+        # Hitung total pengeluaran
+        total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
+
+        context = {
+            'daftar_pengeluaran': daftar_pengeluaran,
+            'total_pengeluaran': total_pengeluaran,
+            'daftar_teknisi': teknisi_model.objects.all(),
+            'filter_teknisi': filter_teknisi,
+            'filter_bulan': filter_bulan,
+        }
+        return render(request, 'spt/teknisi/pengeluaran.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return redirect('pengeluaran_sptteknisi')
+
+
 
 

@@ -5,16 +5,19 @@ from apps.models.sptModel import permintaanSPT as permintaanspt_model, pengumuma
 from django.contrib import messages
 from datetime import datetime, timedelta
 from apps.functions import func_total_siswa_per_jenjang
-from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
+from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model, Pengeluaran as pengeluaran_model, PENGELUARAN_CHOICES
 from apps.models.kunjunganModel import kunjungan_produk as kunjungan_produk_model
 from apps.authentication import *
 from apps.models.kunjunganModel import JUDUL_PRODUK_CHOICES, JUDUL_TEKNISI_CHOICES
 from core.settings import API_KEY
 from apps.models.kegiatanModel import kegiatan_produk as kegiatan_produk_model
 from collections import defaultdict
+from django.db.models import Sum
+
 
 LIST_JUDUL_PRODUK = [item[0] for item in JUDUL_PRODUK_CHOICES]
 LIST_JUDUL_TEKNISI = [item[0] for item in JUDUL_TEKNISI_CHOICES]
+LIST_PENGELUARAN_CHOICES = [item[0] for item in PENGELUARAN_CHOICES]
 
 
 
@@ -474,6 +477,88 @@ def jadwal(request):
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return render(request, 'produk/jadwal.html', {})
+
+@produk_required
+def pengeluaran(request):
+    try:
+        user = request.user
+        edit_id = request.GET.get('edit')
+        hapus_id = request.GET.get('hapus')
+        
+        if edit_id:
+            pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
+            context = {
+                'pengeluaran_obj': pengeluaran_obj,
+                'edit': True,
+                'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
+            }
+            return render(request, 'produk/pengeluaran.html', context)
+        elif hapus_id:
+            pengeluaran_obj = pengeluaran_model.objects.get(id=hapus_id, user=user)
+            pengeluaran_obj.delete()
+            messages.success(request, 'Pengeluaran berhasil dihapus.')
+            return redirect('pengeluaran_produk')
+        
+        if request.method == 'POST':
+            aksi = request.POST.get('aksi')
+            
+            if aksi == 'tambah':
+                nama = request.POST.get('nama')  # Menggunakan field 'nama' sesuai model
+                jumlah = request.POST.get('jumlah')  # Menggunakan field 'jumlah' sesuai model
+                tanggal = request.POST.get('tanggal')
+                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')  # Menambahkan file bukti
+                
+                try:
+                    pengeluaran_obj = pengeluaran_model(
+                        nama=nama,
+                        jumlah=jumlah,
+                        tanggal=tanggal,
+                        bukti_pengeluaran=bukti_pengeluaran,
+                        user=user,
+                        kategori='Produk'
+                        # kategori akan otomatis terisi dari method save() di model
+                    )
+                    pengeluaran_obj.save()
+                    messages.success(request, 'Pengeluaran berhasil ditambahkan.')
+                except Exception as e:
+                    messages.error(request, f'Gagal menambahkan pengeluaran: {str(e)}')
+                    
+            elif aksi == 'edit':
+                pengeluaran_id = request.POST.get('pengeluaran_id')
+                nama = request.POST.get('nama')
+                jumlah = request.POST.get('jumlah')
+                tanggal = request.POST.get('tanggal')
+                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
+                
+                try:
+                    pengeluaran_obj = pengeluaran_model.objects.get(id=pengeluaran_id, user=user)
+                    pengeluaran_obj.nama = nama
+                    pengeluaran_obj.jumlah = jumlah
+                    pengeluaran_obj.tanggal = tanggal
+                    if bukti_pengeluaran:
+                        pengeluaran_obj.bukti_pengeluaran = bukti_pengeluaran
+                    pengeluaran_obj.save()
+                    messages.success(request, 'Pengeluaran berhasil diupdate.')
+                except pengeluaran_model.DoesNotExist:
+                    messages.error(request, 'Pengeluaran tidak ditemukan.')       
+            return redirect('pengeluaran_produk')
+            
+        # Filter pengeluaran berdasarkan user dan kategori Produk
+        daftar_pengeluaran = pengeluaran_model.objects.filter(
+            user=user,
+            kategori='Produk'
+        ).order_by('-tanggal')
+        total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
+        context = {
+            'daftar_pengeluaran': daftar_pengeluaran,
+            'total_pengeluaran': total_pengeluaran,
+            'pengeluaran_choices': LIST_PENGELUARAN_CHOICES  # Menambahkan choices untuk dropdown
+        }
+        
+        return render(request, 'produk/pengeluaran.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return render(request, 'produk/pengeluaran.html', {})
 
 
 

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from apps.models.baseModel import JENJANG_CHOICES, PROVINSI_CHOICES
+from django.db.models import Sum
 
 STATUS_CHOICES = [
     ("retention", "Retention"),
@@ -491,3 +492,33 @@ class sptsales(models.Model):
 
     class Meta:
         verbose_name_plural = "SPT Sales"
+        
+    
+PENGELUARAN_CHOICES = [
+    ("DLK", "DLK"),
+    ("reimburse", "Reimburse"),
+    ("entertaint", "Entertaint"),
+]
+
+KATEGORI_CHOICES = [
+    ("Produk", "Produk"),
+    ("Teknisi", "Teknisi"),
+    ("Sales", "Sales"),
+]
+    
+
+        
+class Pengeluaran(models.Model):
+    nama = models.CharField(max_length=255, choices=PENGELUARAN_CHOICES)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pengeluaran")
+    jumlah = models.IntegerField(null=True, blank=True)
+    tanggal = models.DateField(null=True, blank=True)
+    bukti_pengeluaran = models.FileField(upload_to='bukti_pengeluaran/', null=True, blank=True)
+    kategori = models.CharField(max_length=255, choices=KATEGORI_CHOICES)
+        
+    @property
+    def total_pengeluaran(self, kategori):
+        return Pengeluaran.objects.filter(kategori=kategori).aggregate(total=Sum('jumlah'))['total'] or 0
+      
+    def __str__(self):
+        return self.nama

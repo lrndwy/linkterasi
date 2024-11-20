@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<c-layouts.dashboard dashboard-name="Sales">
+    <c-slot name="sidebar">
+        <c-sidebar.sales></c-sidebar.sales>
+    </c-slot>
+
+    {% if edit %}
+    <c-slot name="content">
+      <c-headingCard judul="Pengeluaran" deskripsi="Kelola data pengeluaran" heading_image_url="https://img.icons8.com/?size=100&id=12780&format=png&color=000000"></c-headingCard>
+      <section class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+        <form method="POST" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 gap-4">
+            <input type="hidden" name="pengeluaran_id" value="{{ pengeluaran_obj.id }}">
+            <div>
+              <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Judul</label>
+              <select id="nama" name="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                <option value="">Pilih Judul</option>
+                {% for item in pengeluaran_choices %}
+                  <option value="{{ item }}" {% if pengeluaran_obj.nama == item %}selected{% endif %}>{{ item|capfirst }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label for="jumlah" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah</label>
+              <input type="number" id="jumlah" name="jumlah" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ pengeluaran_obj.jumlah }}">
+            </div>
+            <div>
+              <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
+              <input type="date" id="tanggal" name="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required value="{{ pengeluaran_obj.tanggal|date:"Y-m-d" }}">
+            </div>
+            <div>
+              <label for="bukti" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bukti</label>
+              <input type="file" id="bukti" name="bukti_pengeluaran" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if pengeluaran_obj.bukti_pengeluaran %}
+                <a href="{{ pengeluaran_obj.bukti_pengeluaran.url }}" target="_blank" class="text-blue-600 hover:underline">Bukti saat ini {{ pengeluaran_obj.bukti_pengeluaran.url }}</a>
+              {% endif %}
+            </div>
+            
+          
+          <input type="hidden" name="aksi" value="edit">
+          </div>
+          
+          <button type="submit" class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan</button>
+          <button type="button" onclick="window.history.back()" class="mt-6 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Batal</button>
+        </form>
+      </section>
+  </c-slot>
+    {% else %}
+    <c-slot name="content">
+        <c-headingCard judul="Pengeluaran" deskripsi="Kelola data pengeluaran" heading_image_url="https://img.icons8.com/?size=100&id=12780&format=png&color=000000"></c-headingCard>
+        <section>
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 mb-4 w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-md sm:text-2xl font-bold text-gray-800 dark:text-white">Tabel Pengeluaran</h2>
+                    <div class="text-md sm:text-xl font-bold text-gray-800 dark:text-white">
+                        Total Pengeluaran: Rp <span id="totalPengeluaran">0</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-4 mb-4">
+                    <div class="w-full sm:w-1/2">
+                        <input type="text" id="searchInput" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cari...">
+                    </div>
+                    <div class="w-full sm:w-auto flex gap-2">
+                      <button data-modal-target="tambah-data-pengeluaran-modal" data-modal-toggle="tambah-data-pengeluaran-modal" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        Tambah 
+                    </button>
+                        <div class="relative">
+                          
+                            <button id="dropdownPengeluaranButton" data-dropdown-toggle="dropdownPengeluaran" class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" type="button">
+                                Ekspor <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                </svg>
+                            </button>
+                            <div id="dropdownPengeluaran" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownPengeluaranButton">
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pengeluaranTable', 'excel', 'data_pengeluaran')">Excel</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pengeluaranTable', 'csv', 'data_pengeluaran')">CSV</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="exportTable('pengeluaranTable', 'pdf', 'data_pengeluaran')">PDF</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto rounded-lg w-full max-h-[500px] overflow-y-auto">
+                    <table id="pengeluaranTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Nama Pengeluaran</th>
+                                <th scope="col" class="px-6 py-3">Jumlah</th>
+                                <th scope="col" class="px-6 py-3">Tanggal</th>
+                                <th scope="col" class="px-6 py-3">Bukti</th>
+                                <th scope="col" class="px-6 py-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pengeluaranTableBody">
+                            {% for pengeluaran in daftar_pengeluaran %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-6 py-4">{{ pengeluaran.get_nama_display }}</td>
+                                <td class="px-6 py-4">Rp {{ pengeluaran.jumlah|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4">{{ pengeluaran.tanggal|date:"d/m/Y"|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4">
+                                    {% if pengeluaran.bukti_pengeluaran %}
+                                        <a href="{{ pengeluaran.bukti_pengeluaran.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat Bukti</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="?edit={{ pengeluaran.id }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+                                    <a href="?hapus={{ pengeluaran.id }}" class="text-red-600 hover:underline">Hapus</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 text-center">Tidak ada data pengeluaran</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </c-slot>
+
+    {% endif %}
+</c-layouts.dashboard>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script>
+  function exportTable(tableId, format, filename) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    // Ambil header dari baris pertama tabel
+    const headers = Array.from(rows[0].querySelectorAll('th')).map(header => header.textContent.trim());
+    
+    // Ambil data dari baris-baris yang terlihat (tidak disembunyikan oleh filter)
+    const data = rows.slice(1)
+      .filter(row => row.style.display !== 'none')
+      .map(row => Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()));
+    
+    if (format === 'excel' || format === 'csv') {
+      let csvContent = headers.join('\t') + '\n';
+      csvContent += data.map(row => row.join('\t')).join('\n');
+      
+      const blob = new Blob([csvContent], { type: format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${filename}.${format === 'excel' ? 'xls' : 'csv'}`;
+      link.click();
+    } else if (format === 'pdf') {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'pt'
+      });
+      doc.autoTable({
+        head: [headers],
+        body: data,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        columnStyles: {
+          0: {cellWidth: 'auto'},
+          1: {cellWidth: 'auto'},
+          2: {cellWidth: 'auto'},
+          3: {cellWidth: 'auto'},
+          4: {cellWidth: 'auto'}
+        },
+        didDrawPage: function (data) {
+          // Header
+          doc.setFontSize(18);
+          doc.setTextColor(40);
+          doc.text(filename.replace(/_/g, ' ').toUpperCase(), data.settings.margin.left, 22);
+        },
+        margin: { top: 30 },
+      });
+      doc.save(`${filename}.pdf`);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('pengeluaranTableBody');
+
+    function hitungTotalPengeluaran() {
+        const rows = tableBody.getElementsByTagName('tr');
+        let total = 0;
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.style.display !== 'none') {
+                const jumlahCell = row.getElementsByTagName('td')[1];
+                if (jumlahCell) {
+                    const jumlahText = jumlahCell.textContent.replace('Rp ', '').replace('-', '0').trim();
+                    const jumlah = parseInt(jumlahText.replace(/\./g, '')) || 0;
+                    total += jumlah;
+                }
+            }
+        }
+
+        // Format angka dengan pemisah ribuan
+        const formattedTotal = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        document.getElementById('totalPengeluaran').textContent = formattedTotal;
+    }
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const cells = row.getElementsByTagName('td');
+            let shouldShow = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                const cellText = cells[j].textContent.toLowerCase();
+                if (cellText.includes(searchTerm)) {
+                    shouldShow = true;
+                    break;
+                }
+            }
+
+            row.style.display = shouldShow ? '' : 'none';
+        }
+
+        // Hitung ulang total setelah filter
+        hitungTotalPengeluaran();
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    
+    // Hitung total awal saat halaman dimuat
+    hitungTotalPengeluaran();
+  });
+</script>
+{% endblock %} 

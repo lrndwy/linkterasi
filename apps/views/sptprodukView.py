@@ -1,5 +1,6 @@
+from django.db.models import Sum
 from django.shortcuts import render, redirect
-from apps.models.mainModel import sptproduk as sptproduk_model
+from apps.models.mainModel import sptproduk as sptproduk_model, Pengeluaran as pengeluaran_model
 from apps.models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman as pengumuman_model
 from django.utils import timezone
 from django.contrib import messages
@@ -956,3 +957,55 @@ def customer_ekskul(request):
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('customer_ekskul_sptproduk')
+      
+@sptproduk_required
+def pengeluaran(request):
+    try:
+        # Ambil parameter filter
+        filter_produk = request.GET.get('produk', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')
+
+        # Base queryset
+        daftar_pengeluaran = pengeluaran_model.objects.filter(kategori='Produk')
+
+        # Filter berdasarkan produk
+        if filter_produk != 'semua':
+            try:
+                produk_user = User.objects.get(username=filter_produk)
+                produk_instance = produk_model.objects.get(user=produk_user)
+                daftar_pengeluaran = daftar_pengeluaran.filter(user=produk_instance.user)
+            except (User.DoesNotExist, produk_model.DoesNotExist):
+                messages.error(request, 'Produk tidak ditemukan')
+
+        # Filter berdasarkan bulan
+        if filter_bulan != 'semua':
+            tahun_sekarang = datetime.now().year
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 
+                          'desember'].index(filter_bulan.lower()) + 1
+            
+            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
+            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+            
+            daftar_pengeluaran = daftar_pengeluaran.filter(
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan,
+            )
+
+        # Urutkan berdasarkan tanggal terbaru
+        daftar_pengeluaran = daftar_pengeluaran.order_by('-tanggal')
+        
+        # Hitung total pengeluaran
+        total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
+
+        context = {
+            'daftar_pengeluaran': daftar_pengeluaran,
+            'total_pengeluaran': total_pengeluaran,
+            'daftar_produk': produk_model.objects.all(),
+            'filter_produk': filter_produk,
+            'filter_bulan': filter_bulan,
+        }
+        return render(request, 'spt/produk/pengeluaran.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return redirect('pengeluaran_sptproduk')

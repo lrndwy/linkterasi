@@ -304,3 +304,9 @@ class pengumumanAdmin(ModelAdmin):
     list_display = ("id_chat", "pesan", "waktu", "kategori", "user")
 
 
+
+# pengeluaranModel ------------------------------------------------------------
+@admin.register(Pengeluaran)
+class pengeluaranAdmin(ModelAdmin):
+    list_display = ("nama", "jumlah", "tanggal", "bukti_pengeluaran", "kategori")
+

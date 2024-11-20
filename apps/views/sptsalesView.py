@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from ..authentication import *
-from ..models.mainModel import master as master_model, sales as sales_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model, teknisi as teknisi_model, produk as produk_model
+from ..models.mainModel import master as master_model, sales as sales_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model, teknisi as teknisi_model, produk as produk_model, Pengeluaran as pengeluaran_model
 from ..models.baseModel import JENJANG_CHOICES
 from ..models.pembayaranModel import pembayaran as pembayaran_model, JENIS_PRODUK_CHOICES, STATUS_CHOICES
 from ..models.kunjunganModel import kunjungan_produk, kunjungan_teknisi
@@ -1033,6 +1033,60 @@ def customer_ekskul(request):
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('customer_ekskul_sptsales')
+      
+      
+@sptsales_required
+def pengeluaran(request):
+    try:
+        # Ambil parameter filter
+        filter_sales = request.GET.get('sales', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')
+
+        # Base queryset
+        daftar_pengeluaran = pengeluaran_model.objects.filter(kategori='Sales')
+
+        # Filter berdasarkan sales
+        if filter_sales != 'semua':
+            try:
+                sales_user = User.objects.get(username=filter_sales)
+                sales_instance = sales_model.objects.get(user=sales_user)
+                daftar_pengeluaran = daftar_pengeluaran.filter(user=sales_instance.user)
+            except (User.DoesNotExist, sales_model.DoesNotExist):
+                messages.error(request, 'Sales tidak ditemukan')
+
+        # Filter berdasarkan bulan
+        if filter_bulan != 'semua':
+            tahun_sekarang = datetime.now().year
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 
+                          'desember'].index(filter_bulan.lower()) + 1
+            
+            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
+            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+            
+            daftar_pengeluaran = daftar_pengeluaran.filter(
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan,
+            )
+
+        # Urutkan berdasarkan tanggal terbaru
+        daftar_pengeluaran = daftar_pengeluaran.order_by('-tanggal')
+        
+        # Hitung total pengeluaran
+        total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
+
+        context = {
+            'daftar_pengeluaran': daftar_pengeluaran,
+            'total_pengeluaran': total_pengeluaran,
+            'daftar_sales': sales_model.objects.all(),
+            'filter_sales': filter_sales,
+            'filter_bulan': filter_bulan,
+        }
+        return render(request, 'spt/sales/pengeluaran.html', context)
+    except Exception as e:
+        messages.error(request, f'Terjadi kesalahan: {str(e)}')
+        return redirect('pengeluaran_sptsales')
+
 
 
 

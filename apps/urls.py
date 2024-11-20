@@ -33,6 +33,7 @@ urlpatterns = [
     path("produk/kunjungan_tik/", produkViews.kunjungan_tik, name="kunjungan_produk_tik"),
     path("produk/kunjungan_ekskul/", produkViews.kunjungan_ekskul, name="kunjungan_produk_ekskul"),
     path("produk/jadwal/", produkViews.jadwal, name="jadwal_produk"),
+    path("produk/pengeluaran/", produkViews.pengeluaran, name="pengeluaran_produk"),
 
     # Teknisi
     path("teknisi/", teknisiViews.index, name="teknisi"),
@@ -42,12 +43,14 @@ urlpatterns = [
     path("teknisi/sptpermintaan/", teknisiViews.sptpermintaan, name="sptpermintaan_teknisi"),
     path("teknisi/pengumuman/", teknisiViews.pengumuman, name="pengumuman_teknisi"),
     path("teknisi/kunjungan/", teknisiViews.kunjungan, name="kunjungan_teknisi"),
+    path("teknisi/pengeluaran/", teknisiViews.pengeluaran, name="pengeluaran_teknisi"),
     
     # Sales
     path("sales/", salesViews.index, name="sales"),
     path("sales/jadwal/", salesViews.jadwal, name="jadwal_sales"),
     path("sales/sptpermintaan/", salesViews.sptpermintaan, name="sptpermintaan_sales"),
     path("sales/pengumuman/", salesViews.pengumuman, name="pengumuman_sales"),
+    path("sales/pengeluaran/", salesViews.pengeluaran, name="pengeluaran_sales"),
     
     # SPT Teknisi
     path("spt/teknisi/", sptteknisiViews.index, name="sptteknisi"),
@@ -58,6 +61,7 @@ urlpatterns = [
     path("spt/teknisi/pengumuman/", sptteknisiViews.pengumuman, name="pengumuman_sptteknisi"),
     path("spt/teknisi/customer/", sptteknisiViews.customer, name="customer_sptteknisi"),
     path("spt/teknisi/customer_ekskul/", sptteknisiViews.customer_ekskul, name="customer_ekskul_sptteknisi"),
+    path("spt/teknisi/pengeluaran/", sptteknisiViews.pengeluaran, name="pengeluaran_sptteknisi"),
     # SPT Produk
     path("spt/produk/", sptprodukViews.index, name="sptproduk"),
     path("spt/produk/komplain/", sptprodukViews.komplain, name="komplain_sptproduk"),
@@ -69,6 +73,7 @@ urlpatterns = [
     path("spt/produk/penggajian/", sptprodukViews.penggajian, name="penggajian_sptproduk"),
     path("spt/produk/customer/", sptprodukViews.customer, name="customer_sptproduk"),
     path("spt/produk/customer_ekskul/", sptprodukViews.customer_ekskul, name="customer_ekskul_sptproduk"),
+    path("spt/produk/pengeluaran/", sptprodukViews.pengeluaran, name="pengeluaran_sptproduk"),
     
     # SPT Sales
     path("spt/sales/", sptsalesViews.index, name="sptsales"),
@@ -79,6 +84,7 @@ urlpatterns = [
     path("spt/sales/adendum/", sptsalesViews.adendum, name="adendum_sptsales"),
     path("spt/sales/adendum_ekskul/", sptsalesViews.adendum_ekskul, name="adendum_ekskul_sptsales"),
     path("spt/sales/customer_ekskul/", sptsalesViews.customer_ekskul, name="customer_ekskul_sptsales"),
+    path("spt/sales/pengeluaran/", sptsalesViews.pengeluaran, name="pengeluaran_sptsales"),
 
      
     # Main
