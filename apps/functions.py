@@ -38,11 +38,9 @@ def func_total_siswa_per_jenjang(daftar_sekolah):
     for sekolah in daftar_sekolah:
         jenjang = sekolah.jenjang
         if jenjang in total_siswa_per_jenjang:
-            if jenjang == 'TK':
-                total_siswa = sekolah.jumlah_siswa_tk or 0
-            else:
-                total_siswa = sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}', 0) or 0 for i in range(1, 13))
-                total_siswa += sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}_smk', 0) or 0 for i in range(10, 13))
+            total_siswa = sekolah.jumlah_siswa_tk or 0
+            total_siswa += sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}', 0) or 0 for i in range(1, 13))
+            total_siswa += sum(getattr(sekolah, f'jumlah_siswa_kelas_{i}_smk', 0) or 0 for i in range(10, 13))
             total_siswa_per_jenjang[jenjang] += total_siswa
     return total_siswa_per_jenjang
 

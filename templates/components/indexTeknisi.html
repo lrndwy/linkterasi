@@ -18,6 +18,12 @@
               <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
               <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
           </select>
+          <select name="tahun" id="tahun_filter" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="semua">Semua Tahun</option>
+              {% for tahun in tahun_list %}
+                  <option value="{{ tahun }}" {% if filter_tahun == tahun %}selected{% endif %}>{{ tahun }}</option>
+              {% endfor %}
+          </select>
           <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               Filter
           </button>
@@ -35,7 +41,7 @@
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-green-800 dark:text-white">Maintenance</h3>
           <p class="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-300">{{ maintenance|default_if_none:"0" }}</p>
-          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
         </div>
       </div>
       <div class="bg-red-100 dark:bg-red-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
@@ -43,7 +49,7 @@
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-red-800 dark:text-white">Trouble Shooting</h3>
           <p class="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-300">{{ trouble_shooting|default_if_none:"0" }}</p>
-          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <p class="text-sm text-red-600 dark:text-red-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
         </div>
       </div>
       <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
@@ -51,7 +57,7 @@
         <div class="ml-2">
           <h3 class="text-base sm:text-xl font-semibold text-indigo-800 dark:text-white">Remote</h3>
           <p class="text-2xl sm:text-3xl font-bold text-indigo-600 dark:text-indigo-300">{{ remote|default_if_none:"0" }}</p>
-          <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+          <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
         </div>
       </div>
       <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">

@@ -70,7 +70,7 @@
                 {% else %}
                     <div class="flex flex-col items-center justify-center max-w-xs w-full">
                         <p class="mb-4 italic">Tanda tangan tidak tersedia</p>
-                        <p class="font-semibold">{{ kunjungan.nama_kepsek_atau_guru }}</p>
+                        <p class="font-semibold">{{ kunjungan.nama_kepsek_atau_guru|default_if_none:"" }}</p>
                     </div>
                 {% endif %}
             </div>

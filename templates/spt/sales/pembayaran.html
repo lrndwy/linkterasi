@@ -99,12 +99,12 @@
               <div class="flex flex-wrap justify-between items-center w-full gap-2">
                   <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
                   <div class="flex flex-wrap gap-2">
-                      <select id="sales_filter" name="sales" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <!-- <select id="sales_filter" name="sales" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option value="semua">Semua Sales</option>
                           {% for sales in daftar_sales %}
-                              <option value="{{ sales.user.username }}" {% if sales.user.username == sales_filter %}selected{% endif %}>{{ sales.user.username }}</option>
+                              <option value="{{ sales.user.username }}" {% if sales.user.username == sales_filter %}selected{% endif %}>{{ sales.nama }}</option>
                           {% endfor %}
-                      </select>
+                      </select> -->
                       <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option value="semua">Semua Bulan</option>
                           <option value="januari" {% if bulan_filter == 'januari' %}selected{% endif %}>Januari</option>
@@ -391,9 +391,8 @@
 
     // Fungsi untuk menerapkan filter
     document.getElementById('apply_filter').addEventListener('click', function() {
-        var salesFilter = document.getElementById('sales_filter').value;
         var bulanFilter = document.getElementById('bulan_filter').value;
-        window.location.href = '?sales=' + salesFilter + '&bulan=' + bulanFilter;
+        window.location.href = '?bulan=' + bulanFilter;
     });
 </script>
 

@@ -24,6 +24,7 @@
                           <option value="{{ teknisi.user.username }}" {% if teknisi.user.username == filter_teknisi %}selected{% endif %}>{{ teknisi.nama }}</option>
                       {% endfor %}
                   </select>
+
                   <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option value="semua">Semua Bulan</option>
                       <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
@@ -38,6 +39,12 @@
                       <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
                       <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
                       <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+                  </select>
+                  <select id="tahun_filter" name="tahun" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="semua">Semua Tahun</option>
+                    {% for tahun in daftar_tahun %}
+                        <option value="{{ tahun }}" {% if tahun == filter_tahun %}selected{% endif %}>{{ tahun }}</option>
+                    {% endfor %}
                   </select>
                   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                       Filter
@@ -76,6 +83,8 @@
           </div>
       </section>
 
+
+
       {% comment %} Map Sekolah {% endcomment %}
       <c-mapSekolah></c-mapSekolah>
 
@@ -90,7 +99,7 @@
             <div class="ml-2">
               <h3 class="text-base sm:text-lg font-semibold text-green-800 dark:text-white">Maintenance</h3>
               <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-300">{{ maintenance|default_if_none:"0" }}</p>
-              <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              <p class="text-sm text-green-600 dark:text-green-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
             </div>
           </div>
           <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
@@ -98,7 +107,7 @@
             <div class="ml-2">
               <h3 class="text-base sm:text-lg font-semibold text-blue-800 dark:text-white">Trouble Shooting</h3>
               <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-300">{{ trouble_shooting|default_if_none:"0" }}</p>
-              <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              <p class="text-sm text-blue-600 dark:text-blue-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
             </div>
           </div>
           <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
@@ -106,7 +115,7 @@
             <div class="ml-2">
               <h3 class="text-base sm:text-lg font-semibold text-indigo-800 dark:text-white">Remote</h3>
               <p class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-300">{{ remote|default_if_none:"0" }}</p>
-              <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Bulan ini{% endif %}</p>
+              <p class="text-sm text-indigo-600 dark:text-indigo-400">{% if filter_bulan != 'semua' %}{{ filter_bulan|title }}{% else %}Semua Bulan{% endif %}</p>
             </div>
           </div>
           <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg flex items-center flex-1 min-w-[250px]">
@@ -195,6 +204,22 @@
             </table>
           </div>
         </div>
+      </section>
+
+      {% comment %} Grafik Pengeluaran {% endcomment %}
+      <section class="gap-4 mb-4">
+          <!-- Radial Chart Pengeluaran -->
+          <div class="max-w-full w-full bg-white rounded-lg dark:bg-gray-800 p-4 md:p-6">
+              <!-- Line Chart -->
+              <div class="py-6" id="pie-chart-pengeluaran"></div>
+          
+              <div class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
+                  <div class="flex flex-col justify-center items-center pt-5 gap-2">
+                      <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white me-1">Total Pengeluaran</h5>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Total Pengeluaran per Kategori</p>
+                  </div>
+              </div>
+          </div>
       </section>
   </c-slot>
 </c-layouts.dashboard>
@@ -321,6 +346,57 @@
     }
   }
 
+  const totalPerPengeluaran = JSON.parse("{{ total_per_pengeluaran|escapejs }}");
+  const daftarPengeluaran = JSON.parse("{{ daftar_pengeluaran|escapejs }}");
+
+  const getChartOptionsPengeluaran = () => {
+      return {
+          series: totalPerPengeluaran,
+          labels: daftarPengeluaran,
+          colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FFA500", "#FF0000"],
+          chart: {
+              height: 420,
+              width: "100%",
+              type: "pie",
+          },
+          stroke: {
+              colors: ["white"],
+              lineCap: "",
+          },
+          plotOptions: {
+              pie: {
+                  labels: {
+                      show: true,
+                  },
+                  size: "100%",
+                  dataLabels: {
+                      offset: -25
+                  }
+              },
+          },
+          dataLabels: {
+              enabled: true,
+              style: {
+                  fontFamily: "Inter, sans-serif",
+              },
+              formatter: function (val, opts) {
+                  return 'Rp ' + opts.w.globals.series[opts.seriesIndex].toLocaleString()
+              }
+          },
+          legend: {
+              position: "bottom",
+              fontFamily: "Inter, sans-serif",
+          },
+          tooltip: {
+              y: {
+                  formatter: function(value) {
+                      return 'Rp ' + value.toLocaleString()
+                  }
+              }
+          }
+      }
+  }
+
   if (document.getElementById("pie-chart1") && typeof ApexCharts !== 'undefined') {
     const chart = new ApexCharts(document.getElementById("pie-chart1"), getChartOptions1());
     chart.render();
@@ -328,6 +404,11 @@
 
   if (document.getElementById("pie-chart2") && typeof ApexCharts !== 'undefined') {
     const chart = new ApexCharts(document.getElementById("pie-chart2"), getChartOptions2());
+    chart.render();
+  }
+
+  if (document.getElementById("pie-chart-pengeluaran") && typeof ApexCharts !== 'undefined') {
+    const chart = new ApexCharts(document.getElementById("pie-chart-pengeluaran"), getChartOptionsPengeluaran());
     chart.render();
   }
 </script>

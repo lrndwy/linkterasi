@@ -43,9 +43,6 @@ class master(models.Model):
     )
     awal_kerjasama = models.DateField(null=True, blank=True)
     akhir_kerjasama = models.DateField(null=True, blank=True)
-    status = models.CharField(
-        max_length=255, choices=STATUS_CHOICES, null=True, blank=True
-    )
     jenis_kerjasama = models.CharField(
         max_length=255, choices=JENIS_KERJASAMA_CHOICES, null=True, blank=True
     )
@@ -77,6 +74,22 @@ class master(models.Model):
     user_sales = models.ForeignKey('sales', on_delete=models.CASCADE, related_name="master", null=True, blank=True)
     file = models.FileField(upload_to='file_master/', null=True, blank=True)
 
+    @property
+    def status(self):
+        from datetime import date
+        tahun_sekarang = date.today().year
+
+        if self.akhir_kerjasama and self.akhir_kerjasama.year == tahun_sekarang:
+            return "retention"
+        elif (
+            self.awal_kerjasama
+            and self.akhir_kerjasama
+            and self.awal_kerjasama.year < tahun_sekarang < self.akhir_kerjasama.year
+        ):
+            return "existing"
+        elif self.awal_kerjasama and self.awal_kerjasama.year == tahun_sekarang:
+            return "new"
+        return None
 
     @property
     def jumlah_seluruh_siswa(self):
@@ -84,6 +97,7 @@ class master(models.Model):
             filter(
                 None,
                 [
+                    self.jumlah_siswa_tk,
                     self.jumlah_siswa_kelas_1,
                     self.jumlah_siswa_kelas_2,
                     self.jumlah_siswa_kelas_3,
@@ -109,24 +123,6 @@ class master(models.Model):
             jenjang: queryset.filter(jenjang=jenjang).count()
             for jenjang, _ in JENJANG_CHOICES
         }
-
-    def save(self, *args, **kwargs):
-        from datetime import date
-
-        tahun_sekarang = date.today().year
-
-        if self.akhir_kerjasama and self.akhir_kerjasama.year == tahun_sekarang:
-            self.status = "retention"
-        elif (
-            self.awal_kerjasama
-            and self.akhir_kerjasama
-            and self.awal_kerjasama.year < tahun_sekarang < self.akhir_kerjasama.year
-        ):
-            self.status = "existing"
-        elif self.awal_kerjasama and self.awal_kerjasama.year == tahun_sekarang:
-            self.status = "new"
-
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.nama_sekolah} - {self.jenjang}"
@@ -188,6 +184,7 @@ class master_ekstrakulikuler(models.Model):
             filter(
                 None,
                 [
+                    self.jumlah_siswa_tk,
                     self.jumlah_siswa_kelas_1,
                     self.jumlah_siswa_kelas_2,
                     self.jumlah_siswa_kelas_3,
@@ -510,15 +507,20 @@ KATEGORI_CHOICES = [
         
 class Pengeluaran(models.Model):
     nama = models.CharField(max_length=255, choices=PENGELUARAN_CHOICES)
+    keterangan = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pengeluaran")
     jumlah = models.IntegerField(null=True, blank=True)
     tanggal = models.DateField(null=True, blank=True)
     bukti_pengeluaran = models.FileField(upload_to='bukti_pengeluaran/', null=True, blank=True)
     kategori = models.CharField(max_length=255, choices=KATEGORI_CHOICES)
-        
-    @property
-    def total_pengeluaran(self, kategori):
-        return Pengeluaran.objects.filter(kategori=kategori).aggregate(total=Sum('jumlah'))['total'] or 0
-      
+    
+    @classmethod
+    def get_total_by_type(cls, queryset):
+        return {
+            nama: queryset.filter(nama=nama).aggregate(
+                total=Sum('jumlah'))['total'] or 0
+            for nama, _ in PENGELUARAN_CHOICES
+        }
+
     def __str__(self):
-        return self.nama
+        return f"{self.nama} - {self.jumlah}"

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from ..authentication import *
-from ..models.mainModel import master as master_model, sales as sales_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model, teknisi as teknisi_model, produk as produk_model, Pengeluaran as pengeluaran_model
+from ..models.mainModel import master as master_model, sales as sales_model, history_adendum as adendum_model, history_adendum_ekskul as adendum_ekskul_model, master_ekstrakulikuler as master_ekstrakulikuler_model, teknisi as teknisi_model, produk as produk_model, Pengeluaran as pengeluaran_model, PENGELUARAN_CHOICES as PENGELUARAN_CHOICES
 from ..models.baseModel import JENJANG_CHOICES
 from ..models.pembayaranModel import pembayaran as pembayaran_model, JENIS_PRODUK_CHOICES, STATUS_CHOICES
 from ..models.kunjunganModel import kunjungan_produk, kunjungan_teknisi
@@ -69,7 +69,15 @@ def index(request):
         daftar_sekolah = master_model.objects.all()
         
         filter_sales = request.GET.get('sales', 'semua')
-        filter_bulan = request.GET.get('bulan', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')  # Default semua bulan
+        filter_tahun = request.GET.get('tahun', 'semua')  # Default semua tahun
+        
+        # Mendapatkan daftar tahun yang tersedia dari data kegiatan
+        daftar_tahun = kegiatan_model.objects.dates('tanggal', 'year').values_list('tanggal__year', flat=True)
+        daftar_tahun = sorted(set(daftar_tahun), reverse=True)  # Mengurutkan tahun dari terbaru
+        
+        if not daftar_tahun:  # Jika tidak ada data, tambahkan tahun sekarang
+            daftar_tahun = [datetime.now().year]
         
         if filter_sales != 'semua':
             try:
@@ -88,20 +96,16 @@ def index(request):
         # Mengambil daftar jenjang
         daftar_jenjang = [jenjang for jenjang, _ in JENJANG_CHOICES]
 
-        # Menghitung jumlah kegiatan bulan ini atau bulan yang dipilih
-        if filter_bulan == 'semua':
-            bulan_ini = datetime.now().replace(day=1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-        else:
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-
-        kegiatan_filter = kegiatan_model.objects.filter(
-            tanggal__gte=bulan_ini,
-            tanggal__lt=bulan_depan
-        )
+        # Filter kegiatan berdasarkan tahun dan bulan
+        kegiatan_filter = kegiatan_model.objects.all()
+        
+        if filter_tahun != 'semua':
+            kegiatan_filter = kegiatan_filter.filter(tanggal__year=int(filter_tahun))
+            
+        if filter_bulan != 'semua':
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            kegiatan_filter = kegiatan_filter.filter(tanggal__month=bulan_index)
 
         if filter_sales != 'semua':
             kegiatan_filter = kegiatan_filter.filter(sales=sales_instance)
@@ -112,20 +116,28 @@ def index(request):
         pertemuan_client = kegiatan_filter.filter(judul='Pertemuan Client').count()
 
         # Mengambil riwayat kegiatan
-        riwayat_kegiatan = kegiatan_filter.select_related('sales').order_by('-tanggal')[:10]
+        riwayat_kegiatan = kegiatan_filter.select_related('sales').order_by('-tanggal')
 
-        # Ambil data provinsi dan sekolah menggunakan PROVINSI_CHOICES dan PROVINSI_KOORDINAT
-        provinsi_sekolah = []
-        for prov_code, prov_name in PROVINSI_CHOICES:
-            sekolah_list = daftar_sekolah.filter(provinsi=prov_code)
-            if sekolah_list.exists():
-                koordinat = PROVINSI_KOORDINAT.get(prov_code)
-                if koordinat:
-                    provinsi_sekolah.append({
-                        'nama': prov_name,
-                        'koordinat': koordinat,
-                        'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
-                    })
+        # Filter pengeluaran berdasarkan tahun dan bulan
+        pengeluaran_filter = pengeluaran_model.objects.filter(kategori='Sales')
+        
+        if filter_tahun != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__year=int(filter_tahun))
+            
+        if filter_bulan != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__month=bulan_index)
+
+        if filter_sales != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(user=sales_instance.user)
+
+        # Hitung total per jenis pengeluaran
+        total_per_pengeluaran = []
+        daftar_pengeluaran = []
+        for nama, label in PENGELUARAN_CHOICES:
+            total = pengeluaran_filter.filter(nama=nama).aggregate(
+                total=Sum('jumlah'))['total'] or 0
+            total_per_pengeluaran.append(total)
+            daftar_pengeluaran.append(label)
 
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
@@ -137,10 +149,14 @@ def index(request):
             'pertemuan_client': pertemuan_client,
             'daftar_sekolah': daftar_sekolah,
             'riwayat_kegiatan': riwayat_kegiatan,
-            'provinsi_sekolah': json.dumps(provinsi_sekolah),
+            'provinsi_sekolah': json.dumps(PROVINSI_LIST),
             'daftar_sales': sales_model.objects.all(),
             'filter_sales': filter_sales,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
+            'daftar_tahun': daftar_tahun,  # Menambahkan daftar tahun ke context
+            'total_per_pengeluaran': json.dumps(total_per_pengeluaran),
+            'daftar_pengeluaran': json.dumps(daftar_pengeluaran),
         }
 
         return render(request, 'spt/sales/index.html', context)

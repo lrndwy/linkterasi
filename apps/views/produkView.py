@@ -27,16 +27,57 @@ def index(request):
         user = request.user
         produk_instance = user.produk.first()
         
-        filter_bulan = request.GET.get('bulan', 'semua')
+        # Dapatkan bulan dan tahun saat ini
+        current_date = datetime.now()
+        current_month = current_date.strftime('%B').lower()  # nama bulan dalam bahasa inggris
+        current_year = current_date.year
+        
+        # Dapatkan filter dari request atau gunakan nilai default
+        filter_bulan = request.GET.get('bulan', current_month)
+        filter_tahun = str(request.GET.get('tahun', current_year))
         filter_tipe_sekolah = request.GET.get('tipe_sekolah', 'semua')
         
-        if filter_bulan == 'semua':
-            bulan_ini = datetime.now().replace(day=1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+        # Konversi nama bulan bahasa Inggris ke Indonesia
+        bulan_dict = {
+            'january': 'januari', 'february': 'februari', 'march': 'maret',
+            'april': 'april', 'may': 'mei', 'june': 'juni',
+            'july': 'juli', 'august': 'agustus', 'september': 'september',
+            'october': 'oktober', 'november': 'november', 'december': 'desember'
+        }
+        
+        if filter_bulan in bulan_dict:
+            filter_bulan = bulan_dict[filter_bulan]
+            
+        # Dapatkan semua tahun yang ada di data
+        tahun_kunjungan = kunjungan_produk_model.objects.filter(produk=produk_instance).dates('tanggal', 'year')
+        tahun_kegiatan = kegiatan_produk_model.objects.filter(produk=produk_instance).dates('tanggal', 'year')
+        
+        # Gabungkan semua tahun dan urutkan
+        semua_tahun = set()
+        for tahun in tahun_kunjungan:
+            semua_tahun.add(tahun.year)
+        for tahun in tahun_kegiatan:
+            semua_tahun.add(tahun.year)
+            
+        # Tambahkan tahun saat ini jika belum ada
+        semua_tahun.add(current_year)
+        
+        # Konversi ke list dan urutkan
+        tahun_list = sorted(list(semua_tahun), reverse=True)
+        
+        # Selalu gunakan filter bulan dan tahun yang dipilih
+        if filter_tahun == 'semua':
+            tahun = current_year
         else:
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
+            tahun = int(filter_tahun)
+            
+        if filter_bulan == 'semua':
+            bulan_ini = datetime(tahun, 1, 1)  # Awal tahun yang dipilih
+            bulan_depan = datetime(tahun + 1, 1, 1)  # Awal tahun berikutnya
+        else:
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            bulan_ini = datetime(tahun, bulan_index, 1)
             bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
 
         # Sekolah TIK
@@ -46,14 +87,10 @@ def index(request):
         kunjungan_filter = kunjungan_produk_model.objects.filter(
             produk=produk_instance,
             sekolah__in=daftar_sekolah,
-            sekolah_ekskul__isnull=True
+            sekolah_ekskul__isnull=True,
+            tanggal__gte=bulan_ini,
+            tanggal__lt=bulan_depan
         )
-        
-        if filter_bulan != 'semua':
-            kunjungan_filter = kunjungan_filter.filter(
-                tanggal__gte=bulan_ini,
-                tanggal__lt=bulan_depan
-            )
         
         sekolah_dikunjungi = kunjungan_filter.values('sekolah').distinct()
         total_sekolah_sudah_dikunjungi_dikontak = sekolah_dikunjungi.count()
@@ -68,7 +105,9 @@ def index(request):
             kunjungan = kunjungan_produk_model.objects.filter(
                 sekolah=sekolah, 
                 produk=produk_instance,
-                sekolah_ekskul__isnull=True
+                sekolah_ekskul__isnull=True,
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan
             )
             
             if kunjungan.filter(judul='kunjungan').exists():
@@ -95,14 +134,10 @@ def index(request):
         
         kunjungan_ekskul_filter = kunjungan_produk_model.objects.filter(
             produk=produk_instance,
-            sekolah_ekskul__in=daftar_sekolah_ekskul
+            sekolah_ekskul__in=daftar_sekolah_ekskul,
+            tanggal__gte=bulan_ini,
+            tanggal__lt=bulan_depan
         )
-        
-        if filter_bulan != 'semua':
-            kunjungan_ekskul_filter = kunjungan_ekskul_filter.filter(
-                tanggal__gte=bulan_ini,
-                tanggal__lt=bulan_depan
-            )
         
         sekolah_ekskul_dikunjungi = kunjungan_ekskul_filter.values('sekolah_ekskul').distinct()
         total_sekolah_ekskul_dikunjungi = sekolah_ekskul_dikunjungi.count()
@@ -113,7 +148,9 @@ def index(request):
         for sekolah in daftar_sekolah_ekskul:
             kunjungan = kunjungan_produk_model.objects.filter(
                 sekolah_ekskul=sekolah, 
-                produk=produk_instance
+                produk=produk_instance,
+                tanggal__gte=bulan_ini,
+                tanggal__lt=bulan_depan
             )
             
             if kunjungan.filter(judul='kunjungan').exists():
@@ -135,13 +172,12 @@ def index(request):
         # Hitung total siswa ekskul
         total_siswa_ekskul = sum(sekolah.jumlah_seluruh_siswa for sekolah in daftar_sekolah_ekskul)
 
-        # Filter kegiatan
-        kegiatan_filter = kegiatan_produk_model.objects.filter(produk=produk_instance)
-        if filter_bulan != 'semua':
-            kegiatan_filter = kegiatan_filter.filter(
-                tanggal__gte=bulan_ini,
-                tanggal__lt=bulan_depan
-            )
+        # Filter kegiatan berdasarkan bulan dan tahun yang dipilih
+        kegiatan_filter = kegiatan_produk_model.objects.filter(
+            produk=produk_instance,
+            tanggal__gte=bulan_ini,
+            tanggal__lt=bulan_depan
+        )
             
         total_per_kegiatan = {
             'Mengajar': kegiatan_filter.filter(judul='Mengajar').count(),
@@ -163,7 +199,9 @@ def index(request):
             'total_sekolah_ekskul_dikunjungi': total_sekolah_ekskul_dikunjungi,
             'total_sekolah_ekskul_belum': total_sekolah_ekskul_belum,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
             'filter_tipe_sekolah': filter_tipe_sekolah,
+            'tahun_list': tahun_list,
             'daftar_permintaan': permintaanspt_model.objects.filter(kategori='produk').order_by('-id')[:5],
             'tabel_sekolah': tabel_sekolah,
             'tabel_sekolah_ekskul': tabel_sekolah_ekskul,
@@ -454,7 +492,7 @@ def jadwal(request):
             judul = request.POST.get('judul')
             deskripsi = request.POST.get('deskripsi')
             tanggal = request.POST.get('tanggal')
-            sekolah = master_model.objects.get(id=request.POST.get('sekolah'))
+            sekolah = request.POST.get('sekolah')
             try:
                 jadwal_produk_obj = kegiatan_produk_model(
                     judul=judul,
@@ -486,13 +524,19 @@ def pengeluaran(request):
         hapus_id = request.GET.get('hapus')
         
         if edit_id:
-            pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
-            context = {
-                'pengeluaran_obj': pengeluaran_obj,
-                'edit': True,
-                'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
-            }
-            return render(request, 'produk/pengeluaran.html', context)
+            try:
+                pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
+                # Konversi choices menjadi list of tuples untuk dropdown
+                context = {
+                    'pengeluaran_obj': pengeluaran_obj,
+                    'edit': True,
+                    'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
+                }
+                return render(request, 'produk/pengeluaran.html', context)
+            except pengeluaran_model.DoesNotExist:
+                messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                return redirect('pengeluaran_produk')
+
         elif hapus_id:
             pengeluaran_obj = pengeluaran_model.objects.get(id=hapus_id, user=user)
             pengeluaran_obj.delete()
@@ -504,6 +548,7 @@ def pengeluaran(request):
             
             if aksi == 'tambah':
                 nama = request.POST.get('nama')  # Menggunakan field 'nama' sesuai model
+                keterangan = request.POST.get('keterangan')
                 jumlah = request.POST.get('jumlah')  # Menggunakan field 'jumlah' sesuai model
                 tanggal = request.POST.get('tanggal')
                 bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')  # Menambahkan file bukti
@@ -511,6 +556,7 @@ def pengeluaran(request):
                 try:
                     pengeluaran_obj = pengeluaran_model(
                         nama=nama,
+                        keterangan=keterangan,
                         jumlah=jumlah,
                         tanggal=tanggal,
                         bukti_pengeluaran=bukti_pengeluaran,
@@ -524,24 +570,34 @@ def pengeluaran(request):
                     messages.error(request, f'Gagal menambahkan pengeluaran: {str(e)}')
                     
             elif aksi == 'edit':
-                pengeluaran_id = request.POST.get('pengeluaran_id')
-                nama = request.POST.get('nama')
-                jumlah = request.POST.get('jumlah')
-                tanggal = request.POST.get('tanggal')
-                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
-                
                 try:
+                    pengeluaran_id = request.POST.get('pengeluaran_id')
+                    nama = request.POST.get('nama')
+                    keterangan = request.POST.get('keterangan')
+                    jumlah = request.POST.get('jumlah')
+                    tanggal = request.POST.get('tanggal')
+                    
                     pengeluaran_obj = pengeluaran_model.objects.get(id=pengeluaran_id, user=user)
+                    
+                    # Update fields
                     pengeluaran_obj.nama = nama
+                    pengeluaran_obj.keterangan = keterangan
                     pengeluaran_obj.jumlah = jumlah
                     pengeluaran_obj.tanggal = tanggal
+                    
+                    # Handle bukti pengeluaran file
+                    bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
                     if bukti_pengeluaran:
                         pengeluaran_obj.bukti_pengeluaran = bukti_pengeluaran
+                        
                     pengeluaran_obj.save()
                     messages.success(request, 'Pengeluaran berhasil diupdate.')
                 except pengeluaran_model.DoesNotExist:
-                    messages.error(request, 'Pengeluaran tidak ditemukan.')       
-            return redirect('pengeluaran_produk')
+                    messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                except Exception as e:
+                    messages.error(request, f'Gagal mengupdate pengeluaran: {str(e)}')
+                
+                return redirect('pengeluaran_produk')
             
         # Filter pengeluaran berdasarkan user dan kategori Produk
         daftar_pengeluaran = pengeluaran_model.objects.filter(

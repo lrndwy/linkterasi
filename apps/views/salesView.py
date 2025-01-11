@@ -7,6 +7,7 @@ from apps.models.sptModel import permintaanSPT as permintaanSPT_model
 from apps.models.mainModel import sales as sales_model, master as master_model, Pengeluaran as pengeluaran_model, PENGELUARAN_CHOICES
 from core.settings import API_KEY
 from django.db.models import Sum
+from datetime import datetime, timedelta
 
 LIST_PENGELUARAN_CHOICES = [item[0] for item in PENGELUARAN_CHOICES]
 
@@ -17,38 +18,83 @@ def index(request):
         user = request.user
         sales_instance = user.sales.first()
         
-        # Mendapatkan parameter filter bulan dari request
-        filter_bulan = request.GET.get('bulan', 'semua').lower()
+        # Dapatkan bulan dan tahun saat ini
+        current_date = datetime.now()
+        current_month = current_date.strftime('%B').lower()  # nama bulan dalam bahasa inggris
+        current_year = current_date.year
         
-        # Base queryset untuk kegiatan
-        kegiatan_qs = kegiatan_model.objects.filter(sales=sales_instance)
+        # Dapatkan filter dari request atau gunakan nilai default
+        filter_bulan = request.GET.get('bulan', 'semua')
+        filter_tahun = request.GET.get('tahun', str(current_year))
         
-        # Filter berdasarkan bulan jika dipilih
+        # Konversi nama bulan bahasa Inggris ke Indonesia
+        bulan_dict = {
+            'january': 'januari', 'february': 'februari', 'march': 'maret',
+            'april': 'april', 'may': 'mei', 'june': 'juni',
+            'july': 'juli', 'august': 'agustus', 'september': 'september',
+            'october': 'oktober', 'november': 'november', 'december': 'desember'
+        }
+        
+        if filter_bulan in bulan_dict:
+            filter_bulan = bulan_dict[filter_bulan]
+            
+        # Dapatkan semua tahun yang ada di data
+        tahun_kegiatan = kegiatan_model.objects.filter(sales=sales_instance).dates('tanggal', 'year')
+        
+        # Gabungkan semua tahun dan urutkan
+        semua_tahun = set()
+        for tahun in tahun_kegiatan:
+            semua_tahun.add(tahun.year)
+            
+        # Tambahkan tahun saat ini jika belum ada
+        semua_tahun.add(current_year)
+        
+        # Konversi ke list dan urutkan
+        tahun_list = sorted(list(semua_tahun), reverse=True)
+        
+        # Filter berdasarkan bulan dan tahun
+        kegiatan_filter = kegiatan_model.objects.filter(sales=sales_instance)
+        
+        if filter_tahun != 'semua':
+            kegiatan_filter = kegiatan_filter.filter(tanggal__year=int(filter_tahun))
+            
         if filter_bulan != 'semua':
-            bulan_map = {
-                'januari': 1, 'februari': 2, 'maret': 3, 'april': 4,
-                'mei': 5, 'juni': 6, 'juli': 7, 'agustus': 8,
-                'september': 9, 'oktober': 10, 'november': 11, 'desember': 12
-            }
-            if filter_bulan in bulan_map:
-                kegiatan_qs = kegiatan_qs.filter(tanggal__month=bulan_map[filter_bulan])
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            kegiatan_filter = kegiatan_filter.filter(tanggal__month=bulan_index)
+
+        # Hitung total kunjungan berdasarkan jenis
+        kunjungan_sekolah_baru = kegiatan_filter.filter(judul='Kunjungan Sekolah Baru').count()
+        kunjungan_sekolah_existing = kegiatan_filter.filter(judul='Kunjungan Sekolah Existing').count()
+        kunjungan_sekolah_event = kegiatan_filter.filter(judul='Kunjungan Sekolah Event').count()
+        pertemuan_client = kegiatan_filter.filter(judul='Pertemuan Client').count()
+
+        # Daftar sekolah
+        daftar_sekolah = master_model.objects.filter(user_sales=sales_instance)
         
-        # Hitung jumlah masing-masing jenis kegiatan
+        # Daftar permintaan SPT
+        daftar_permintaan = permintaanSPT_model.objects.filter(
+            kategori='sales',
+            user=user
+        ).order_by('-id')
+        
         context = {
-            'kunjungan_sekolah_baru': kegiatan_qs.filter(judul='Kunjungan Sekolah Baru').count(),
-            'kunjungan_sekolah_existing': kegiatan_qs.filter(judul='Kunjungan Sekolah Existing').count(),
-            'kunjungan_sekolah_event': kegiatan_qs.filter(judul='Kunjungan Sekolah Event').count(),
-            'pertemuan_client': kegiatan_qs.filter(judul='Pertemuan Client').count(),
+            'kunjungan_sekolah_baru': kunjungan_sekolah_baru,
+            'kunjungan_sekolah_existing': kunjungan_sekolah_existing, 
+            'kunjungan_sekolah_event': kunjungan_sekolah_event,
+            'pertemuan_client': pertemuan_client,
             'filter_bulan': filter_bulan,
-            'daftar_kegiatan': kegiatan_qs.order_by('-id'),
-            'daftar_permintaan': permintaanSPT_model.objects.filter(kategori='sales').order_by('-id'),
-            'daftar_sekolah': master_model.objects.filter(user_sales=sales_instance).order_by('-id')
+            'filter_tahun': filter_tahun,
+            'tahun_list': tahun_list,
+            'daftar_permintaan': daftar_permintaan,
+            'daftar_sekolah': daftar_sekolah,
+            'daftar_kegiatan': kegiatan_filter.order_by('-tanggal')
         }
         
         return render(request, 'sales/index.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
-        return redirect('sales')
+        return render(request, 'sales/index.html', {})
 
 @sales_required
 def jadwal(request):
@@ -61,7 +107,26 @@ def jadwal(request):
                 deskripsi = request.POST.get('deskripsi')
                 tanggal = request.POST.get('tanggal')
                 sales = sales_instance
-                sekolah = request.POST.get('sekolah')
+                sekolah = None
+                
+                # Cek apakah ini kunjungan sekolah baru
+                if judul == 'Kunjungan Sekolah Baru':
+                    sekolah = request.POST.get('sekolah_input')  # Ambil dari input teks
+                else:
+                    # Untuk sekolah existing, ambil dari database
+                    sekolah_id = request.POST.get('sekolah_select')
+                    if not sekolah_id:  # Tambahkan validasi
+                        raise ValueError("Sekolah harus dipilih")
+                        
+                    try:
+                        sekolah_obj = master_model.objects.get(id=sekolah_id)
+                        sekolah = sekolah_obj.nama_sekolah
+                    except master_model.DoesNotExist:
+                        raise Exception("Sekolah tidak ditemukan")
+                
+                if not sekolah:
+                    raise ValueError("Nama sekolah tidak boleh kosong")
+                    
                 kegiatan_obj = kegiatan_model(
                     judul=judul,
                     deskripsi=deskripsi,
@@ -72,9 +137,12 @@ def jadwal(request):
                 kegiatan_obj.save()
                 messages.success(request, 'Kegiatan berhasil ditambahkan.')
                 return redirect('jadwal_sales')
+            except ValueError as e:
+                messages.error(request, str(e))
             except Exception as e:
                 messages.error(request, f'Gagal menambahkan kegiatan: {str(e)}')
             return redirect('jadwal_sales')
+            
         context = {
             'daftar_sekolah': master_model.objects.filter(user_sales=sales_instance).order_by('-id'),
             'kategori_kegiatan': 'sales'
@@ -145,13 +213,18 @@ def pengeluaran(request):
         hapus_id = request.GET.get('hapus')
         
         if edit_id:
-            pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
-            context = {
-                'pengeluaran_obj': pengeluaran_obj,
-                'edit': True,
-                'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
-            }
-            return render(request, 'sales/pengeluaran.html', context)
+            try:
+                pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
+                context = {
+                    'pengeluaran_obj': pengeluaran_obj,
+                    'edit': True,
+                    'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
+                }
+                return render(request, 'sales/pengeluaran.html', context)
+            except pengeluaran_model.DoesNotExist:
+                messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                return redirect('pengeluaran_sales')
+        
         elif hapus_id:
             pengeluaran_obj = pengeluaran_model.objects.get(id=hapus_id, user=user)
             pengeluaran_obj.delete()
@@ -162,20 +235,21 @@ def pengeluaran(request):
             aksi = request.POST.get('aksi')
             
             if aksi == 'tambah':
-                nama = request.POST.get('nama')  # Menggunakan field 'nama' sesuai model
-                jumlah = request.POST.get('jumlah')  # Menggunakan field 'jumlah' sesuai model
+                nama = request.POST.get('nama')
+                keterangan = request.POST.get('keterangan')
+                jumlah = request.POST.get('jumlah')
                 tanggal = request.POST.get('tanggal')
-                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')  # Menambahkan file bukti
+                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
                 
                 try:
                     pengeluaran_obj = pengeluaran_model(
                         nama=nama,
+                        keterangan=keterangan,
                         jumlah=jumlah,
                         tanggal=tanggal,
                         bukti_pengeluaran=bukti_pengeluaran,
                         user=user,
                         kategori='Sales'
-                        # kategori akan otomatis terisi dari method save() di model
                     )
                     pengeluaran_obj.save()
                     messages.success(request, 'Pengeluaran berhasil ditambahkan.')
@@ -183,23 +257,31 @@ def pengeluaran(request):
                     messages.error(request, f'Gagal menambahkan pengeluaran: {str(e)}')
                     
             elif aksi == 'edit':
-                pengeluaran_id = request.POST.get('pengeluaran_id')
-                nama = request.POST.get('nama')
-                jumlah = request.POST.get('jumlah')
-                tanggal = request.POST.get('tanggal')
-                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
-                
                 try:
+                    pengeluaran_id = request.POST.get('pengeluaran_id')
+                    nama = request.POST.get('nama')
+                    keterangan = request.POST.get('keterangan')
+                    jumlah = request.POST.get('jumlah')
+                    tanggal = request.POST.get('tanggal')
+                    
                     pengeluaran_obj = pengeluaran_model.objects.get(id=pengeluaran_id, user=user)
+                    
                     pengeluaran_obj.nama = nama
+                    pengeluaran_obj.keterangan = keterangan
                     pengeluaran_obj.jumlah = jumlah
                     pengeluaran_obj.tanggal = tanggal
+                    
+                    bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
                     if bukti_pengeluaran:
                         pengeluaran_obj.bukti_pengeluaran = bukti_pengeluaran
+                        
                     pengeluaran_obj.save()
                     messages.success(request, 'Pengeluaran berhasil diupdate.')
                 except pengeluaran_model.DoesNotExist:
-                    messages.error(request, 'Pengeluaran tidak ditemukan.')       
+                    messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                except Exception as e:
+                    messages.error(request, f'Gagal mengupdate pengeluaran: {str(e)}')
+                
             return redirect('pengeluaran_sales')
             
         # Filter pengeluaran berdasarkan user dan kategori Produk

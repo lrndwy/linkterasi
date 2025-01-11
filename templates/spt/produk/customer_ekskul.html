@@ -255,7 +255,7 @@
                     <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                              <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap sticky left-0 bg-gray-50 dark:bg-gray-700 z-20">Aksi</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">File</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
@@ -288,6 +288,7 @@
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 10 SMK</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 11 SMK</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa Kelas 12 SMK</th>
+                                <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Siswa</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Jumlah Komputer</th>
                                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Tipe Sekolah</th>
                             </tr>
@@ -295,7 +296,7 @@
                         <tbody id="masterTableBody">
                             {% for data in master_data %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-4 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800 z-20">
                                   <a href="{% url 'customer_ekskul_sptproduk' %}?edit={{ data.id }}" class="text-blue-600 hover:underline dark:text-blue-500">Edit</a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou|default_if_none:"-" }}</td>
@@ -330,6 +331,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_10_smk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_11_smk|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_siswa_kelas_12_smk|default_if_none:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_seluruh_siswa|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.jumlah_komputer|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ data.tipe_sekolah|default_if_none:"-" }}</td>
                                 

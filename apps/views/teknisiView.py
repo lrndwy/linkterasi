@@ -20,32 +20,58 @@ def index(request):
         user = request.user
         teknisi_instance = user.teknisi.first()
         
-        filter_bulan = request.GET.get('bulan', 'semua')
+        # Dapatkan bulan dan tahun saat ini
+        current_date = datetime.now()
+        current_month = current_date.strftime('%B').lower()  # nama bulan dalam bahasa inggris
+        current_year = current_date.year
         
-        if filter_bulan == 'semua':
-            bulan_ini = datetime.now().replace(day=1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-        else:
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+        # Dapatkan filter dari request atau gunakan nilai default
+        filter_bulan = request.GET.get('bulan', 'semua')
+        filter_tahun = request.GET.get('tahun', 'semua')
+        
+        # Konversi nama bulan bahasa Inggris ke Indonesia
+        bulan_dict = {
+            'january': 'januari', 'february': 'februari', 'march': 'maret',
+            'april': 'april', 'may': 'mei', 'june': 'juni',
+            'july': 'juli', 'august': 'agustus', 'september': 'september',
+            'october': 'oktober', 'november': 'november', 'december': 'desember'
+        }
+        
+        if filter_bulan in bulan_dict:
+            filter_bulan = bulan_dict[filter_bulan]
+            
+        # Dapatkan semua tahun yang ada di data
+        tahun_kunjungan = kunjungan_teknisi.objects.filter(teknisi=teknisi_instance).dates('tanggal', 'year')
+        
+        # Gabungkan semua tahun dan urutkan
+        semua_tahun = set()
+        for tahun in tahun_kunjungan:
+            semua_tahun.add(tahun.year)
+            
+        # Tambahkan tahun saat ini jika belum ada
+        semua_tahun.add(current_year)
+        
+        # Konversi ke list dan urutkan
+        tahun_list = sorted(list(semua_tahun), reverse=True)
 
         daftar_sekolah = master_model.objects.filter(user_teknisi=teknisi_instance)
-        
         total_sekolah = daftar_sekolah.count()
         total_komputer = sum(sekolah.jumlah_komputer or 0 for sekolah in daftar_sekolah)
         
+        # Filter kunjungan berdasarkan teknisi dan sekolah
         kunjungan_filter = kunjungan_teknisi.objects.filter(
             teknisi=teknisi_instance,
             sekolah__in=daftar_sekolah
         )
         
+        # Terapkan filter tahun dan bulan jika ada
+        if filter_tahun != 'semua':
+            kunjungan_filter = kunjungan_filter.filter(tanggal__year=int(filter_tahun))
+            
         if filter_bulan != 'semua':
-            kunjungan_filter = kunjungan_filter.filter(
-                tanggal__gte=bulan_ini,
-                tanggal__lt=bulan_depan
-            )
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                          'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            kunjungan_filter = kunjungan_filter.filter(tanggal__month=bulan_index)
         
         maintenance = kunjungan_filter.filter(judul='maintenance').count()
         trouble_shooting = kunjungan_filter.filter(judul='trouble shooting').count()
@@ -92,6 +118,8 @@ def index(request):
             'total_sekolah': total_sekolah,
             'total_komputer': total_komputer,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
+            'tahun_list': tahun_list,
             'daftar_permintaan_spt': daftar_permintaan_spt,
             'tabel_sekolah': tabel_sekolah
         }
@@ -294,13 +322,19 @@ def pengeluaran(request):
         hapus_id = request.GET.get('hapus')
         
         if edit_id:
-            pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
-            context = {
-                'pengeluaran_obj': pengeluaran_obj,
-                'edit': True,
-                'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
-            }
-            return render(request, 'teknisi/pengeluaran.html', context)
+            try:
+                pengeluaran_obj = pengeluaran_model.objects.get(id=edit_id, user=user)
+                # Konversi choices menjadi list of tuples untuk dropdown
+                context = {
+                    'pengeluaran_obj': pengeluaran_obj,
+                    'edit': True,
+                    'pengeluaran_choices': LIST_PENGELUARAN_CHOICES
+                }
+                return render(request, 'teknisi/pengeluaran.html', context)
+            except pengeluaran_model.DoesNotExist:
+                messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                return redirect('pengeluaran_teknisi')
+
         elif hapus_id:
             pengeluaran_obj = pengeluaran_model.objects.get(id=hapus_id, user=user)
             pengeluaran_obj.delete()
@@ -312,6 +346,7 @@ def pengeluaran(request):
             
             if aksi == 'tambah':
                 nama = request.POST.get('nama')  # Menggunakan field 'nama' sesuai model
+                keterangan = request.POST.get('keterangan')
                 jumlah = request.POST.get('jumlah')  # Menggunakan field 'jumlah' sesuai model
                 tanggal = request.POST.get('tanggal')
                 bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')  # Menambahkan file bukti
@@ -319,6 +354,7 @@ def pengeluaran(request):
                 try:
                     pengeluaran_obj = pengeluaran_model(
                         nama=nama,
+                        keterangan=keterangan,
                         jumlah=jumlah,
                         tanggal=tanggal,
                         bukti_pengeluaran=bukti_pengeluaran,
@@ -332,31 +368,40 @@ def pengeluaran(request):
                     messages.error(request, f'Gagal menambahkan pengeluaran: {str(e)}')
                     
             elif aksi == 'edit':
-                pengeluaran_id = request.POST.get('pengeluaran_id')
-                nama = request.POST.get('nama')
-                jumlah = request.POST.get('jumlah')
-                tanggal = request.POST.get('tanggal')
-                bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
-                
                 try:
+                    pengeluaran_id = request.POST.get('pengeluaran_id')
+                    nama = request.POST.get('nama')
+                    keterangan = request.POST.get('keterangan')
+                    jumlah = request.POST.get('jumlah')
+                    tanggal = request.POST.get('tanggal')
+                    
                     pengeluaran_obj = pengeluaran_model.objects.get(id=pengeluaran_id, user=user)
+                    
+                    # Update fields
                     pengeluaran_obj.nama = nama
+                    pengeluaran_obj.keterangan = keterangan
                     pengeluaran_obj.jumlah = jumlah
                     pengeluaran_obj.tanggal = tanggal
+                    
+                    # Handle bukti pengeluaran file
+                    bukti_pengeluaran = request.FILES.get('bukti_pengeluaran')
                     if bukti_pengeluaran:
                         pengeluaran_obj.bukti_pengeluaran = bukti_pengeluaran
+                        
                     pengeluaran_obj.save()
                     messages.success(request, 'Pengeluaran berhasil diupdate.')
                 except pengeluaran_model.DoesNotExist:
-                    messages.error(request, 'Pengeluaran tidak ditemukan.')       
-            return redirect('pengeluaran_teknisi')
+                    messages.error(request, 'Data pengeluaran tidak ditemukan.')
+                except Exception as e:
+                    messages.error(request, f'Gagal mengupdate pengeluaran: {str(e)}')
+                
+                return redirect('pengeluaran_teknisi')
             
-        # Filter pengeluaran berdasarkan user dan kategori Produk
+        # Filter pengeluaran berdasarkan user dan kategori Teknisi
         daftar_pengeluaran = pengeluaran_model.objects.filter(
             user=user,
             kategori='Teknisi'
         ).order_by('-tanggal')
-
         total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
         context = {
             'daftar_pengeluaran': daftar_pengeluaran,

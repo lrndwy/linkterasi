@@ -86,16 +86,18 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                             <tr>
                                 <th scope="col" class="px-6 py-3">Nama Pengeluaran</th>
+                                <th scope="col" class="px-6 py-3">Keterangan</th>
                                 <th scope="col" class="px-6 py-3">Jumlah</th>
                                 <th scope="col" class="px-6 py-3">Tanggal</th>
                                 <th scope="col" class="px-6 py-3">Bukti</th>
-                                
+                                <th scope="col" class="px-6 py-3">Sales</th>
                             </tr>
                         </thead>
                         <tbody id="pengeluaranTableBody">
                             {% for pengeluaran in daftar_pengeluaran %}
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-6 py-4">{{ pengeluaran.get_nama_display }}</td>
+                                <td class="px-6 py-4">{{ pengeluaran.keterangan }}</td>
                                 <td class="px-6 py-4">Rp {{ pengeluaran.jumlah|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4">{{ pengeluaran.tanggal|date:"d/m/Y"|default_if_none:"-" }}</td>
                                 <td class="px-6 py-4">
@@ -105,7 +107,7 @@
                                         -
                                     {% endif %}
                                 </td>
-                                
+                                <td class="px-6 py-4">{{ pengeluaran.user.sales.first.nama }}</td>
                             </tr>
                             {% empty %}
                             <tr>
@@ -187,7 +189,7 @@
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
             if (row.style.display !== 'none') {
-                const jumlahCell = row.getElementsByTagName('td')[1];
+                const jumlahCell = row.getElementsByTagName('td')[2];
                 if (jumlahCell) {
                     const jumlahText = jumlahCell.textContent.replace('Rp ', '').replace('-', '0').trim();
                     const jumlah = parseInt(jumlahText.replace(/\./g, '')) || 0;

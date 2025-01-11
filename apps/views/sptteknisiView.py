@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from ..authentication import *
 from apps.models.mainModel import master as master_model, master_ekstrakulikuler as master_ekstrakulikuler_model
-from apps.models.mainModel import teknisi as teknisi_model, produk as produk_model, sales as sales_model, Pengeluaran as pengeluaran_model
+from apps.models.mainModel import teknisi as teknisi_model, produk as produk_model, sales as sales_model, Pengeluaran as pengeluaran_model, PENGELUARAN_CHOICES as PENGELUARAN_CHOICES
 from apps.models.kunjunganModel import kunjungan_teknisi
 from django.utils import timezone
 from django.contrib import messages
@@ -22,7 +22,7 @@ from core.settings import API_KEY
 from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
 import logging
 from django.db.models import Sum
-
+from django.db.models.functions import ExtractYear
 logger = logging.getLogger(__name__)
 
 DAFTAR_JENJANG = [item[0] for item in JENJANG_CHOICES]
@@ -56,6 +56,14 @@ def index(request):
         
         filter_teknisi = request.GET.get('teknisi', 'semua')
         filter_bulan = request.GET.get('bulan', 'semua')
+        filter_tahun = request.GET.get('tahun', 'semua')  # Tambahkan filter tahun
+        
+        # Query untuk mendapatkan daftar tahun dari data
+        daftar_tahun = (kunjungan_teknisi.objects
+                    .annotate(tahun=ExtractYear('tanggal'))
+                    .values_list('tahun', flat=True)
+                    .distinct()
+                    .order_by('-tahun'))
         
         teknisi_instance = None
         if filter_teknisi != 'semua':
@@ -75,35 +83,28 @@ def index(request):
         # Mengambil daftar jenjang
         daftar_jenjang = [jenjang for jenjang, _ in JENJANG_CHOICES]
 
-        # Menghitung jumlah kunjungan teknisi bulan ini atau bulan yang dipilih
-        if filter_bulan == 'semua':
-            bulan_ini = datetime.now().replace(day=1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-        else:
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
+        # Filter kunjungan
+        kunjungan_filter = kunjungan_teknisi.objects.all()
 
-        kunjungan_filter = kunjungan_teknisi.objects.filter(
-            tanggal__gte=bulan_ini,
-            tanggal__lt=bulan_depan
-        )
+        # Terapkan filter bulan dan tahun jika dipilih
+        if filter_bulan != 'semua':
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            kunjungan_filter = kunjungan_filter.filter(tanggal__month=bulan_index)
+            
+        if filter_tahun != 'semua':
+            kunjungan_filter = kunjungan_filter.filter(tanggal__year=int(filter_tahun))
 
         if teknisi_instance:
             kunjungan_filter = kunjungan_filter.filter(teknisi=teknisi_instance)
 
-        maintenance = kunjungan_filter.filter(judul='maintenance').count()
-        trouble_shooting = kunjungan_filter.filter(judul='trouble shooting').count()
-        remote = kunjungan_filter.filter(judul='remote').count()
+        # Hitung jumlah sekolah yang dikunjungi per kategori
+        maintenance = kunjungan_filter.filter(judul='maintenance').values('sekolah').distinct().count()
+        trouble_shooting = kunjungan_filter.filter(judul='trouble shooting').values('sekolah').distinct().count() 
+        remote = kunjungan_filter.filter(judul='remote').values('sekolah').distinct().count()
 
         # Menghitung jumlah sekolah yang belum dikunjungi
-        if teknisi_instance:
-            sekolah_dikunjungi = kunjungan_filter.values_list('sekolah', flat=True).distinct()
-        else:
-            sekolah_dikunjungi = kunjungan_filter.values_list('sekolah', flat=True).distinct()
-
-        belum_dikunjungi = daftar_sekolah.exclude(id__in=sekolah_dikunjungi).count()
+        sekolah_dikunjungi = kunjungan_filter.values('sekolah').distinct()
+        belum_dikunjungi = daftar_sekolah.exclude(id__in=sekolah_dikunjungi.values_list('sekolah', flat=True)).count()
 
         # Mengambil riwayat kunjungan teknisi
         riwayat_kunjungan = kunjungan_filter.select_related('teknisi').prefetch_related('sekolah').order_by('-tanggal')[:10]
@@ -121,6 +122,28 @@ def index(request):
                         'sekolah': [sekolah.nama_sekolah for sekolah in sekolah_list]
                     })
 
+        # Filter pengeluaran berdasarkan tanggal
+        pengeluaran_filter = pengeluaran_model.objects.filter(kategori='Teknisi')
+        
+        if filter_bulan != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__month=bulan_index)
+            
+        if filter_tahun != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__year=int(filter_tahun))
+
+        # Filter berdasarkan teknisi jika ada
+        if teknisi_instance:
+            pengeluaran_filter = pengeluaran_filter.filter(user=teknisi_instance.user)
+
+        # Hitung total per jenis pengeluaran
+        total_per_pengeluaran = []
+        daftar_pengeluaran = []
+        for nama, label in PENGELUARAN_CHOICES:
+            total = pengeluaran_filter.filter(nama=nama).aggregate(
+                total=Sum('jumlah'))['total'] or 0
+            total_per_pengeluaran.append(total)
+            daftar_pengeluaran.append(label)
+
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
             'total_komputer_per_jenjang': json.dumps(list(total_komputer_per_jenjang.values())),
@@ -134,7 +157,11 @@ def index(request):
             'daftar_teknisi': teknisi_model.objects.all(),
             'filter_teknisi': filter_teknisi,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
+            'daftar_tahun': daftar_tahun,
             'belum_dikunjungi': belum_dikunjungi,
+            'total_per_pengeluaran': json.dumps(total_per_pengeluaran),
+            'daftar_pengeluaran': json.dumps(daftar_pengeluaran),
         }
 
         return render(request, 'spt/teknisi/index.html', context)

@@ -98,6 +98,40 @@
         <c-slot name="content">
             <c-headingCard judul="Penggajian" deskripsi="Penggajian" heading_image_url="https://img.icons8.com/?size=100&id=yUTNKgUuTlsA&format=png&color=000000"></c-headingCard>
 
+            <section class="mb-4 bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+                <div class="flex flex-wrap justify-between items-center w-full gap-2">
+                    <h2 class="mr-2 text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Filter</h2>
+                    <div class="flex flex-wrap gap-2">
+                      <form action="" method="get">
+                        <select id="tahun_filter" name="tahun" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="semua">Semua Tahun</option>
+                            {% for tahun in daftar_tahun %}
+                                <option value="{{ tahun }}" {% if tahun|stringformat:"s" == filter_tahun %}selected{% endif %}>{{ tahun }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="bulan_filter" name="bulan" class="rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="semua">Semua Bulan</option>
+                            <option value="januari" {% if filter_bulan == 'januari' %}selected{% endif %}>Januari</option>
+                            <option value="februari" {% if filter_bulan == 'februari' %}selected{% endif %}>Februari</option>
+                            <option value="maret" {% if filter_bulan == 'maret' %}selected{% endif %}>Maret</option>
+                            <option value="april" {% if filter_bulan == 'april' %}selected{% endif %}>April</option>
+                            <option value="mei" {% if filter_bulan == 'mei' %}selected{% endif %}>Mei</option>
+                            <option value="juni" {% if filter_bulan == 'juni' %}selected{% endif %}>Juni</option>
+                            <option value="juli" {% if filter_bulan == 'juli' %}selected{% endif %}>Juli</option>
+                            <option value="agustus" {% if filter_bulan == 'agustus' %}selected{% endif %}>Agustus</option>
+                            <option value="september" {% if filter_bulan == 'september' %}selected{% endif %}>September</option>
+                            <option value="oktober" {% if filter_bulan == 'oktober' %}selected{% endif %}>Oktober</option>
+                            <option value="november" {% if filter_bulan == 'november' %}selected{% endif %}>November</option>
+                            <option value="desember" {% if filter_bulan == 'desember' %}selected{% endif %}>Desember</option>
+                        </select>
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            Filter
+                        </button>
+                      </form>
+                    </div>
+                </div>
+            </section>
+
             <!-- Grafik Pengeluaran -->
             <section class="flex flex-col md:flex-row gap-4 mb-4">
                 <!-- Pie Chart 1: Total Pengeluaran per Jenis -->

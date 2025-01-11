@@ -1,5 +1,7 @@
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models.functions import ExtractYear
 from apps.models.mainModel import sptproduk as sptproduk_model, Pengeluaran as pengeluaran_model
 from apps.models.sptModel import permintaanSPT as permintaanSPT_model, pengumuman as pengumuman_model
 from django.utils import timezone
@@ -24,7 +26,7 @@ import logging
 from apps.models.mainModel import master_ekstrakulikuler
 from core.settings import API_KEY
 from apps.models.baseModel import PROVINSI_CHOICES, PROVINSI_KOORDINAT
-from apps.models.mainModel import teknisi as teknisi_model, sales as sales_model
+from apps.models.mainModel import teknisi as teknisi_model, sales as sales_model, Pengeluaran as pengeluaran_model, PENGELUARAN_CHOICES
 from apps.models.kegiatanModel import kegiatan_produk, JUDUL_PRODUK_CHOICES
 
 logger = logging.getLogger(__name__)
@@ -52,10 +54,9 @@ JENIS_PRODUK_MASTER_CHOICES = [
   ('coding', 'Coding'),
 ]
 
-
 JENIS_PRODUK_CHOICES = [
     ("tik", "Tik"),
-    ("hardware & software", "Hardware & Software"),
+    ("hardware & software", "Hardware & Software"), 
     ("buku diginusa", "Buku Diginusa"),
     ("buku gen", "Buku Gen"),
     ("robotik", "Robotik"),
@@ -63,24 +64,32 @@ JENIS_PRODUK_CHOICES = [
     ("lainnya", "Lainnya")
 ]
 
-
+@login_required
 @sptproduk_required
 def index(request):
     try:
-        # Inisialisasi data sekolah biasa - Perubahan query untuk mengambil sekolah
-        daftar_sekolah = master_model.objects.all()
-        # Inisialisasi data ekstrakulikuler - Perubahan query untuk mengambil ekskul  
-        daftar_ekskul = master_ekstrakulikuler.objects.all()
-        
+        # Ambil parameter filter
         filter_produk = request.GET.get('produk', 'semua')
-        filter_bulan = request.GET.get('bulan', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')  # Default 'semua'
+        filter_tahun = request.GET.get('tahun', 'semua')  # Default 'semua'
+
+        # Query untuk mendapatkan daftar tahun dari data
+        daftar_tahun = (kunjungan_produk.objects
+                    .annotate(tahun=ExtractYear('tanggal'))
+                    .values_list('tahun', flat=True)
+                    .distinct()
+                    .order_by('-tahun'))
+
+        # Inisialisasi data sekolah biasa
+        daftar_sekolah = master_model.objects.all()
+        # Inisialisasi data ekstrakulikuler  
+        daftar_ekskul = master_ekstrakulikuler.objects.all()
         
         produk_instance = None
         if filter_produk != 'semua':
             try:
                 produk_user = User.objects.get(username=filter_produk)
                 produk_instance = produk_model.objects.get(user=produk_user)
-                # Filter berdasarkan foreign key user_produk
                 daftar_sekolah = daftar_sekolah.filter(user_produk=produk_instance)
                 daftar_ekskul = daftar_ekskul.filter(user_produk=produk_instance)
             except (User.DoesNotExist, produk_model.DoesNotExist):
@@ -96,29 +105,21 @@ def index(request):
 
         daftar_jenjang = DAFTAR_JENJANG
 
-        # Setup filter tanggal
-        if filter_bulan == 'semua':
-            bulan_ini = datetime.now().replace(day=1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-        else:
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-
         # Filter kunjungan untuk sekolah biasa
-        kunjungan_filter = kunjungan_produk.objects.filter(
-            tanggal__gte=bulan_ini,
-            tanggal__lt=bulan_depan,
-            sekolah__isnull=False
-        )
+        kunjungan_filter = kunjungan_produk.objects.filter(sekolah__isnull=False)
 
         # Filter kunjungan untuk ekstrakulikuler
-        kunjungan_ekskul_filter = kunjungan_produk.objects.filter(
-            tanggal__gte=bulan_ini,
-            tanggal__lt=bulan_depan,
-            sekolah_ekskul__isnull=False
-        )
+        kunjungan_ekskul_filter = kunjungan_produk.objects.filter(sekolah_ekskul__isnull=False)
+
+        # Terapkan filter bulan dan tahun jika dipilih
+        if filter_bulan != 'semua':
+            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'].index(filter_bulan.lower()) + 1
+            kunjungan_filter = kunjungan_filter.filter(tanggal__month=bulan_index)
+            kunjungan_ekskul_filter = kunjungan_ekskul_filter.filter(tanggal__month=bulan_index)
+            
+        if filter_tahun != 'semua':
+            kunjungan_filter = kunjungan_filter.filter(tanggal__year=int(filter_tahun))
+            kunjungan_ekskul_filter = kunjungan_ekskul_filter.filter(tanggal__year=int(filter_tahun))
 
         if produk_instance:
             kunjungan_filter = kunjungan_filter.filter(produk=produk_instance)
@@ -175,11 +176,15 @@ def index(request):
                         'ekskul': [ekskul.nama_sekolah for ekskul in ekskul_list]
                     })
 
-        # Filter kegiatan berdasarkan tanggal
-        kegiatan_filter = kegiatan_produk.objects.filter(
-            tanggal__gte=bulan_ini,
-            tanggal__lt=bulan_depan
-        )
+        # Filter kegiatan
+        kegiatan_filter = kegiatan_produk.objects.all()
+
+        # Terapkan filter bulan dan tahun jika dipilih
+        if filter_bulan != 'semua':
+            kegiatan_filter = kegiatan_filter.filter(tanggal__month=bulan_index)
+            
+        if filter_tahun != 'semua':
+            kegiatan_filter = kegiatan_filter.filter(tanggal__year=int(filter_tahun))
 
         # Filter berdasarkan produk jika ada
         if produk_instance:
@@ -192,6 +197,29 @@ def index(request):
 
         # Ambil daftar kegiatan untuk tabel
         daftar_kegiatan = kegiatan_filter.order_by('-tanggal')
+
+        # Filter pengeluaran
+        pengeluaran_filter = pengeluaran_model.objects.filter(kategori='Produk')
+        
+        # Terapkan filter bulan dan tahun jika dipilih
+        if filter_bulan != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__month=bulan_index)
+            
+        if filter_tahun != 'semua':
+            pengeluaran_filter = pengeluaran_filter.filter(tanggal__year=int(filter_tahun))
+
+        # Filter berdasarkan produk jika ada
+        if produk_instance:
+            pengeluaran_filter = pengeluaran_filter.filter(user=produk_instance.user)
+
+        # Hitung total per jenis pengeluaran
+        total_per_pengeluaran = []
+        daftar_pengeluaran = []
+        for nama, label in PENGELUARAN_CHOICES:
+            total = pengeluaran_filter.filter(nama=nama).aggregate(
+                total=Sum('jumlah'))['total'] or 0
+            total_per_pengeluaran.append(total)
+            daftar_pengeluaran.append(label)
 
         context = {
             'total_per_jenjang': json.dumps(list(total_per_jenjang.values())),
@@ -212,16 +240,20 @@ def index(request):
             'daftar_produk': produk_model.objects.all(),
             'filter_produk': filter_produk,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
+            'daftar_tahun': daftar_tahun,
             'belum_dikunjungi': belum_dikunjungi,
             'belum_dikunjungi_ekskul': belum_dikunjungi_ekskul,
             'total_per_kegiatan': total_per_kegiatan,
             'daftar_kegiatan': daftar_kegiatan,
+            'total_per_pengeluaran': json.dumps(total_per_pengeluaran),
+            'daftar_pengeluaran': json.dumps(daftar_pengeluaran),
         }
 
         return render(request, 'spt/produk/index.html', context)
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
-        return redirect('index_sptproduk')
+        return redirect('sptproduk')
 
 @sptproduk_required
 def komplain(request):
@@ -425,7 +457,96 @@ def karyawan(request):
 @sptproduk_required
 def penggajian(request):
     try:
+        # Ambil daftar tahun yang unik dari model penggajian
+        daftar_tahun = penggajian_model.objects.values_list('tahun', flat=True).distinct().order_by('-tahun')
+        
+        # Ambil parameter filter dari URL
+        filter_tahun = request.GET.get('tahun', 'semua')
+        filter_bulan = request.GET.get('bulan', 'semua')
+        
+        # Query dasar
         daftar_penggajian = penggajian_model.objects.all()
+        
+        # Terapkan filter
+        if filter_tahun != 'semua':
+            daftar_penggajian = daftar_penggajian.filter(tahun=filter_tahun)
+            
+        if filter_bulan != 'semua':
+            # Buat dictionary untuk mapping nama bulan ke field
+            bulan_mapping = {
+                'januari': 'januari',
+                'februari': 'februari',
+                'maret': 'maret',
+                'april': 'april',
+                'mei': 'mei',
+                'juni': 'juni',
+                'juli': 'juli',
+                'agustus': 'agustus',
+                'september': 'september',
+                'oktober': 'oktober',
+                'november': 'november',
+                'desember': 'desember'
+            }
+            
+            # Filter berdasarkan bulan yang dipilih (hanya yang nilainya > 0)
+            if filter_bulan in bulan_mapping:
+                filter_kwargs = {f"{bulan_mapping[filter_bulan]}__gt": 0}
+                daftar_penggajian = daftar_penggajian.filter(**filter_kwargs)
+
+        # Hitung total pengeluaran berdasarkan data yang sudah difilter
+        def total_pengeluaran():
+            total = 0
+            for penggajian in daftar_penggajian:
+                if filter_bulan != 'semua':
+                    # Jika ada filter bulan, hanya ambil nilai bulan tersebut
+                    total += getattr(penggajian, filter_bulan, 0)
+                else:
+                    # Jika tidak ada filter bulan, ambil total semua bulan
+                    total += sum([
+                        penggajian.januari or 0,
+                        penggajian.februari or 0,
+                        penggajian.maret or 0,
+                        penggajian.april or 0,
+                        penggajian.mei or 0,
+                        penggajian.juni or 0,
+                        penggajian.juli or 0,
+                        penggajian.agustus or 0,
+                        penggajian.september or 0,
+                        penggajian.oktober or 0,
+                        penggajian.november or 0,
+                        penggajian.desember or 0
+                    ])
+            return total
+
+        # Hitung pengeluaran per jenis berdasarkan data yang sudah difilter
+        def total_pengeluaran_per_jenis():
+            pengeluaran_per_jenis = {}
+            for penggajian in daftar_penggajian:
+                jenis = penggajian.karyawan.jenis
+                if jenis not in pengeluaran_per_jenis:
+                    pengeluaran_per_jenis[jenis] = 0
+                
+                if filter_bulan != 'semua':
+                    # Jika ada filter bulan, hanya ambil nilai bulan tersebut
+                    pengeluaran_per_jenis[jenis] += getattr(penggajian, filter_bulan, 0)
+                else:
+                    # Jika tidak ada filter bulan, ambil total semua bulan
+                    pengeluaran_per_jenis[jenis] += sum([
+                        penggajian.januari or 0,
+                        penggajian.februari or 0,
+                        penggajian.maret or 0,
+                        penggajian.april or 0,
+                        penggajian.mei or 0,
+                        penggajian.juni or 0,
+                        penggajian.juli or 0,
+                        penggajian.agustus or 0,
+                        penggajian.september or 0,
+                        penggajian.oktober or 0,
+                        penggajian.november or 0,
+                        penggajian.desember or 0
+                    ])
+            return pengeluaran_per_jenis
+
         daftar_karyawan = karyawan_model.objects.all()
         
         def get_int_or_zero(value):
@@ -523,17 +644,18 @@ def penggajian(request):
                 messages.error(request, 'Gagal melakukan aksi: ' + str(e))
                 return redirect('penggajian_sptproduk')
         
-        pengeluaran_per_jenis = total_pengeluaran_per_jenis()
-        total_pengeluaran_value = total_pengeluaran()
-
         context = {
             'daftar_penggajian': daftar_penggajian,
             'daftar_karyawan': daftar_karyawan,
-            'pengeluaran_per_jenis_labels': json.dumps(list(pengeluaran_per_jenis.keys())),
-            'pengeluaran_per_jenis_values': json.dumps(list(pengeluaran_per_jenis.values())),
-            'total_pengeluaran': total_pengeluaran_value,
+            'daftar_tahun': daftar_tahun,
+            'filter_tahun': filter_tahun,
+            'filter_bulan': filter_bulan,
+            'pengeluaran_per_jenis_labels': json.dumps(list(total_pengeluaran_per_jenis().keys())),
+            'pengeluaran_per_jenis_values': json.dumps(list(total_pengeluaran_per_jenis().values())),
+            'total_pengeluaran': total_pengeluaran(),
         }
         return render(request, 'spt/produk/penggajian.html', context)
+        
     except Exception as e:
         messages.error(request, f'Terjadi kesalahan: {str(e)}')
         return redirect('penggajian_sptproduk')
@@ -602,14 +724,30 @@ def customer(request):
                     master.awal_kerjasama = datetime.strptime(awal_kerjasama, '%Y-%m-%d').date() if awal_kerjasama else None
                     master.akhir_kerjasama = datetime.strptime(akhir_kerjasama, '%Y-%m-%d').date() if akhir_kerjasama else None
                     
-                    # Update jumlah siswa per kelas
+                    # Hitung total jumlah siswa dari semua jenjang
+                    total_siswa = 0
+                    print(master.jumlah_siswa_tk)
+                    print(jumlah_siswa_tk)
+                    
+                    # Tambahkan siswa TK
+                    total_siswa += int(jumlah_siswa_tk)
+                        
+                    # Tambahkan siswa kelas 1-12
                     for i in range(1, 13):
                         jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
-                        setattr(master, f'jumlah_siswa_kelas_{i}', int(jumlah_siswa) if jumlah_siswa else None)
+                        if jumlah_siswa:
+                            total_siswa += int(jumlah_siswa)
+                            setattr(master, f'jumlah_siswa_kelas_{i}', int(jumlah_siswa))
+                            
+                    # Tambahkan siswa SMK
                     for i in range(10, 13):
                         jumlah_siswa_smk = request.POST.get(f'jumlah_siswa_kelas_{i}_smk')
-                        setattr(master, f'jumlah_siswa_kelas_{i}_smk', int(jumlah_siswa_smk) if jumlah_siswa_smk else None)
-                    
+                        if jumlah_siswa_smk:
+                            total_siswa += int(jumlah_siswa_smk)
+                            setattr(master, f'jumlah_siswa_kelas_{i}_smk', int(jumlah_siswa_smk))
+                            
+                    # Set total jumlah siswa
+                    master.jumlah_siswa = total_siswa
                     master.save()
                     messages.success(request, 'Data customer berhasil diubah')
                     return redirect('customer_sptproduk')
@@ -704,13 +842,29 @@ def customer(request):
                         else:
                             master.user_sales = None
                         
-                        # Simpan jumlah siswa per kelas
+                        # Hitung total jumlah siswa dari semua jenjang
+                        total_siswa = 0
+                        
+                        # Tambahkan siswa TK
+                        if jumlah_siswa_tk:
+                            total_siswa += int(jumlah_siswa_tk)
+                            
+                        # Tambahkan siswa kelas 1-12
                         for i in range(1, 13):
                             jumlah_siswa = request.POST.get(f'jumlah_siswa_kelas_{i}')
-                            setattr(master, f'jumlah_siswa_kelas_{i}', int(jumlah_siswa) if jumlah_siswa else None)
+                            if jumlah_siswa:
+                                total_siswa += int(jumlah_siswa)
+                                setattr(master, f'jumlah_siswa_kelas_{i}', int(jumlah_siswa))
+                                
+                        # Tambahkan siswa SMK
                         for i in range(10, 13):
                             jumlah_siswa_smk = request.POST.get(f'jumlah_siswa_kelas_{i}_smk')
-                            setattr(master, f'jumlah_siswa_kelas_{i}_smk', int(jumlah_siswa_smk) if jumlah_siswa_smk else None)
+                            if jumlah_siswa_smk:
+                                total_siswa += int(jumlah_siswa_smk)
+                                setattr(master, f'jumlah_siswa_kelas_{i}_smk', int(jumlah_siswa_smk))
+                                
+                        # Set total jumlah siswa
+                        master.jumlah_siswa = total_siswa
                         
                         master.save()
                         
@@ -747,6 +901,8 @@ def customer(request):
             'JENIS_KERJASAMA_CHOICES': JENIS_KERJASAMA_MASTER_CHOICES,
             'JENIS_PRODUK_CHOICES': JENIS_PRODUK_MASTER_CHOICES,
             'daftar_produk': produk_model.objects.all(),
+            'daftar_teknisi': teknisi_model.objects.all(),
+            'daftar_sales': sales_model.objects.all(),
         }
         return render(request, 'spt/produk/customer.html', context)
     except Exception as e:
@@ -964,6 +1120,7 @@ def pengeluaran(request):
         # Ambil parameter filter
         filter_produk = request.GET.get('produk', 'semua')
         filter_bulan = request.GET.get('bulan', 'semua')
+        filter_tahun = request.GET.get('tahun', 'semua')
 
         # Base queryset
         daftar_pengeluaran = pengeluaran_model.objects.filter(kategori='Produk')
@@ -977,20 +1134,24 @@ def pengeluaran(request):
             except (User.DoesNotExist, produk_model.DoesNotExist):
                 messages.error(request, 'Produk tidak ditemukan')
 
+        # Filter berdasarkan tahun
+        if filter_tahun != 'semua':
+            try:
+                tahun = int(filter_tahun)
+                daftar_pengeluaran = daftar_pengeluaran.filter(tanggal__year=tahun)
+            except ValueError:
+                messages.error(request, 'Format tahun tidak valid')
+
         # Filter berdasarkan bulan
         if filter_bulan != 'semua':
-            tahun_sekarang = datetime.now().year
-            bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
-                          'juli', 'agustus', 'september', 'oktober', 'november', 
-                          'desember'].index(filter_bulan.lower()) + 1
-            
-            bulan_ini = datetime(tahun_sekarang, bulan_index, 1)
-            bulan_depan = (bulan_ini + timedelta(days=32)).replace(day=1)
-            
-            daftar_pengeluaran = daftar_pengeluaran.filter(
-                tanggal__gte=bulan_ini,
-                tanggal__lt=bulan_depan,
-            )
+            try:
+                bulan_index = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 
+                              'juli', 'agustus', 'september', 'oktober', 'november', 
+                              'desember'].index(filter_bulan.lower()) + 1
+                
+                daftar_pengeluaran = daftar_pengeluaran.filter(tanggal__month=bulan_index)
+            except ValueError:
+                messages.error(request, 'Bulan tidak valid')
 
         # Urutkan berdasarkan tanggal terbaru
         daftar_pengeluaran = daftar_pengeluaran.order_by('-tanggal')
@@ -998,12 +1159,18 @@ def pengeluaran(request):
         # Hitung total pengeluaran
         total_pengeluaran = daftar_pengeluaran.aggregate(Sum('jumlah'))['jumlah__sum'] or 0
 
+        # Get list of available years from data
+        tahun_tersedia = pengeluaran_model.objects.filter(kategori='Produk').dates('tanggal', 'year')
+        tahun_list = [date.year for date in tahun_tersedia]
+
         context = {
             'daftar_pengeluaran': daftar_pengeluaran,
             'total_pengeluaran': total_pengeluaran,
             'daftar_produk': produk_model.objects.all(),
             'filter_produk': filter_produk,
             'filter_bulan': filter_bulan,
+            'filter_tahun': filter_tahun,
+            'tahun_list': tahun_list
         }
         return render(request, 'spt/produk/pengeluaran.html', context)
     except Exception as e:

@@ -62,11 +62,11 @@
               </div>
               <div>
                 <label for="awal_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Awal Kerjasama</label>
-                <input type="date" id="awal_kerjasama" name="awal_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.awal_kerjasama }}">
+                <input type="date" id="awal_kerjasama" name="awal_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.awal_kerjasama|date:'Y-m-d' }}">
               </div>
               <div>
                 <label for="akhir_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Akhir Kerjasama</label>
-                <input type="date" id="akhir_kerjasama" name="akhir_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.akhir_kerjasama }}">
+                <input type="date" id="akhir_kerjasama" name="akhir_kerjasama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ master.akhir_kerjasama|date:'Y-m-d' }}">
               </div>
               <div>
                 <label for="jenis_kerjasama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kerjasama</label>
@@ -267,7 +267,7 @@
                       <table id="masterTable" class="w-full text-base text-left text-gray-500 dark:text-gray-400">
                           <thead class="text-sm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                               <tr>
-                                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Aksi</th>
+                                  <th scope="col" class="px-6 py-3 whitespace-nowrap sticky left-0 bg-gray-50 dark:bg-gray-700 z-20">Aksi</th>
                                   <th scope="col" class="px-6 py-3 whitespace-nowrap">No MOU</th>
                                   <th scope="col" class="px-6 py-3 whitespace-nowrap">File</th>
                                   <th scope="col" class="px-6 py-3 whitespace-nowrap">Nama Yayasan</th>
@@ -310,7 +310,7 @@
                           <tbody id="masterTableBody">
                               {% for data in master_data %}
                               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                  <td class="px-6 py-4 whitespace-nowrap">
+                                  <td class="px-6 py-4 whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800 z-20">
                                       <a href="{% url 'customer_sptteknisi' %}?edit={{ data.id }}" class="text-blue-600 hover:underline">Edit</a>
                                   </td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.no_mou|default_if_none:"-" }}</td>
@@ -323,7 +323,7 @@
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.jenjang|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.awal_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.akhir_kerjasama|date:"d/m/Y"|default_if_none:"-" }}</td>
-                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.get_status_display|default_if_none:"-" }}</td>
+                                  <td class="px-6 py-4 whitespace-nowrap">{{ data.status|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_kerjasama_display|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.get_jenis_produk_display|default_if_none:"-" }}</td>
                                   <td class="px-6 py-4 whitespace-nowrap">{{ data.pembayaran|default_if_none:"-" }}</td>
