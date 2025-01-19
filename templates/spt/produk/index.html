@@ -607,6 +607,7 @@
                     <th scope="col" class="px-6 py-3">Deskripsi</th>
                     <th scope="col" class="px-6 py-3">Tanggal</th>
                     <th scope="col" class="px-6 py-3">Sekolah</th>
+                    <th scope="col" class="px-6 py-3">Produk</th>
                   </tr>
                 </thead>
                 <tbody id="kegiatanTableBody">
@@ -618,6 +619,7 @@
                     <td class="px-6 py-4">{{ kegiatan.deskripsi }}</td>
                     <td class="px-6 py-4">{{ kegiatan.tanggal|date:"d/m/Y" }}</td>
                     <td class="px-6 py-4">{{ kegiatan.sekolah }}</td>
+                    <td class="px-6 py-4">{{ kegiatan.produk.nama }}</td>
                   </tr>
                   {% empty %}
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
